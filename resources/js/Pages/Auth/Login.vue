@@ -99,48 +99,48 @@ const submit = () => {
                 </PrimaryButton>
             </div>
 
-            <div class="max-w-5x mt-5 flex w-full space-x-2 overflow-hidden">
-                <div
-                    v-if="socialiteSettings?.google?.data?.status"
-                    class="w-100 md:w-1/2"
-                >
-                    <a
-                        :href="route('auth.login.socialite', 'google')"
-                        class="rounded-circle tex-sm block inline-flex w-100 items-center justify-center border border-blue-700 px-4 py-3 text-center font-medium text-blue-700"
-                    >
-                        <CommonIcon icon="logos:google-icon" class="mx-2" />
-                        Google
-                    </a>
-                </div>
+            <!--            <div class="max-w-5x mt-5 flex w-full space-x-2 overflow-hidden">-->
+            <!--                <div-->
+            <!--                    v-if="socialiteSettings?.google?.data?.status"-->
+            <!--                    class="w-100 md:w-1/2"-->
+            <!--                >-->
+            <!--                    <a-->
+            <!--                        :href="route('auth.login.socialite', 'google')"-->
+            <!--                        class="rounded-circle tex-sm block inline-flex w-100 items-center justify-center border border-blue-700 px-4 py-3 text-center font-medium text-blue-700"-->
+            <!--                    >-->
+            <!--                        <CommonIcon icon="logos:google-icon" class="mx-2" />-->
+            <!--                        Google-->
+            <!--                    </a>-->
+            <!--                </div>-->
 
-                <!-- Right Side Login Form -->
-                <div
-                    v-if="socialiteSettings?.linkedin?.data?.status"
-                    class="w-100 md:w-1/2"
-                >
-                    <a
-                        :href="route('auth.login.socialite', 'linkedin-openid')"
-                        class="rounded-circle block inline-flex w-100 items-center justify-center border border-blue-700 px-4 py-3 text-center text-sm font-medium text-blue-700"
-                    >
-                        <CommonIcon icon="logos:linkedin-icon" class="mx-2" />
-                        Linkedin
-                    </a>
-                </div>
-            </div>
+            <!--                &lt;!&ndash; Right Side Login Form &ndash;&gt;-->
+            <!--                <div-->
+            <!--                    v-if="socialiteSettings?.linkedin?.data?.status"-->
+            <!--                    class="w-100 md:w-1/2"-->
+            <!--                >-->
+            <!--                    <a-->
+            <!--                        :href="route('auth.login.socialite', 'linkedin-openid')"-->
+            <!--                        class="rounded-circle block inline-flex w-100 items-center justify-center border border-blue-700 px-4 py-3 text-center text-sm font-medium text-blue-700"-->
+            <!--                    >-->
+            <!--                        <CommonIcon icon="logos:linkedin-icon" class="mx-2" />-->
+            <!--                        Linkedin-->
+            <!--                    </a>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
-            <div class="mx-auto mt-4 w-100 text-center">
-                <p
-                    class="ms-2 mb-4 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                >
-                    Have no account yet?
-                </p>
-                <Link
-                    :href="route('register')"
-                    class="rounded-circle block w-100 border border-blue-700 px-4 py-3 text-sm font-medium text-blue-700"
-                >
-                    Registration
-                </Link>
-            </div>
+            <!--            <div class="mx-auto mt-4 w-100 text-center">-->
+            <!--                <p-->
+            <!--                    class="ms-2 mb-4 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"-->
+            <!--                >-->
+            <!--                    Have no account yet?-->
+            <!--                </p>-->
+            <!--                <Link-->
+            <!--                    :href="route('register')"-->
+            <!--                    class="rounded-circle block w-100 border border-blue-700 px-4 py-3 text-sm font-medium text-blue-700"-->
+            <!--                >-->
+            <!--                    Registration-->
+            <!--                </Link>-->
+            <!--            </div>-->
         </form>
     </GuestLayout>
 </template>

@@ -8,7 +8,6 @@ use App\Http\Requests\Users\UserRequest;
 use App\Http\Resources\User\RoleResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
-use App\Repositories\ProjectRepository;
 use App\Repositories\UsersRepository;
 use App\Services\Users\UsersService;
 use EragPermission\Models\Role;

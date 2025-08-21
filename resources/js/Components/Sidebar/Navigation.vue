@@ -82,7 +82,11 @@ onMounted(() => {
                             :active="subItem?.active"
                         >
                             <CommonIcon
-                                :icon="subItem?.active ? 'bi:record-fill':'bi:record'"
+                                :icon="
+                                    subItem?.active
+                                        ? 'bi:record-fill'
+                                        : 'bi:record'
+                                "
                                 :class="[
                                     subItem?.active
                                         ? 'text-indigo-600'

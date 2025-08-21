@@ -26,7 +26,6 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(f
         Route::get('/', 'index')->name('dashboard')->middleware('permissions:dashboard');
     });
 
-
     Route::prefix('settings')->controller(SettingsController::class)->group(function () {
         Route::get('/', 'show')->name('settings');
         Route::post('general-settings-save', 'generalSettingsSave')->name('settings.general.save');
@@ -55,7 +54,6 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(f
         Route::post('/store', 'store')->name('email.store');
 
     });
-
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
         Route::get('/', 'index')->name('user.index');
