@@ -21,7 +21,7 @@ class BlackListEmailService
             );
         }
 
-        BlackListEmail::create([
+        BlackListEmail::query()->create([
             'file' => basename($data['file']),
             'user_id' => auth()->user()->id,
         ]);

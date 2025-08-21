@@ -13,11 +13,11 @@ class GeneralSettingsSeeder extends Seeder
     {
         $paths = [
             'favicon' => public_path('assets/images/favicon.png'),
-            'icon_logo_dark' => public_path('assets/images/inboxSyncLogo.png'),
-            'icon_logo_white' => public_path('assets/images/inboxSyncLogoWhite.png'),
-            'logo_dark' => public_path('assets/images/inboxSync.png'),
-            'logo_white' => public_path('assets/images/inboxSyncWhite.png'),
-            'app_logo' => public_path('assets/images/inboxSyncLogo.png'),
+            'icon_logo_dark' => public_path('assets/images/logo-circle.png'),
+            'icon_logo_white' => public_path('assets/images/logo-circle-white.png'),
+            'logo_dark' => public_path('assets/images/logo.png'),
+            'logo_white' => public_path('assets/images/logo-white.png'),
+            'app_logo' => public_path('assets/images/logo.png'),
         ];
 
         $uploaded = [];
@@ -38,7 +38,7 @@ class GeneralSettingsSeeder extends Seeder
             $uploaded[$key] = basename($storedPath);
         }
 
-        GeneralSettings::create([
+        GeneralSettings::query()->create([
             'footer_text' => 'footerText',
             'icon_logo_dark' => $uploaded['icon_logo_dark'],
             'icon_logo_white' => $uploaded['icon_logo_white'],

@@ -14,9 +14,9 @@ class EmailSettingsService
     public function createEmailSetting(array $data)
     {
 
-        $emailSetting = EmailSetting::first();
+        $emailSetting = EmailSetting::query()->first();
 
-        return EmailSetting::updateOrCreate(
+        return EmailSetting::query()->updateOrCreate(
             ['id' => $emailSetting->id ?? null],
             [
                 'mail_driver' => $data['mailDriver'],
@@ -33,7 +33,7 @@ class EmailSettingsService
 
     public function testEmailSetting(array $data)
     {
-        $settings = GeneralSettings::select('app_name')->first();
+        $settings = GeneralSettings::query()->select('app_name')->first();
         Config::set('app.name', $settings->app_name ?? 'App');
 
         App::getInstance()->register('App\Providers\MailConfigProvider');

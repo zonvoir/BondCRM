@@ -48,24 +48,9 @@ const isVisible = ref(false);
             class="border border-gray-200 p-4 shadow-sm sm:rounded-lg sm:p-2 dark:border-gray-700"
         >
             <CommonDataTable :data="user">
-                <Column
-                    field="name"
-                    header="Name"
-                    :sortable="true"
-                    style="width: 20%"
-                />
-                <Column
-                    field="email"
-                    header="Email"
-                    :sortable="true"
-                    style="width: 20%"
-                />
-                <Column
-                    field="created_at"
-                    header="date"
-                    :sortable="true"
-                    style="width: 20%"
-                />
+                <Column field="name" header="Name" :sortable="true" />
+                <Column field="email" header="Email" :sortable="true" />
+                <Column field="created_at" header="date" :sortable="true" />
             </CommonDataTable>
 
             <CommonDrawer v-model:visible="showDrawer" header="Tenant Regster">

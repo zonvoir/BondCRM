@@ -41,7 +41,7 @@ class UsersService
         return $user->delete();
     }
 
-    public function roleCreateOrUpdate(array $data)
+    public function roleCreateOrUpdate(array $data): Model|Role
     {
         return Role::query()->updateOrCreate(
             ['id' => $data['id'] ?? null],

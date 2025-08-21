@@ -12,7 +12,7 @@ class EmailSettingSeeder extends Seeder
      */
     public function run(): void
     {
-        EmailSetting::create([
+        EmailSetting::query()->create([
             'mail_driver' => 'smtp',
             'mail_host' => 'smtp.gmail.com',
             'mail_port' => '465',

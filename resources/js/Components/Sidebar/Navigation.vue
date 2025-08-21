@@ -78,6 +78,7 @@ onMounted(() => {
                 <li v-for="(subItem, index) in menu.subMenu" :key="index">
                     <template v-if="subItem?.permission">
                         <CommonLink
+                            class="items-center"
                             :href="subItem?.href"
                             :active="subItem?.active"
                         >

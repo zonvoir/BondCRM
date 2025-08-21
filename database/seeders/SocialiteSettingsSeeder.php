@@ -30,7 +30,7 @@ class SocialiteSettingsSeeder extends Seeder
         ];
 
         foreach ($socialiteSettings as $setting) {
-            SocialiteSetting::updateOrCreate(
+            SocialiteSetting::query()->updateOrCreate(
                 ['provider' => $setting['provider']],
                 $setting
             );

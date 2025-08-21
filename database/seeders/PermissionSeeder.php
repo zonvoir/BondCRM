@@ -19,7 +19,7 @@ class PermissionSeeder extends Seeder
             ->unique();
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate([
+            Permission::query()->firstOrCreate([
                 'name' => $permission,
             ]);
         }

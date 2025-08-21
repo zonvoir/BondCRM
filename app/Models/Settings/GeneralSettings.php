@@ -23,6 +23,7 @@ class GeneralSettings extends Model
         'app_description',
         'app_logo',
         'theme_color',
+        'id',
     ];
 
     protected $casts = [

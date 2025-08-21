@@ -450,23 +450,8 @@ initializeCheckedStates();
 
             <!-- Roles Table -->
             <CommonDataTable :data="roles">
-                <Column
-                    field="name"
-                    header="Name"
-                    :sortable="true"
-                    style="width: 20%"
-                />
-                <Column
-                    field="created_at"
-                    header="Created At"
-                    :sortable="true"
-                    style="width: 20%"
-                />
-                <Column
-                    header="Permissions"
-                    :sortable="false"
-                    style="width: 20%"
-                >
+                <Column field="name" header="Name" :sortable="true" />
+                <Column header="Permissions" :sortable="false">
                     <template #body="slotProps">
                         <div class="flex gap-2">
                             <CommonButton
@@ -479,7 +464,7 @@ initializeCheckedStates();
                         </div>
                     </template>
                 </Column>
-                <Column header="Action" :sortable="false" style="width: 20%">
+                <Column header="Action" :sortable="false">
                     <template #body="slotProps">
                         <div class="flex gap-2">
                             <CommonButton

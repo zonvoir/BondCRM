@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
 
         foreach ($users as $userData) {
             $roleName = $userData['role'];
-            $role = Role::firstOrCreate(['name' => $roleName]);
+            $role = Role::query()->firstOrCreate(['name' => $roleName]);
 
             unset($userData['role']);
             $user = User::query()->create($userData);

@@ -18,5 +18,6 @@ class LiveChatSettings extends Model
         'pusher_scheme',
         'pusher_app_cluster',
         'ably_key',
+        'id',
     ];
 }

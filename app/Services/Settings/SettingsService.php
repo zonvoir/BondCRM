@@ -15,7 +15,7 @@ class SettingsService
 
     public function saveGeneralSettings(array $data)
     {
-        $generalSettings = GeneralSettings::first();
+        $generalSettings = GeneralSettings::query()->first();
 
         if (isset($data['iconLogoDark']) && $data['iconLogoDark'] instanceof UploadedFile) {
             $uploadPath = storage_path('app/public/logo');
@@ -94,7 +94,7 @@ class SettingsService
     public function savePwaSettings(array $data)
     {
 
-        $generalSettings = GeneralSettings::first();
+        $generalSettings = GeneralSettings::query()->first();
 
         if (isset($data['appLogo']) && $data['appLogo'] instanceof UploadedFile) {
             $uploadPath = public_path();
@@ -152,7 +152,7 @@ class SettingsService
         ];
 
         foreach ($providers as $provider => $credentials) {
-            SocialiteSetting::updateOrCreate(
+            SocialiteSetting::query()->updateOrCreate(
                 ['provider' => $provider],
                 $credentials
             );
@@ -161,11 +161,11 @@ class SettingsService
 
     public function saveChatSettings(array $data)
     {
-        $generalSettings = LiveChatSettings::first();
+        $generalSettings = LiveChatSettings::query()->first();
 
         $data['type'] = $data['type']['code'];
 
-        return LiveChatSettings::updateOrCreate(
+        return LiveChatSettings::query()->updateOrCreate(
             ['id' => $generalSettings?->id],
             $data
         );
@@ -173,9 +173,9 @@ class SettingsService
 
     protected function saveSettings(array $data)
     {
-        $generalSettings = GeneralSettings::first();
+        $generalSettings = GeneralSettings::query()->first();
 
-        return GeneralSettings::updateOrCreate(
+        return GeneralSettings::query()->updateOrCreate(
             ['id' => $generalSettings?->id],
             $data
         );

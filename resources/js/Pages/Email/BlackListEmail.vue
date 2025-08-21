@@ -74,25 +74,15 @@ const handleSubmit = () => {
         </div>
 
         <CommonDataTable :data="blackListEmail">
-            <Column
-                field="file"
-                header="File"
-                :sortable="true"
-                style="width: 20%"
-            />
+            <Column field="file" header="File" :sortable="true" />
 
-            <Column header="Created By" :sortable="false" style="width: 20%">
+            <Column header="Created By" :sortable="false">
                 <template #body="slotProps">
                     {{ slotProps?.data?.created_by?.name }}
                 </template>
             </Column>
-            <Column
-                field="created_at"
-                header="Created At"
-                :sortable="true"
-                style="width: 20%"
-            />
-            <Column header="Action" :sortable="false" style="width: 20%">
+            <Column field="created_at" header="Created At" :sortable="true" />
+            <Column header="Action" :sortable="false">
                 <template #body="slotProps">
                     <div class="flex gap-2">
                         <CommonButton

@@ -206,23 +206,9 @@ const isModuleGroupChecked = actions =>
             </div>
 
             <CommonDataTable :showSerialNumber="true" :data="users">
-                <Column
-                    field="name"
-                    header="Name"
-                    :sortable="true"
-                    style="width: 20%"
-                />
-                <Column
-                    field="created_at"
-                    header="Created At"
-                    :sortable="true"
-                    style="width: 20%"
-                />
-                <Column
-                    header="Roles / Permissions"
-                    :sortable="false"
-                    style="width: 20%"
-                >
+                <Column field="name" header="Name" :sortable="true" />
+                <Column field="email" header="Email" :sortable="true" />
+                <Column header="Roles / Permissions" :sortable="false">
                     <template #body="slotProps">
                         <CommonBadge
                             class="cursor-pointer"
@@ -232,7 +218,7 @@ const isModuleGroupChecked = actions =>
                         />
                     </template>
                 </Column>
-                <Column header="Action" :sortable="false" style="width: 20%">
+                <Column header="Action" :sortable="false">
                     <template #body="slotProps">
                         <div class="flex gap-2">
                             <CommonButton
