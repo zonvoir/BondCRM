@@ -9,7 +9,6 @@ class SideNav
 {
     public static function menu(): array
     {
-
         if (hasRole(RoleEnum::ADMIN->value)) {
             return self::adminMenu();
         }
@@ -19,7 +18,16 @@ class SideNav
         }
 
         if (hasRole(RoleEnum::EMPLOYEE->value)) {
-            return self::employeeMenu();
+
+            if (request()->routeIs('employee.setup.*')) {
+                return array_values(array_filter(self::employeeMenu(), function ($item) {
+                    return $item['name'] === 'Setup';
+                }));
+            }
+
+            return array_values(
+                array_filter(self::employeeMenu(), fn ($item) => $item['name'] !== 'Setup')
+            );
         }
 
         return [];
@@ -66,14 +74,14 @@ class SideNav
                     ],
                 ],
             ],
-            //            [
-            //                'name' => ' Email Black List',
-            //                'permission' => hasPermissions('email-black-view'),
-            //                'href' => route('email.blacklist.index'),
-            //                'icon' => 'flat-color-icons:cancel',
-            //                'active' => $currentRouteName === 'email.blacklist.index',
-            //                'subMenu' => [],
-            //            ],
+            [
+                'name' => ' Email Black List',
+                'permission' => hasPermissions('email-black-view'),
+                'href' => route('email.blacklist.index'),
+                'icon' => 'flat-color-icons:cancel',
+                'active' => $currentRouteName === 'email.blacklist.index',
+                'subMenu' => [],
+            ],
         ];
     }
 
@@ -97,6 +105,63 @@ class SideNav
     {
         $currentRouteName = Route::currentRouteName();
 
-        return [];
+        return [
+            [
+                'name' => 'Dashboard',
+                'permission' => hasPermissions('dashboard-view-employee'),
+                'href' => route('employee.dashboard'),
+                'icon' => 'vscode-icons:file-type-homeassistant',
+                'active' => $currentRouteName === 'employee.dashboard',
+                'subMenu' => [],
+            ],
+            [
+                'name' => 'Mails',
+                'permission' => hasPermissions('dashboard-view-employee'),
+                'icon' => 'material-icon-theme:folder-mail-open',
+                'active' => in_array($currentRouteName, ['employee.gmail', 'employee.outlook', 'employee.webmail', 'employee.apple-mail'], true),
+                'subMenu' => [
+                    [
+                        'name' => 'Gmail',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.gmail', 'inbox'),
+                        'active' => $currentRouteName === 'employee.gmail',
+                    ],
+                    [
+                        'name' => 'Outlook',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.outlook', 'inbox'),
+                        'active' => $currentRouteName === 'employee.outlook',
+                    ],
+                    [
+                        'name' => 'WebMail',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.webmail', 'inbox'),
+                        'active' => $currentRouteName === 'employee.webmail',
+                    ],
+                    [
+                        'name' => 'AppMail',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.apple-mail', 'inbox'),
+                        'active' => $currentRouteName === 'employee.apple-mail',
+                    ],
+                ],
+            ],
+
+            [
+                'name' => 'Setup',
+                'permission' => hasPermissions('dashboard-view-employee'),
+                'icon' => 'material-icon-theme:folder-config-open',
+                'active' => in_array($currentRouteName, ['employee.setup.index'], true),
+                'subMenu' => [
+                    [
+                        'name' => 'Mails configure',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.setup.index'),
+                        'active' => $currentRouteName === 'employee.setup.index',
+                    ],
+
+                ],
+            ],
+        ];
     }
 }

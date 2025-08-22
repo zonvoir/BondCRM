@@ -5,9 +5,11 @@ use App\Http\Controllers\Auth\SocialiteAuthController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Email\BlackListEmailController;
 use App\Http\Controllers\Email\BulkImportController;
+use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\EmailSettingsController;
 use App\Http\Controllers\Settings\SettingsController;
+use App\Http\Controllers\Setup\SetupController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +20,7 @@ Route::get('/', function () {
 Route::controller(SocialiteAuthController::class)->group(function () {
     Route::get('/auth/socialite/{type?}', 'redirectToOAuth')->name('auth.login.socialite');
     Route::get('/auth/google/callback', 'handleGoogleCallback')->name('auth.google.callback');
-    Route::get('/auth/linkedin/callback', 'handleLinkedinCallback')->name('auth.linkedin.callback');
+    Route::get('/auth/outlook/callback', 'handleMicrosoftCallback')->name('auth.microsoft.callback');
 });
 
 Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(function () {
@@ -52,7 +54,6 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(f
     Route::prefix('email-bulk')->controller(BulkImportController::class)->group(function () {
         Route::get('/', 'index')->name('email.index');
         Route::post('/store', 'store')->name('email.store');
-
     });
 
     Route::prefix('users')->controller(UserController::class)->group(function () {
@@ -73,6 +74,21 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
     Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });
+
+    Route::prefix('mail')->controller(MailController::class)->group(function () {
+        Route::get('/gmail/{type}', 'gmailList')->name('gmail');
+        Route::get('/outlook/{type}', 'outlookList')->name('outlook');
+        Route::get('/webmail/{type}', 'webMailList')->name('webmail');
+        Route::get('/apple-mail/{type}', 'appleMailList')->name('apple-mail');
+    });
+
+    Route::prefix('setup')->controller(SetupController::class)->group(function () {
+        Route::get('/', 'employeeSetup')->name('setup.index');
+        Route::get('/authorized-gmail', 'authorizedGmail')->name('authorized.gmail');
+        Route::get('/authorized-outlook', 'authorizedOutlook')->name('authorized.outlook');
+    });
+
+
 });
 
 Route::middleware(['auth', 'verified', 'role:'.RoleEnum::USER->value])->prefix('user')->as('user.')->group(function () {

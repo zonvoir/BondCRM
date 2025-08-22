@@ -4,10 +4,13 @@ namespace App\Services\Settings;
 
 use App\Models\Settings\GeneralSettings;
 use App\Models\Settings\LiveChatSettings;
+use App\Models\Settings\Setting;
 use App\Models\Settings\SocialiteSetting;
 use App\Traits\FileUploadTrait;
 use EragLaravelPwa\Facades\PWA;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
 
 class SettingsService
 {
@@ -77,7 +80,7 @@ class SettingsService
             $data['favicon'] = $generalSettings?->favicon;
         }
 
-        $this->saveSettings(
+        $this->generalSettingsSave(
             [
                 'footer_text' => $data['footerText'],
                 'icon_logo_dark' => $data['iconLogoDark'],
@@ -108,7 +111,7 @@ class SettingsService
             $data['appLogo'] = $generalSettings?->app_logo;
         }
 
-        $this->saveSettings(
+        $this->generalSettingsSave(
             [
                 'app_name' => $data['appName'],
                 'app_description' => $data['description'],
@@ -137,11 +140,11 @@ class SettingsService
     public function saveSocialiteSettings(array $data)
     {
         $providers = [
-            'linkedin' => [
-                'client_id' => $data['linkedinClientId'] ?? '',
-                'client_secret' => $data['linkedinClientSecret'] ?? '',
-                'redirect_url' => $data['linkedinRedirect'] ?? '',
-                'status' => $data['statusLinkedin'] ?? '',
+            'microsoft' => [
+                'client_id' => $data['microsoftClientId'] ?? '',
+                'client_secret' => $data['microsoftClientSecret'] ?? '',
+                'redirect_url' => $data['microsoftRedirect'] ?? '',
+                'status' => $data['statusMicrosoft'] ?? '',
             ],
             'google' => [
                 'client_id' => $data['googleClientId'] ?? '',
@@ -159,7 +162,7 @@ class SettingsService
         }
     }
 
-    public function saveChatSettings(array $data)
+    public function saveChatSettings(array $data): Model|LiveChatSettings
     {
         $generalSettings = LiveChatSettings::query()->first();
 
@@ -171,7 +174,56 @@ class SettingsService
         );
     }
 
-    protected function saveSettings(array $data)
+    public function getValueSettings(string $group, string $key, $default = null)
+    {
+        $settings = Cache::remember("settings:{$group}", 60, function () use ($group) {
+            return Setting::query()->where('group', $group)->get()->keyBy('key');
+        });
+
+        if (! isset($settings[$key])) {
+            return $default;
+        }
+
+        $record = $settings[$key];
+        $value = $record->value;
+
+        return match ($record->type) {
+            'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+            'integer' => (int) $value,
+            'float' => (float) $value,
+            'json' => json_decode($value, true),
+            default => $value, // string
+        };
+    }
+
+    public function saveSettings(string $group, string $key, $value): Model|Setting
+    {
+        $type = match (true) {
+            is_bool($value) => 'boolean',
+            is_int($value) => 'integer',
+            is_float($value) => 'float',
+            is_array($value),
+            is_object($value) => 'json',
+            default => 'string',
+        };
+
+        $serialized = match ($type) {
+            'boolean' => $value ? '1' : '0',
+            'json' => json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            default => (string) $value,
+        };
+
+        $setting = Setting::query()->updateOrCreate(
+            ['group' => $group, 'key' => $key],
+            ['type' => $type, 'value' => $serialized]
+        );
+
+        Cache::forget("settings:{$group}");
+
+        return $setting;
+    }
+
+    protected function generalSettingsSave(array $data): Model|GeneralSettings
     {
         $generalSettings = GeneralSettings::query()->first();
 

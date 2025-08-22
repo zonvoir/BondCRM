@@ -13,12 +13,12 @@ const props = defineProps({
 });
 
 const form = useForm({
-    linkedinClientId: props?.socialiteSettings?.linkedin?.data?.client_id || '',
-    linkedinClientSecret:
-        props?.socialiteSettings?.linkedin?.data?.client_secret || '',
-    linkedinRedirect:
-        props?.socialiteSettings?.linkedin?.data?.redirect_url ||
-        route('auth.linkedin.callback'),
+    microsoftClientId: props?.socialiteSettings?.microsoft?.data?.client_id || '',
+    microsoftClientSecret:
+        props?.socialiteSettings?.microsoft?.data?.client_secret || '',
+    microsoftRedirect:
+        props?.socialiteSettings?.microsoft?.data?.redirect_url ||
+        route('auth.microsoft.callback'),
 
     googleClientId: props?.socialiteSettings?.google?.data?.client_id || '',
     googleClientSecret:
@@ -27,7 +27,7 @@ const form = useForm({
         props?.socialiteSettings?.google?.data?.redirect_url ||
         route('auth.google.callback'),
 
-    statusLinkedin: props?.socialiteSettings?.linkedin?.data?.status || null,
+    statusMicrosoft: props?.socialiteSettings?.microsoft?.data?.status || null,
     statusGoogle: props?.socialiteSettings?.google?.data?.status || null,
 });
 
@@ -49,30 +49,30 @@ const submit = () => {
             >
                 <div class="flex items-center">
                     <CommonIcon
-                        icon="logos:linkedin-icon"
+                        icon="logos:microsoft-icon"
                         class="mr-2 text-blue-600"
                     />
-                    <span class="text-black dark:text-white">LinkedIn</span>
+                    <span class="text-black dark:text-white">Microsoft Azure</span>
                 </div>
-                <CommonToggleSwitch v-model="form.statusLinkedin" />
+                <CommonToggleSwitch v-model="form.statusMicrosoft" />
             </div>
             <div class="grid grid-cols-1 gap-2 md:grid-cols-1">
                 <CommonInput
-                    label="LinkedIn Client ID"
-                    v-model="form.linkedinClientId"
-                    :error="form.errors.linkedinClientId"
+                    label="Microsoft Client ID"
+                    v-model="form.microsoftClientId"
+                    :error="form.errors.microsoftClientId"
                 />
                 <CommonInput
-                    label="LinkedIn Client Secret"
-                    v-model="form.linkedinClientSecret"
-                    :error="form.errors.linkedinClientSecret"
+                    label="Microsoft Client Secret"
+                    v-model="form.microsoftClientSecret"
+                    :error="form.errors.microsoftClientSecret"
                 />
                 <CommonInput
                     type="url"
                     readonly
-                    label="LinkedIn Redirect URL"
-                    v-model="form.linkedinRedirect"
-                    :error="form.errors.linkedinRedirect"
+                    label="Microsoft Redirect URL"
+                    v-model="form.microsoftRedirect"
+                    :error="form.errors.microsoftRedirect"
                 />
             </div>
         </CommonCard>

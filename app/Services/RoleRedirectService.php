@@ -9,7 +9,6 @@ class RoleRedirectService
 {
     public function redirectToDashboard(): RedirectResponse
     {
-
         if (hasRole(RoleEnum::EMPLOYEE->value)) {
             return redirect()->intended(route('employee.dashboard', absolute: false));
         }

@@ -23,10 +23,10 @@ class SettingsSocialiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'linkedinClientId' => ['required', 'string'],
-            'linkedinClientSecret' => ['required', 'string'],
-            'linkedinRedirect' => ['required', 'url'],
-            'statusLinkedin' => ['required'],
+            'microsoftClientId' => ['required', 'string'],
+            'microsoftClientSecret' => ['required', 'string'],
+            'microsoftRedirect' => ['required', 'url'],
+            'statusMicrosoft' => ['required'],
 
             'googleClientId' => ['required', 'string'],
             'googleClientSecret' => ['required', 'string'],

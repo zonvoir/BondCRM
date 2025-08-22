@@ -29,7 +29,7 @@ const props = defineProps({
         </div>
         <div>
             <CommonIcon
-                v-if="menu?.subMenu?.length > 0 && menu?.subMenu?.permission"
+                v-if="menu?.subMenu?.length > 0"
                 :icon="
                     'heroicons-solid:' +
                     (activeSubmenu === menu.name

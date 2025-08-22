@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
 import {
     Dialog,
     DialogPanel,
@@ -12,9 +13,13 @@ import {
 import Navigation from '@/Components/Sidebar/Navigation.vue';
 import CommonIcon from '@/Components/Common/CommonIcon.vue';
 import DropdownLink from '../DropdownLink.vue';
-import { isDark, switchTheme } from '@/Composables/theme';
 import CommonLink from '@/Components/Common/CommonLink.vue';
-import { usePage } from '@inertiajs/vue3';
+import { isDark, switchTheme } from '@/Composables/theme';
+import { useRoles } from '@/Composables/useRoles';
+import { RoleEnum } from '@/enums/RoleEnum.js';
+import CommonButton from '@/Components/Common/CommonButton.vue';
+
+const { hasRole } = useRoles();
 const { props } = usePage();
 const sidebarOpen = ref(false);
 
@@ -147,7 +152,7 @@ const shortName = (name, type = false) => {
         <div
             class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4 dark:border-gray-700 dark:bg-gray-900"
         >
-            <div class="flex h-16 shrink-0 items-center">
+            <div class="flex h-16 shrink-0 items-center justify-between">
                 <template v-if="isDark">
                     <img
                         class="h-8 w-auto cursor-pointer"
@@ -162,22 +167,51 @@ const shortName = (name, type = false) => {
                         alt="logo"
                     />
                 </template>
+
+                <template
+                    v-if="
+                        useRoles(RoleEnum.EMPLOYEE) &&
+                        route().current('employee.setup.*')
+                    "
+                >
+                    <Link :href="route('employee.dashboard')">
+                        <CommonIcon
+                            class="h-6 w-6 cursor-pointer"
+                            icon="mdi:close"
+                        />
+                    </Link>
+                </template>
             </div>
             <nav class="flex flex-1 flex-col">
                 <ul role="list" class="flex flex-1 flex-col gap-y-2">
                     <Navigation />
-
                     <li class="mt-auto">
-                        <CommonLink
-                            :href="route('settings')"
-                            :active="route().current('settings')"
-                        >
-                            <CommonIcon
-                                class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                icon="vscode-icons:file-type-config"
-                            />
-                            Settings
-                        </CommonLink>
+                        <template v-if="hasRole(RoleEnum.EMPLOYEE)">
+                            <CommonLink
+                                :href="route('employee.setup.index')"
+                                :active="
+                                    route().current('employee.setup.index')
+                                "
+                            >
+                                <CommonIcon
+                                    class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+                                    icon="vscode-icons:file-type-config"
+                                />
+                                Setup
+                            </CommonLink>
+                        </template>
+                        <template v-else>
+                            <CommonLink
+                                :href="route('settings')"
+                                :active="route().current('settings')"
+                            >
+                                <CommonIcon
+                                    class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+                                    icon="vscode-icons:file-type-config"
+                                />
+                                Setup
+                            </CommonLink>
+                        </template>
                     </li>
                 </ul>
             </nav>

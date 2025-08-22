@@ -30,7 +30,7 @@ class SettingsController extends Controller
             'emailSettings' => new EmailSettingsResource($this->SettingsRepository->getEmailSettings()),
             'liveChatSettings' => new LiveChatSettingsResource($this->SettingsRepository->getChatSettings()),
             'socialiteSettings' => [
-                'linkedin' => new SocialiteSettingsResource($this->SettingsRepository->getSocialiteSettings('linkedin')),
+                'microsoft' => new SocialiteSettingsResource($this->SettingsRepository->getSocialiteSettings('microsoft')),
                 'google' => new SocialiteSettingsResource($this->SettingsRepository->getSocialiteSettings('google')),
             ],
         ];
