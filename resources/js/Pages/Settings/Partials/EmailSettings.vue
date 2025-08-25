@@ -1,3 +1,4 @@
+x
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import CommonCard from '@/Components/Common/CommonCard.vue';

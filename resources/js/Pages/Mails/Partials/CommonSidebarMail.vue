@@ -29,7 +29,7 @@ defineProps({
                         class="group flex w-full items-center justify-between rounded-sm p-3 pr-3 pl-3 text-left transition"
                         :class="[
                             route().current(routeName, list.key)
-                                ? 'bg-gray-100/80'
+                                ? 'bg-gray-100/80 dark:bg-gray-600'
                                 : 'hover:bg-gray-100',
                         ]"
                         aria-current="page"

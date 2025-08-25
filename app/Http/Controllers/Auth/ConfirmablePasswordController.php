@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Settings\SettingsRepository;
 use App\Services\RoleRedirectService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

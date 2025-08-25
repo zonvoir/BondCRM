@@ -19,7 +19,7 @@ class SideNav
 
         if (hasRole(RoleEnum::EMPLOYEE->value)) {
 
-            if (request()->routeIs('employee.setup.*')) {
+            if (request()->routeIs('employee.setup.*') || request()->routeIs('employee.imap.settings')) {
                 return array_values(array_filter(self::employeeMenu(), function ($item) {
                     return $item['name'] === 'Setup';
                 }));
@@ -151,13 +151,13 @@ class SideNav
                 'name' => 'Setup',
                 'permission' => hasPermissions('dashboard-view-employee'),
                 'icon' => 'material-icon-theme:folder-config-open',
-                'active' => in_array($currentRouteName, ['employee.setup.index'], true),
+                'active' => in_array($currentRouteName, ['employee.setup.index', 'employee.imap.settings'], true),
                 'subMenu' => [
                     [
                         'name' => 'Mails configure',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.setup.index'),
-                        'active' => $currentRouteName === 'employee.setup.index',
+                        'active' => $currentRouteName === 'employee.setup.index' || $currentRouteName === 'employee.imap.settings',
                     ],
 
                 ],

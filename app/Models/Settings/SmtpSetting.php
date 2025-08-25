@@ -4,9 +4,9 @@ namespace App\Models\Settings;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EmailSetting extends Model
+class SmtpSetting extends Model
 {
-    protected $table = 'email_settings';
+    protected $table = 'smtp_settings';
 
     protected $primaryKey = 'id';
 

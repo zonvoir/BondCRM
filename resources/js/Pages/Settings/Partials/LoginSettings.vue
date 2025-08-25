@@ -13,7 +13,8 @@ const props = defineProps({
 });
 
 const form = useForm({
-    microsoftClientId: props?.socialiteSettings?.microsoft?.data?.client_id || '',
+    microsoftClientId:
+        props?.socialiteSettings?.microsoft?.data?.client_id || '',
     microsoftClientSecret:
         props?.socialiteSettings?.microsoft?.data?.client_secret || '',
     microsoftRedirect:
@@ -52,7 +53,9 @@ const submit = () => {
                         icon="logos:microsoft-icon"
                         class="mr-2 text-blue-600"
                     />
-                    <span class="text-black dark:text-white">Microsoft Azure</span>
+                    <span class="text-black dark:text-white"
+                        >Microsoft Azure</span
+                    >
                 </div>
                 <CommonToggleSwitch v-model="form.statusMicrosoft" />
             </div>

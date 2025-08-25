@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Settings\EmailSetting;
+use App\Models\Settings\SmtpSetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -20,7 +20,7 @@ class MailConfigProvider extends ServiceProvider
     public function boot(): void
     {
         if (Schema::hasTable('email_settings')) {
-            $emailSettings = EmailSetting::first();
+            $emailSettings = SmtpSetting::query()->first();
             if (! empty($emailSettings)) {
                 Config::set('mail.default', $emailSettings->mail_driver);
                 Config::set('mail.mailers.smtp.host', $emailSettings->mail_host);

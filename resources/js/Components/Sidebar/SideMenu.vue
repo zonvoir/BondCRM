@@ -167,11 +167,11 @@ const shortName = (name, type = false) => {
                         alt="logo"
                     />
                 </template>
-
                 <template
                     v-if="
-                        useRoles(RoleEnum.EMPLOYEE) &&
-                        route().current('employee.setup.*')
+                        (useRoles(RoleEnum.EMPLOYEE) &&
+                            route().current('employee.setup.*')) ||
+                        route().current('employee.imap.settings')
                     "
                 >
                     <Link :href="route('employee.dashboard')">

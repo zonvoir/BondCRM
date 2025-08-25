@@ -2,8 +2,8 @@
 
 namespace App\Services\Settings;
 
-use App\Models\Settings\EmailSetting;
 use App\Models\Settings\GeneralSettings;
+use App\Models\Settings\SmtpSetting;
 use App\Notifications\TestEmailConfiguration;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -14,9 +14,9 @@ class EmailSettingsService
     public function createEmailSetting(array $data)
     {
 
-        $emailSetting = EmailSetting::query()->first();
+        $emailSetting = SmtpSetting::query()->first();
 
-        return EmailSetting::query()->updateOrCreate(
+        return SmtpSetting::query()->updateOrCreate(
             ['id' => $emailSetting->id ?? null],
             [
                 'mail_driver' => $data['mailDriver'],

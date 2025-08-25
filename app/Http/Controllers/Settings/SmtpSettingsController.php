@@ -7,7 +7,7 @@ use App\Http\Requests\Email\TestEmailSettingRequest;
 use App\Http\Requests\Settings\EmailSettingsRequest;
 use App\Services\Settings\EmailSettingsService;
 
-class EmailSettingsController extends Controller
+class SmtpSettingsController extends Controller
 {
     public function __construct(protected EmailSettingsService $emailSettingsService) {}
 

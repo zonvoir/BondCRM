@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Settings\GeneralSettings;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
@@ -59,5 +60,20 @@ if (! function_exists('getFirstAndLastWord')) {
                 mb_substr($words[0], 0, 1).mb_substr($words[array_key_last($words)], 0, 1)
             ),
         };
+    }
+}
+
+if (! function_exists('humanTime')) {
+    function humanTime(?string $timestamp): string
+    {
+        if (empty($timestamp)) {
+            return '';
+        }
+
+        $dt = Carbon::parse($timestamp)->setTimezone(config('app.timezone'));
+
+        return $dt->greaterThanOrEqualTo(now()->subHours(12))
+            ? $dt->format('h:i A')    // e.g., 03:45 PM
+            : $dt->diffForHumans();   // e.g., 2 days ago
     }
 }

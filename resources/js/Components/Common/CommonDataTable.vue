@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card w-full">
         <DataTable
             :value="data?.data"
             :sortField="sortField"
@@ -35,7 +35,7 @@
                             link?.active,
                         'border-indigo-500 text-indigo-500': link?.active,
                     }"
-                    :href="link?.url"
+                    :href="link?.url + otherArgument"
                     v-html="link?.label"
                 />
             </template>
@@ -72,7 +72,12 @@ const props = defineProps({
         type: String,
         default: 'S.N',
     },
+    otherArgument: {
+        type: String,
+        default: '',
+        required: false,
+    },
 });
 
-const links = ref(props?.data?.meta?.links);
+const links = ref(props?.data?.meta?.links ?? props?.data?.links);
 </script>

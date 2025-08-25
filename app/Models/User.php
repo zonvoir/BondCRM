@@ -6,6 +6,7 @@ use Database\Factories\UserFactory;
 use EragPermission\Traits\HasPermissionsTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -36,6 +37,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
+
+    public function socialCredentials(): BelongsTo
+    {
+        return $this->belongsTo(SocialCredential::class);
+    }
 
     /**
      * Get the attributes that should be cast.

@@ -7,8 +7,8 @@ use App\Http\Controllers\Email\BlackListEmailController;
 use App\Http\Controllers\Email\BulkImportController;
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Settings\EmailSettingsController;
 use App\Http\Controllers\Settings\SettingsController;
+use App\Http\Controllers\Settings\SmtpSettingsController;
 use App\Http\Controllers\Setup\SetupController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +40,7 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(f
     });
 
     // For Email Settings
-    Route::prefix('settings')->controller(EmailSettingsController::class)->group(function () {
+    Route::prefix('settings')->controller(SmtpSettingsController::class)->group(function () {
         Route::post('email-settings-save', 'saveEmailSetting')->name('settings.email.save');
         Route::post('email-settings-test', 'testEmailSetting')->name('settings.email.test');
     });
@@ -86,8 +86,9 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
         Route::get('/', 'employeeSetup')->name('setup.index');
         Route::get('/authorized-gmail', 'authorizedGmail')->name('authorized.gmail');
         Route::get('/authorized-outlook', 'authorizedOutlook')->name('authorized.outlook');
+        Route::get('imap/{type}', 'imapSettings')->where('type', 'webmail|applemail')->name('imap.settings');
+        Route::post('imap/save', 'saveImapSettings')->name('imap.settings.save');
     });
-
 
 });
 

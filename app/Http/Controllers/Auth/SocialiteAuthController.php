@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\SocialCredential;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteAuthController extends Controller
@@ -38,14 +40,56 @@ class SocialiteAuthController extends Controller
         return back();
     }
 
-    public function handleGoogleCallback(Request $request): RedirectResponse
+    public function handleGoogleCallback(Request $request)
     {
-        dd($request->all());
 
+        $googleUser = Socialite::driver('google')->user();
+        $user = Auth::user();
+
+        SocialCredential::query()->updateOrCreate(
+            [
+                'provider' => 'gmail',
+                'user_id' => $user->id,
+            ],
+            [
+                'provider_user_id' => $googleUser->getId(),
+                'credentials' => json_encode([
+                    'email' => $googleUser->getEmail(),
+                    'name' => $googleUser->getName(),
+                ]),
+                'user_id' => $user->id,
+                'access_token' => $googleUser->token,
+                'refresh_token' => $googleUser->refreshToken,
+                'token_expires_at' => now()->addSeconds($googleUser->expiresIn),
+            ]
+        );
+
+        return redirect()->route('employee.setup.index');
     }
 
     public function handleMicrosoftCallback(Request $request)
     {
-        dd($request->all());
+        $outlookUser = Socialite::driver('microsoft')->user();
+        $user = Auth::user();
+
+        SocialCredential::query()->updateOrCreate(
+            [
+                'provider' => 'outlook',
+                'user_id' => $user->id,
+            ],
+            [
+                'provider_user_id' => $outlookUser->getId(),
+                'credentials' => json_encode([
+                    'email' => $outlookUser->getEmail(),
+                    'name' => $outlookUser->getName(),
+                ]),
+                'user_id' => $user->id,
+                'access_token' => $outlookUser->token,
+                'refresh_token' => $outlookUser->refreshToken,
+                'token_expires_at' => now()->addSeconds($outlookUser->expiresIn ?? 0),
+            ]
+        );
+
+        return redirect()->route('employee.setup.index');
     }
 }

@@ -20,7 +20,10 @@
         "laravel/socialite": "^5.20",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
-        "tightenco/ziggy": "^2.0"
+        "socialiteproviders/microsoft": "*",
+        "tightenco/ziggy": "^2.0",
+        "webklex/laravel-imap": "*",
+        "webklex/php-imap": "^4.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
