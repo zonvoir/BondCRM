@@ -4,6 +4,7 @@ namespace App\Menu;
 
 use App\Enums\RoleEnum;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class SideNav
 {
@@ -19,7 +20,7 @@ class SideNav
 
         if (hasRole(RoleEnum::EMPLOYEE->value)) {
 
-            if (request()->routeIs('employee.setup.*') || request()->routeIs('employee.imap.settings')) {
+            if (request()->routeIs('employee.setup.*') || Str::contains(url()->current(), 'setup')) {
                 return array_values(array_filter(self::employeeMenu(), function ($item) {
                     return $item['name'] === 'Setup';
                 }));

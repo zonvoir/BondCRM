@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Menu\SideNav;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 
@@ -39,6 +40,7 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'menu' => SideNav::menu(),
+            'setup' => Str::contains(url()->current(), 'setup'),
             'auth' => function () use ($request) {
                 return [
                     'user' => $request->user() ? $request->user() : null,

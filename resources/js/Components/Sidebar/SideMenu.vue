@@ -15,9 +15,8 @@ import CommonIcon from '@/Components/Common/CommonIcon.vue';
 import DropdownLink from '../DropdownLink.vue';
 import CommonLink from '@/Components/Common/CommonLink.vue';
 import { isDark, switchTheme } from '@/Composables/theme';
-import { useRoles } from '@/Composables/useRoles';
-import { RoleEnum } from '@/enums/RoleEnum.js';
-import CommonButton from '@/Components/Common/CommonButton.vue';
+import { RoleEnum } from '@/enums/RoleEnum';
+import { useRoles } from '@/composables/useRoles';
 
 const { hasRole } = useRoles();
 const { props } = usePage();
@@ -168,11 +167,7 @@ const shortName = (name, type = false) => {
                     />
                 </template>
                 <template
-                    v-if="
-                        (useRoles(RoleEnum.EMPLOYEE) &&
-                            route().current('employee.setup.*')) ||
-                        route().current('employee.imap.settings')
-                    "
+                    v-if="useRoles(RoleEnum.EMPLOYEE) && usePage().props.setup"
                 >
                     <Link :href="route('employee.dashboard')">
                         <CommonIcon
@@ -189,9 +184,7 @@ const shortName = (name, type = false) => {
                         <template v-if="hasRole(RoleEnum.EMPLOYEE)">
                             <CommonLink
                                 :href="route('employee.setup.index')"
-                                :active="
-                                    route().current('employee.setup.index')
-                                "
+                                :active="usePage().props.setup"
                             >
                                 <CommonIcon
                                     class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
