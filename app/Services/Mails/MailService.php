@@ -46,7 +46,7 @@ class MailService
         $page = request('page', 1);
         $perPage = 10;
 
-        $messages = collect($response['value']);
+        $messages = collect($response['value'] ?? []);
 
         return new LengthAwarePaginator(
             $messages,

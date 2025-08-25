@@ -158,7 +158,19 @@ class SideNav
                         'name' => 'Mails configure',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.setup.index'),
-                        'active' => $currentRouteName === 'employee.setup.index' || $currentRouteName === 'employee.imap.settings',
+                        'active' => $currentRouteName === 'employee.setup.index',
+                    ],
+                    [
+                        'name' => 'IMAP Web Mail',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.imap.settings', 'webmail'),
+                        'active' => request()->is('employee/setup/imap/webmail'),
+                    ],
+                    [
+                        'name' => 'IMAP Apple Mail',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.imap.settings', 'applemail'),
+                        'active' => request()->is('employee/setup/imap/applemail'),
                     ],
 
                 ],
