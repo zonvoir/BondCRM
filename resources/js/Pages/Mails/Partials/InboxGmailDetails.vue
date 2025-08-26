@@ -18,18 +18,20 @@ defineProps({
             <h1 class="text-lg font-medium">{{ message?.subject }}</h1>
             <span
                 class="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs font-medium"
-            >{{ route().params.type }}</span
+                >{{ route().params.type }}</span
             >
         </div>
 
         <div class="px-8 py-6">
             <div class="flex items-center gap-3">
-                <div class="flex items-center justify-center  size-8 rounded bg-slate-200 font-bold">
+                <div
+                    class="flex size-8 items-center justify-center rounded bg-slate-200 font-bold"
+                >
                     {{ message?.email?.sender_name[0] }}
                 </div>
                 <div class="flex items-center gap-2 text-sm text-slate-500">
                     <span class="inline-flex items-center gap-1">
-                        {{message?.email.sender_name}}
+                        {{ message?.email.sender_name }}
                         <span class="size-2 rounded-full bg-emerald-500"></span>
                         {{ message?.email?.created_at }}
                     </span>
@@ -51,8 +53,8 @@ defineProps({
                             class="inline-flex items-center gap-2 rounded bg-slate-100 px-2 py-0.5"
                         >
                             <span class="text-slate-700">{{
-                                    message?.email?.sender_email
-                                }}</span>
+                                message?.email?.sender_email
+                            }}</span>
                             <button class="text-slate-500 hover:text-slate-700">
                                 ×
                             </button>

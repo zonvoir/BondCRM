@@ -18,7 +18,4 @@ class SmtpUser extends Model
         'id',
         'user_id',
     ];
-
-
-
 }

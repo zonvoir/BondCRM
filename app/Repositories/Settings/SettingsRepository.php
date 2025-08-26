@@ -30,7 +30,6 @@ class SettingsRepository
         return Imap::query()->where(['user_id' => auth()->id(), 'type' => $type])->first() ?? new Imap();
     }
 
-
     public function getSmtpUserSettings(): ?SmtpUser
     {
         return SmtpUser::query()->where('user_id', auth()->id())->first() ?? new SmtpUser();

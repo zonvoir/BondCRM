@@ -24,12 +24,14 @@ defineProps({
 
         <div class="px-8 py-6">
             <div class="flex items-center gap-3">
-                <div class="flex items-center justify-center  size-8 rounded bg-slate-200 font-bold">
+                <div
+                    class="flex size-8 items-center justify-center rounded bg-slate-200 font-bold"
+                >
                     {{ message?.email?.sender_name[0] }}
                 </div>
                 <div class="flex items-center gap-2 text-sm text-slate-500">
                     <span class="inline-flex items-center gap-1">
-                         {{message?.email.sender_name}}
+                        {{ message?.email.sender_name }}
                         <span class="size-2 rounded-full bg-emerald-500"></span>
                         {{ message?.created_at }}
                     </span>

@@ -171,8 +171,6 @@ class GraphMicrosoftService
         $senderEmail = $from['address'] ?? 'Unknown';
         $senderName = $from['name'] ?? $senderEmail;
 
-
-
         return [
             'id' => $email['id'] ?? null,
             'subject' => $email['subject'] ?? '',

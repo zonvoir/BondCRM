@@ -265,6 +265,64 @@ class GmailService
         ];
     }
 
+    public function gmailReply(string $messageId): array
+    {
+        $credential = $this->getCredential();
+        if (! $credential) {
+            return ['error' => 'Please connect your Gmail account first.'];
+        }
+
+        $token = $this->ensureValidToken($credential);
+        if (! $token) {
+            return ['error' => 'Failed to refresh token.'];
+        }
+
+        $emailData = $this->fetchMessageDetail($token, $messageId);
+
+        if (empty($emailData)) {
+            return ['error' => 'Failed to retrieve email.'];
+        }
+
+        $headers = collect($emailData['payload']['headers']);
+
+        $subjectHeader = $headers->firstWhere('name', 'Subject')['value'] ?? 'No Subject';
+        $fromHeader = $headers->firstWhere('name', 'From')['value'] ?? 'Unknown';
+
+        preg_match('/^(.*?)(?:\s*<(.+?)>)?$/', $fromHeader, $m);
+        $senderName = trim($m[1] ?? '') ?: trim($m[2] ?? 'Unknown');
+        $senderEmail = trim($m[2] ?? 'Unknown');
+
+        $dateHeader = $headers->firstWhere('name', 'Date')['value'] ?? now()->toDateTimeString();
+        $bodyText = $this->decodeMessageBody($emailData);
+
+        // Extract attachments
+        $attachments = $this->extractEmailAttachments($emailData, $token, $messageId);
+
+        $to = $senderEmail;
+        $cc = $headers->firstWhere('name', 'Cc')['value'] ?? '';
+        $bcc = $headers->firstWhere('name', 'Bcc')['value'] ?? '';
+        $subject = 'Re: '.$subjectHeader;
+
+        return [
+            'success' => true,
+            'email' => [
+                'id' => $messageId,
+                'subject' => $subjectHeader,
+                'sender_name' => $senderName,
+                'sender_email' => $senderEmail,
+                'created_at' => humanTime($dateHeader),
+                'body' => $bodyText,
+                'avatar' => $senderEmail,
+                'threadId' => $emailData['threadId'] ?? null,
+            ],
+            'to' => $to,
+            'cc' => $cc,
+            'bcc' => $bcc,
+            'subject' => $subject,
+            'attachments' => $attachments,
+        ];
+    }
+
     private function processMessages(string $token, array $messages, string $folder = 'inbox'): array
     {
         $data = [];
@@ -398,64 +456,6 @@ class GmailService
         return $query;
     }
 
-    public function gmailReply(string $messageId): array
-    {
-        $credential = $this->getCredential();
-        if (! $credential) {
-            return ['error' => 'Please connect your Gmail account first.'];
-        }
-
-        $token = $this->ensureValidToken($credential);
-        if (! $token) {
-            return ['error' => 'Failed to refresh token.'];
-        }
-
-        $emailData = $this->fetchMessageDetail($token, $messageId);
-
-        if (empty($emailData)) {
-            return ['error' => 'Failed to retrieve email.'];
-        }
-
-        $headers = collect($emailData['payload']['headers']);
-
-        $subjectHeader = $headers->firstWhere('name', 'Subject')['value'] ?? 'No Subject';
-        $fromHeader = $headers->firstWhere('name', 'From')['value'] ?? 'Unknown';
-
-        preg_match('/^(.*?)(?:\s*<(.+?)>)?$/', $fromHeader, $m);
-        $senderName = trim($m[1] ?? '') ?: trim($m[2] ?? 'Unknown');
-        $senderEmail = trim($m[2] ?? 'Unknown');
-
-        $dateHeader = $headers->firstWhere('name', 'Date')['value'] ?? now()->toDateTimeString();
-        $bodyText = $this->decodeMessageBody($emailData);
-
-        // Extract attachments
-        $attachments = $this->extractEmailAttachments($emailData, $token, $messageId);
-
-        $to = $senderEmail;
-        $cc = $headers->firstWhere('name', 'Cc')['value'] ?? '';
-        $bcc = $headers->firstWhere('name', 'Bcc')['value'] ?? '';
-        $subject = 'Re: '.$subjectHeader;
-
-        return [
-            'success' => true,
-            'email' => [
-                'id' => $messageId,
-                'subject' => $subjectHeader,
-                'sender_name' => $senderName,
-                'sender_email' => $senderEmail,
-                'created_at' => humanTime($dateHeader),
-                'body' => $bodyText,
-                'avatar' => $senderEmail,
-                'threadId' => $emailData['threadId'] ?? null,
-            ],
-            'to' => $to,
-            'cc' => $cc,
-            'bcc' => $bcc,
-            'subject' => $subject,
-            'attachments' => $attachments,
-        ];
-    }
-
     private function extractEmailAttachments(array $emailData, string $token, string $messageId): array
     {
         $attachments = [];
@@ -493,8 +493,4 @@ class GmailService
 
         return $attachments;
     }
-
-
-
-
 }
