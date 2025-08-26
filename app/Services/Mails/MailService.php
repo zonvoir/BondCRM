@@ -46,7 +46,13 @@ class MailService
         $page = request('page', 1);
         $perPage = 10;
 
-        $messages = collect($response['value'] ?? []);
+        $messages = collect($response['value'] ?? [])->map(function ($message) {
+            if (isset($message['receivedDateTime'])) {
+                $message['receivedDateTime'] = humanTime($message['receivedDateTime']);
+            }
+
+            return $message;
+        });
 
         return new LengthAwarePaginator(
             $messages,

@@ -43,6 +43,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(SocialCredential::class);
     }
 
+    public function smtpUser(): BelongsTo
+    {
+        return $this->belongsTo(SmtpUser::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

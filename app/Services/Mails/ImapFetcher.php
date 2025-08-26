@@ -152,8 +152,10 @@ class ImapFetcher
      * @throws MessageHeaderFetchingException
      * @throws MessageNotFoundException
      */
-    public function getReplyData(object $settings, string $folderName, int $emailUid): array
+    public function getReplyData($provider, string $folderName, int $emailUid): array
     {
+        $settings = $this->getSettings($provider);
+
         $client = $this->makeConnectedClient($settings);
         $mailbox = $this->resolveMailbox($client, $folderName);
 
@@ -171,7 +173,7 @@ class ImapFetcher
             'body' => $message->getHtmlBody() ?? $message->getTextBody(),
             'cc' => $this->extractEmailAddresses($ccList),
             'bcc' => $this->extractEmailAddresses($bccList),
-            'created_at' => (string) $message->getDate(),
+            'created_at' => humanTime($message->getDate()),
             'avatar' => $from->mail ?? '',
         ];
 
@@ -187,7 +189,9 @@ class ImapFetcher
             'ccTags' => $makeTags($email['cc']),
             'bccTags' => $makeTags($email['bcc']),
             'subject' => 'Re: '.$email['subject'],
+            'subject_title' => ''.$email['subject'],
             'emailUid' => $email['id'],
+            'created_at' => humanTime($message->getDate()),
             'attachments' => [],
         ];
     }
@@ -214,7 +218,7 @@ class ImapFetcher
     /**
      * @throws Exception
      */
-    public function sendReplyEmail($originalEmail, array $replyData, array $attachments, $imapSettings, SmtpSetting $smtpSettings)
+    public function sendReplyEmail($originalEmail, array $replyData, array $attachments, SmtpSetting $smtpSettings)
     {
         try {
             $this->configureSmtp($smtpSettings);

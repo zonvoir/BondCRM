@@ -4,11 +4,12 @@ import PanelLayout from '@/Layouts/PanelLayout.vue';
 import CommonCard from '@/Components/Common/CommonCard.vue';
 import CommonIcon from '@/Components/Common/CommonIcon.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
-import CommonCheckbox from '@/Components/Common/CommonCheckbox.vue';
 import CommonSidebarMail from '@/Pages/Mails/Partials/CommonSidebarMail.vue';
 import { ref } from 'vue';
 import Column from 'primevue/column';
 import CommonDataTable from '@/Components/Common/CommonDataTable.vue';
+import { Link } from '@inertiajs/vue3';
+import InboxAppleMailDetails from '@/Pages/Mails/Partials/InboxAppleMailDetails.vue';
 
 defineProps({
     mails: {
@@ -16,6 +17,8 @@ defineProps({
         required: true,
     },
 });
+
+const message = ref(null);
 
 const sideList = ref([
     { key: 'inbox', label: 'Inbox', icon: 'material-symbols:mail', count: 201 },
@@ -27,6 +30,24 @@ const sideList = ref([
     },
     { key: 'sent', label: 'Sent', icon: 'ic:sharp-send', count: 50 },
 ]);
+
+const viewInbox = message_id => {
+    axios
+        .post(route('employee.apple-mail.view'), {
+            id: message_id,
+            folder: route().params.type,
+        })
+        .then(response => {
+            if (response) {
+                message.value = response?.data;
+            }
+        })
+        .catch(error => {});
+};
+
+const clearMessage = () => {
+    message.value = null;
+};
 </script>
 
 <template>
@@ -39,32 +60,30 @@ const sideList = ref([
                 />
 
                 <CommonCard class="col-span-1 md:col-span-9">
-                    <div class="flex flex-col items-center gap-3 py-1 sm:px-5">
+                    <div v-if="message">
+                        <div class="flex flex-col items-end">
+                            <CommonIcon
+                                @click="clearMessage"
+                                class="h-8 w-8 cursor-pointer"
+                                icon="material-symbols:close"
+                            />
+                        </div>
+                        <InboxAppleMailDetails :message="message" />
+                    </div>
+                    <div
+                        v-else
+                        class="flex flex-col items-center gap-3 py-1 sm:px-5"
+                    >
                         <div class="flex w-full justify-between">
                             <div class="flex items-center gap-2">
-                                <label
-                                    class="inline-flex items-center justify-center"
-                                >
-                                    <CommonCheckbox />
-                                </label>
-
-                                <div
+                                <Link
                                     class="cursor-pointer rounded-lg bg-gray-50 p-2"
                                 >
                                     <CommonIcon
                                         class="h-7 w-7 text-gray-500"
                                         icon="mdi:sync-circle"
                                     />
-                                </div>
-
-                                <div
-                                    class="cursor-pointer rounded-lg bg-gray-50 p-2"
-                                >
-                                    <CommonIcon
-                                        class="h-7 w-7 text-gray-500"
-                                        icon="mdi:delete"
-                                    />
-                                </div>
+                                </Link>
 
                                 <CommonButton size="xs">
                                     Goto Leads
@@ -83,19 +102,9 @@ const sideList = ref([
                                 <span
                                     class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-neutral-400"
                                 >
-                                    <svg
-                                        class="size-5"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="1.8"
-                                    >
-                                        <circle cx="11" cy="11" r="7"></circle>
-                                        <path
-                                            stroke-linecap="round"
-                                            d="M20 20l-3.5-3.5"
-                                        ></path>
-                                    </svg>
+                                    <CommonIcon
+                                        icon="material-symbols:search-rounded"
+                                    />
                                 </span>
 
                                 <input
@@ -117,25 +126,6 @@ const sideList = ref([
                                 >
                                     <template #body="slotProps">
                                         <div class="flex gap-2">
-                                            <CommonButton
-                                                size="xs"
-                                                variant="secondary"
-                                            >
-                                                <CommonIcon
-                                                    class="h-7 w-7"
-                                                    icon="material-symbols-light:preview"
-                                                />
-                                            </CommonButton>
-                                        </div>
-                                    </template>
-                                </Column>
-                                <Column
-                                    field="name"
-                                    header=""
-                                    :sortable="false"
-                                >
-                                    <template #body="slotProps">
-                                        <div class="flex gap-2">
                                             <CommonIcon
                                                 class="h-7 w-7"
                                                 icon="material-symbols-light:star-outline-rounded"
@@ -143,13 +133,25 @@ const sideList = ref([
                                         </div>
                                     </template>
                                 </Column>
-                                <Column
-                                    field="subject"
-                                    header=""
-                                    :sortable="false"
-                                />
+
                                 <Column
                                     field="sender_name"
+                                    header=""
+                                    :sortable="false"
+                                >
+                                    <template #body="slotProps">
+                                        <div
+                                            @click="
+                                                viewInbox(slotProps?.data?.id)
+                                            "
+                                            class="cursor-pointer"
+                                        >
+                                            {{ slotProps?.data?.sender_name }}
+                                        </div>
+                                    </template>
+                                </Column>
+                                <Column
+                                    field="subject"
                                     header=""
                                     :sortable="false"
                                 />

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Setup;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ImapRequest;
+use App\Http\Requests\Settings\SmtpUserRequest;
 use App\Repositories\Settings\SettingsRepository;
 use App\Services\Setup\SetupService;
 use Inertia\Inertia;
@@ -49,6 +50,25 @@ class SetupController extends Controller
     public function saveImapSettings(ImapRequest $request)
     {
         $this->setupService->saveImap($request->validated());
+
+        return back()->with([
+            'message' => 'Save successfully',
+            'type' => 'success',
+        ]);
+    }
+
+    public function smtp()
+    {
+        $props = [
+            'smtpSettings' => $this->settings->getSmtpUserSettings(),
+        ];
+
+        return Inertia::render('SettingsEmployee/Smtp', $props);
+    }
+
+    public function smtpSave(SmtpUserRequest $request)
+    {
+        $this->setupService->saveSmtpUser($request->validated());
 
         return back()->with([
             'message' => 'Save successfully',

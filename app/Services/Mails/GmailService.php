@@ -170,7 +170,7 @@ class GmailService
         ];
     }
 
-    public function decodeMessageBody(array $msgData): string
+    public function decodeMessageBody(array $msgData): ?string
     {
         if (! isset($msgData['payload'])) {
             return '';
@@ -183,6 +183,10 @@ class GmailService
             $bodyText = $this->extractBodyFromParts($payload['parts']);
         } elseif (isset($payload['body']['data'])) {
             $bodyText = $this->decodeBase64UrlSafe($payload['body']['data']);
+        }
+
+        if (empty($bodyText)) {
+            return $msgData['snippet'] ?? null;
         }
 
         return $bodyText;
@@ -283,7 +287,6 @@ class GmailService
 
             $actions = [];
 
-            // Special handling for sent messages
             if ($folder === 'sent') {
                 $from = $this->processSentMessageRecipient($headers);
             }
@@ -303,7 +306,7 @@ class GmailService
 
         return [
             'email' => $recipientEmail,
-            'name' => 'To'.strip_tags(e($recipientEmail)),
+            'name' => 'To: '.strip_tags(e($recipientEmail)),
         ];
     }
 
@@ -394,4 +397,104 @@ class GmailService
 
         return $query;
     }
+
+    public function gmailReply(string $messageId): array
+    {
+        $credential = $this->getCredential();
+        if (! $credential) {
+            return ['error' => 'Please connect your Gmail account first.'];
+        }
+
+        $token = $this->ensureValidToken($credential);
+        if (! $token) {
+            return ['error' => 'Failed to refresh token.'];
+        }
+
+        $emailData = $this->fetchMessageDetail($token, $messageId);
+
+        if (empty($emailData)) {
+            return ['error' => 'Failed to retrieve email.'];
+        }
+
+        $headers = collect($emailData['payload']['headers']);
+
+        $subjectHeader = $headers->firstWhere('name', 'Subject')['value'] ?? 'No Subject';
+        $fromHeader = $headers->firstWhere('name', 'From')['value'] ?? 'Unknown';
+
+        preg_match('/^(.*?)(?:\s*<(.+?)>)?$/', $fromHeader, $m);
+        $senderName = trim($m[1] ?? '') ?: trim($m[2] ?? 'Unknown');
+        $senderEmail = trim($m[2] ?? 'Unknown');
+
+        $dateHeader = $headers->firstWhere('name', 'Date')['value'] ?? now()->toDateTimeString();
+        $bodyText = $this->decodeMessageBody($emailData);
+
+        // Extract attachments
+        $attachments = $this->extractEmailAttachments($emailData, $token, $messageId);
+
+        $to = $senderEmail;
+        $cc = $headers->firstWhere('name', 'Cc')['value'] ?? '';
+        $bcc = $headers->firstWhere('name', 'Bcc')['value'] ?? '';
+        $subject = 'Re: '.$subjectHeader;
+
+        return [
+            'success' => true,
+            'email' => [
+                'id' => $messageId,
+                'subject' => $subjectHeader,
+                'sender_name' => $senderName,
+                'sender_email' => $senderEmail,
+                'created_at' => humanTime($dateHeader),
+                'body' => $bodyText,
+                'avatar' => $senderEmail,
+                'threadId' => $emailData['threadId'] ?? null,
+            ],
+            'to' => $to,
+            'cc' => $cc,
+            'bcc' => $bcc,
+            'subject' => $subject,
+            'attachments' => $attachments,
+        ];
+    }
+
+    private function extractEmailAttachments(array $emailData, string $token, string $messageId): array
+    {
+        $attachments = [];
+
+        $extractAttachments = function ($parts) use (&$extractAttachments, &$attachments) {
+            foreach ($parts as $p) {
+                if (! empty($p['parts'])) {
+                    $extractAttachments($p['parts']);
+                }
+                if (! empty($p['body']['attachmentId'])) {
+                    $attachments[] = [
+                        'name' => $p['filename'],
+                        'contentType' => $p['mimeType'],
+                        'attachmentId' => $p['body']['attachmentId'],
+                        'size' => $p['body']['size'] ?? null,
+                        'contentBytes' => null,
+                    ];
+                }
+            }
+        };
+
+        if (! empty($emailData['payload']['parts'])) {
+            $extractAttachments($emailData['payload']['parts']);
+        }
+
+        foreach ($attachments as &$att) {
+            $attResp = Http::withHeaders(['Authorization' => "Bearer {$token}"])
+                ->get(self::GMAIL_API_BASE."/messages/{$messageId}/attachments/{$att['attachmentId']}");
+            if ($attResp->successful()) {
+                $data = $attResp->json();
+                $att['contentBytes'] = $this->decodeBase64UrlSafe($data['data']);
+            }
+        }
+        unset($att);
+
+        return $attachments;
+    }
+
+
+
+
 }

@@ -152,7 +152,7 @@ class SideNav
                 'name' => 'Setup',
                 'permission' => hasPermissions('dashboard-view-employee'),
                 'icon' => 'material-icon-theme:folder-config-open',
-                'active' => in_array($currentRouteName, ['employee.setup.index', 'employee.imap.settings'], true),
+                'active' => in_array($currentRouteName, ['employee.setup.index', 'employee.imap.settings', 'employee.smtp'], true),
                 'subMenu' => [
                     [
                         'name' => 'Mails configure',
@@ -171,6 +171,12 @@ class SideNav
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.imap.settings', 'applemail'),
                         'active' => request()->is('employee/setup/imap/applemail'),
+                    ],
+                    [
+                        'name' => 'SMTP configure',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.smtp'),
+                        'active' => $currentRouteName === 'employee.smtp',
                     ],
 
                 ],

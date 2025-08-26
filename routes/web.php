@@ -77,9 +77,14 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
 
     Route::prefix('mail')->controller(MailController::class)->group(function () {
         Route::get('/gmail/{type}', 'gmailList')->name('gmail');
+        Route::post('/gmail-view-inbox', 'gmailInboxView')->name('gmail.view');
         Route::get('/outlook/{type}', 'outlookList')->name('outlook');
+        Route::post('/outlook-view-inbox', 'outlookInboxView')->name('outlook.view');
         Route::get('/webmail/{type}', 'webMailList')->name('webmail');
+        Route::post('/webmail-view-inbox', 'webmailInboxView')->name('webmail.view');
         Route::get('/apple-mail/{type}', 'appleMailList')->name('apple-mail');
+        Route::post('/apple-mail-view-inbox', 'appleMailInboxView')->name('apple-mail.view');
+
     });
 
     Route::prefix('setup')->controller(SetupController::class)->group(function () {
@@ -88,6 +93,8 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
         Route::get('/authorized-outlook', 'authorizedOutlook')->name('authorized.outlook');
         Route::get('imap/{type}', 'imapSettings')->where('type', 'webmail|applemail')->name('imap.settings');
         Route::post('imap/save', 'saveImapSettings')->name('imap.settings.save');
+        Route::get('smtp', 'smtp')->name('smtp');
+        Route::post('smtp-save', 'smtpSave')->name('smtp.save');
     });
 
 });

@@ -171,20 +171,14 @@ class GraphMicrosoftService
         $senderEmail = $from['address'] ?? 'Unknown';
         $senderName = $from['name'] ?? $senderEmail;
 
-        $formattedDate = '';
-        if (! empty($email['receivedDateTime'])) {
-            $dt = Carbon::parse($email['receivedDateTime'])->setTimezone(config('app.timezone'));
-            $formattedDate = $dt->isToday()
-                ? $dt->format('H:i A')
-                : $dt->format('M d');
-        }
+
 
         return [
             'id' => $email['id'] ?? null,
             'subject' => $email['subject'] ?? '',
             'sender_email' => $senderEmail,
             'sender_name' => $senderName,
-            'created_at' => $formattedDate,
+            'created_at' => humanTime($email['receivedDateTime']),
             'body' => $email['body']['content'] ?? '',
             'avatar' => 'https://www.gravatar.com/avatar/'.md5(mb_strtolower(trim($senderEmail))).'?s=100&d=404',
             'attachments' => $email['attachments'] ?? [],

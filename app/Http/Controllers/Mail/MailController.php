@@ -34,6 +34,18 @@ class MailController extends Controller
         return Inertia::render('Mails/Gmail', $props);
     }
 
+    public function gmailInboxView(Request $request)
+    {
+        $gmail = new GmailService(auth()->user());
+        $data = $gmail->gmailReply($request->id);
+
+        if (! $data['success']) {
+            return false;
+        }
+
+        return $data;
+    }
+
     public function outlookList(Request $request, $folder)
     {
         $user = Auth::user();
@@ -66,6 +78,17 @@ class MailController extends Controller
         return Inertia::render('Mails/Outlook', $props);
     }
 
+    public function outlookInboxView(Request $request)
+    {
+        if (empty($request->id)) {
+            return false;
+        }
+
+        $graph = app(GraphMicrosoftService::class, ['user' => auth()->user()]);
+
+        return $graph->getOutlookEmailById($request->id);
+    }
+
     public function webMailList(Request $request, $type)
     {
         $user = Auth::user();
@@ -78,6 +101,11 @@ class MailController extends Controller
         return Inertia::render('Mails/WebMail', $props);
     }
 
+    public function webmailInboxView(Request $request)
+    {
+        return (new ImapFetcher(auth()->user()))->getReplyData('webmail', $request->folder, $request->id);
+    }
+
     public function appleMailList(Request $request, $type)
     {
         $user = Auth::user();
@@ -88,5 +116,10 @@ class MailController extends Controller
         ];
 
         return Inertia::render('Mails/AppleMail', $props);
+    }
+
+    public function appleMailInboxView(Request $request)
+    {
+        return (new ImapFetcher(auth()->user()))->getReplyData('applemail', $request->folder, $request->id);
     }
 }
