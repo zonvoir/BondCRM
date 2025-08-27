@@ -7,7 +7,6 @@ import CommonButton from '@/Components/Common/CommonButton.vue';
 import CommonInput from '@/Components/Common/CommonInput.vue';
 import { useDebounce } from '@vueuse/core';
 import CommonDrawer from '@/Components/Common/CommonDrawer.vue';
-import CommonMultiSelect from '@/Components/Common/CommonMultiSelect.vue';
 import CommonDataTable from '@/Components/Common/CommonDataTable.vue';
 import CommonIcon from '@/Components/Common/CommonIcon.vue';
 import Column from 'primevue/column';

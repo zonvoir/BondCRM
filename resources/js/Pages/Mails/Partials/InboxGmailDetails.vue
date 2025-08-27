@@ -1,10 +1,34 @@
 <script setup>
-defineProps({
+import CommonButton from '@/Components/Common/CommonButton.vue';
+import CommonEditor from '@/Components/Common/CommonEditor.vue';
+import { ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+
+const props = defineProps({
     message: {
         type: Object,
         required: true,
     },
 });
+const contentText = ref();
+const onTextChange = e => {
+    form.message = e.htmlValue;
+};
+
+const form = useForm({
+    id: props.message?.email?.id ?? null,
+    to: props.message?.email?.sender_email ?? null,
+    subject: props.message?.subject ?? null,
+    message: null,
+});
+
+const submit = () => {
+    form.post(route('employee.gmail.reply'), {
+        onSuccess: () => {
+            contentText.value = '';
+        },
+    });
+};
 </script>
 
 <template>
@@ -83,31 +107,19 @@ defineProps({
                     <button class="underline decoration-dotted">U</button>
                 </div>
 
-                <!-- Editor -->
-                <div class="min-h-[240px] px-4 py-3">
-                    <textarea
-                        class="h-56 w-full resize-none outline-none placeholder:text-slate-400"
-                        placeholder="Type your message here..."
-                    ></textarea>
-                </div>
+                <CommonEditor
+                    v-model="contentText"
+                    @textChange="onTextChange"
+                    editorStyle="height: 240px"
+                />
 
                 <!-- Actions -->
                 <div
                     class="flex items-center justify-between border-t border-slate-200 px-4 py-3"
                 >
-                    <button
-                        class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                    >
+                    <CommonButton @click="submit" :processing="form.processing">
                         Send
-                    </button>
-                    <button
-                        class="inline-flex items-center gap-2 text-slate-600 hover:text-slate-800"
-                    >
-                        <span
-                            class="i-heroicons-paper-clip-20-solid size-5"
-                        ></span>
-                        Attach
-                    </button>
+                    </CommonButton>
                 </div>
             </div>
         </div>

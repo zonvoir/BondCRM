@@ -12,10 +12,10 @@ class SetupService
     public function mailsConfigureLogo(): array
     {
         $gmail = $this->getSocialCredentials('gmail');
-        $g = $this->jsonToArray($gmail->credentials);
+        $g = $this->jsonToArray($gmail?->credentials);
 
         $outlook = $this->getSocialCredentials('outlook');
-        $o = $this->jsonToArray($outlook->credentials);
+        $o = $this->jsonToArray($outlook?->credentials);
 
         return [
             'Gmail' => [
@@ -79,8 +79,14 @@ class SetupService
         return SocialCredential::query()->where(['user_id' => auth()->id(), 'provider' => $provider])->first() ?? new SocialCredential();
     }
 
-    public function jsonToArray(string $json): array
+    public function jsonToArray(?string $json = null): array
     {
+        if (empty($json)) {
+            return [
+                'email' => '',
+            ];
+        }
+
         return json_decode($json, true);
     }
 

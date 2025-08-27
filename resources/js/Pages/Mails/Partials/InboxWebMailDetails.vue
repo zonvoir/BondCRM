@@ -1,10 +1,37 @@
 <script setup>
-defineProps({
+import { ref } from 'vue';
+import CommonEditor from '@/Components/Common/CommonEditor.vue';
+import CommonButton from '@/Components/Common/CommonButton.vue';
+import { useForm } from '@inertiajs/vue3';
+
+const props = defineProps({
     message: {
         type: Object,
         required: true,
     },
 });
+const contentText = ref();
+const onTextChange = e => {
+    form.replyData = e.htmlValue;
+};
+
+const form = useForm({
+    message_id: props.message?.email?.id,
+    replyData: null,
+    attachments: null,
+});
+
+const submit = () => {
+    form.post(
+        route('employee.webmail.reply', {
+            type: 'webmail',
+            folder: route().params.type,
+        }),
+        {
+            onSuccess: () => {},
+        }
+    );
+};
 </script>
 
 <template>
@@ -70,44 +97,18 @@ defineProps({
                     <span class="text-slate-700">{{ message?.subject }}</span>
                 </div>
 
-                <!-- Toolbar -->
-                <div
-                    class="flex items-center gap-4 border-b border-slate-200 px-4 py-2 text-sm text-slate-600"
-                >
-                    <span>Normal</span>
-                    <div class="h-4 w-px bg-slate-300"></div>
-                    <button class="font-bold">B</button>
-                    <button class="italic">I</button>
-                    <button class="underline">U</button>
-                    <button class="line-through">S</button>
-                    <button class="underline decoration-dotted">U</button>
-                </div>
+                <CommonEditor
+                    v-model="contentText"
+                    @textChange="onTextChange"
+                    editorStyle="height: 240px"
+                />
 
-                <!-- Editor -->
-                <div class="min-h-[240px] px-4 py-3">
-                    <textarea
-                        class="h-56 w-full resize-none outline-none placeholder:text-slate-400"
-                        placeholder="Type your message here..."
-                    ></textarea>
-                </div>
-
-                <!-- Actions -->
                 <div
                     class="flex items-center justify-between border-t border-slate-200 px-4 py-3"
                 >
-                    <button
-                        class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                    >
+                    <CommonButton @click="submit" :processing="form.processing">
                         Send
-                    </button>
-                    <button
-                        class="inline-flex items-center gap-2 text-slate-600 hover:text-slate-800"
-                    >
-                        <span
-                            class="i-heroicons-paper-clip-20-solid size-5"
-                        ></span>
-                        Attach
-                    </button>
+                    </CommonButton>
                 </div>
             </div>
         </div>

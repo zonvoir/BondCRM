@@ -9,6 +9,8 @@ import CommonSidebarMail from '@/Pages/Mails/Partials/CommonSidebarMail.vue';
 import CommonDataTable from '@/Components/Common/CommonDataTable.vue';
 import Column from 'primevue/column';
 import InboxWebMailDetails from '@/Pages/Mails/Partials/InboxWebMailDetails.vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
 
 defineProps({
     mails: {
@@ -18,6 +20,12 @@ defineProps({
 });
 
 const message = ref(null);
+const openConfirmation = ref(false);
+
+const form = useForm({
+    ids: null,
+    folder: route().params.type,
+});
 
 const sideList = ref([
     { key: 'inbox', label: 'Inbox', icon: 'material-symbols:mail', count: 201 },
@@ -48,6 +56,26 @@ const viewInbox = message_id => {
 const clearMessage = () => {
     message.value = null;
 };
+const selectedItem = row => {
+    viewInbox(row?.data?.id);
+};
+const selectRows = e => {
+    form.ids = e?.map(item => item?.id);
+};
+
+const handleDelete = () => {
+    form.post(route('employee.smtp.mail.delete', { type: 'webmail' }), {
+        onSuccess: () => {},
+    });
+};
+
+const handleCancel = () => {
+    openConfirmation.value = false;
+};
+
+const handleConfirm = () => {
+    openConfirmation.value = true;
+};
 </script>
 
 <template>
@@ -76,6 +104,16 @@ const clearMessage = () => {
                     >
                         <div class="flex w-full justify-between">
                             <div class="flex items-center gap-2">
+                                <div
+                                    @click="handleConfirm"
+                                    class="cursor-pointer rounded-lg bg-gray-50 p-2"
+                                >
+                                    <CommonIcon
+                                        class="h-7 w-7 text-gray-500"
+                                        icon="material-symbols:delete"
+                                    />
+                                </div>
+
                                 <Link
                                     class="cursor-pointer rounded-lg bg-gray-50 p-2"
                                 >
@@ -119,6 +157,9 @@ const clearMessage = () => {
                             <CommonDataTable
                                 :showSerialNumber="false"
                                 :data="mails"
+                                :checkbox="true"
+                                @rowClick="selectedItem"
+                                @update:modelSelection="selectRows"
                             >
                                 <Column
                                     field="name"
@@ -139,18 +180,7 @@ const clearMessage = () => {
                                     field="sender_name"
                                     header=""
                                     :sortable="false"
-                                >
-                                    <template #body="slotProps">
-                                        <div
-                                            @click="
-                                                viewInbox(slotProps?.data?.id)
-                                            "
-                                            class="cursor-pointer"
-                                        >
-                                            {{ slotProps?.data?.sender_name }}
-                                        </div>
-                                    </template>
-                                </Column>
+                                />
                                 <Column
                                     field="subject"
                                     header=""
@@ -166,6 +196,16 @@ const clearMessage = () => {
                     </div>
                 </CommonCard>
             </div>
+
+            <CommonConfirmation
+                v-model="openConfirmation"
+                title="Delete Confirmation"
+                message="Are you sure you want to delete this item? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                @confirm="handleDelete"
+                @cancel="handleCancel"
+            />
         </PanelLayout>
     </AppLayout>
 </template>

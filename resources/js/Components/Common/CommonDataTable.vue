@@ -4,8 +4,22 @@
             :value="data?.data"
             :sortField="sortField"
             :sortOrder="sortOrder"
+            v-model:selection="internalSelection"
+            dataKey="id"
             tableStyle="min-width: 50rem"
+            @row-click="onRowClick"
+            :pt="{
+                column: {
+                    headerCell: { class: 'cursor-pointer' },
+                    bodyCell: { class: 'cursor-pointer' },
+                },
+            }"
         >
+            <Column
+                v-if="checkbox"
+                selectionMode="multiple"
+                headerStyle="width: 3rem"
+            ></Column>
             <Column v-if="showSerialNumber" :header="serialNumberText">
                 <template #body="slotProps">
                     {{
@@ -28,7 +42,7 @@
                 />
                 <Link
                     v-else
-                    :key="`link-${key}`"
+                    :key="'link-' + key"
                     class="mr-1 mb-1 rounded-sm border px-4 py-3 text-sm leading-4 hover:bg-gray-100 focus:ring-3 focus:ring-indigo-300 focus:outline-hidden dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                     :class="{
                         'bg-white dark:border-indigo-500 dark:bg-gray-800 dark:text-indigo-400':
@@ -44,25 +58,23 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, watch, defineEmits } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
 const props = defineProps({
     data: {
-        type: Array,
+        type: Object,
         required: true,
         default: () => [],
     },
     sortField: {
         type: String,
         default: '',
-        required: false,
     },
     sortOrder: {
         type: Number,
         default: -1,
-        required: false,
     },
     showSerialNumber: {
         type: Boolean,
@@ -75,9 +87,33 @@ const props = defineProps({
     otherArgument: {
         type: String,
         default: '',
-        required: false,
+    },
+    checkbox: {
+        type: Boolean,
+        default: false,
+    },
+    modelSelection: {
+        type: [Array, Object, null],
+        default: null,
     },
 });
 
 const links = ref(props?.data?.meta?.links ?? props?.data?.links);
+const internalSelection = ref(props.modelSelection);
+const emit = defineEmits(['update:modelSelection', 'rowClick']);
+
+watch(
+    () => props.modelSelection,
+    val => {
+        internalSelection.value = val;
+    }
+);
+
+watch(internalSelection, val => {
+    emit('update:modelSelection', val);
+});
+
+const onRowClick = event => {
+    emit('rowClick', event);
+};
 </script>

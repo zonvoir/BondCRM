@@ -3,7 +3,7 @@
 namespace App\Services\Mails;
 
 use App\Models\Settings\Imap;
-use App\Models\Settings\SmtpSetting;
+use App\Models\SmtpUser;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTimeInterface;
@@ -120,13 +120,21 @@ class ImapFetcher
         }
     }
 
-    public function deleteEmails(object $settings, array $uids, string $folder = 'INBOX'): bool
+    /**
+     * @throws Exception
+     */
+    public function deleteEmails($data, $type): bool
     {
-        try {
-            $client = $this->makeConnectedClient($settings);
-            $mailbox = $this->resolveMailbox($client, $folder);
+        if (empty(count($data['ids'])) && empty($data['folder'])) {
+            return false;
+        }
 
-            foreach ($uids as $uid) {
+        try {
+            $settings = $this->getSettings($type);
+            $client = $this->makeConnectedClient($settings);
+            $mailbox = $this->resolveMailbox($client, $data['folder']);
+
+            foreach ($data['ids'] as $uid) {
                 $msg = $mailbox->query()->uid($uid)->get()->first();
                 if ($msg) {
                     $msg->delete();
@@ -207,8 +215,9 @@ class ImapFetcher
      * @throws MessageHeaderFetchingException
      * @throws MessageNotFoundException
      */
-    public function getMessageByUid(object $settings, string $folder, int $emailUid): Message
+    public function getMessageByUid($provider, string $folder, int $emailUid): Message
     {
+        $settings = $this->getSettings($provider);
         $client = $this->makeConnectedClient($settings);
         $mailbox = $this->resolveMailbox($client, $folder);
 
@@ -218,11 +227,12 @@ class ImapFetcher
     /**
      * @throws Exception
      */
-    public function sendReplyEmail($originalEmail, array $replyData, array $attachments, SmtpSetting $smtpSettings)
+    public function sendReplyEmail($originalEmail, $replyData, $attachments = []): void
     {
         try {
+            $smtpSettings = SmtpUser::query()->where('user_id', $this->user->id)->first();
             $this->configureSmtp($smtpSettings);
-            $body = $this->sanitizeHtml($replyData['body']);
+            $body = $this->sanitizeHtml($replyData);
             $to = $this->extractFirstEmail($originalEmail->from);
             $cc = $this->extractEmails($originalEmail->cc);
             $bcc = $this->extractEmails($originalEmail->bcc);
@@ -297,13 +307,13 @@ class ImapFetcher
 
     protected function getSettings($provider): ?Imap
     {
-        return Imap::query()->where(['user_id' => Auth::id(), 'type' => $provider])->first();
+        return Imap::query()->where(['user_id' => Auth::id(), 'type' => $provider])->first() ?? new Imap();
     }
 
-    private function configureSmtp(SmtpSetting $smtp): void
+    private function configureSmtp(SmtpUser $smtp)
     {
         Config::set([
-            'mail.default' => 'smtp',
+            'mail.default' => $smtp->mail_driver,
             'mail.mailers.smtp' => [
                 'transport' => $smtp->mail_driver,
                 'host' => $smtp->mail_host,
@@ -364,17 +374,14 @@ class ImapFetcher
                 $message->bcc($bcc);
             }
 
-            foreach ($attachments as $attachment) {
-                $message->attach($attachment['path'], [
-                    'as' => $attachment['name'],
-                    'mime' => mime_content_type($attachment['path']),
-                ]);
+            if (! empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    $message->attach($attachment['path'], [
+                        'as' => $attachment['name'],
+                        'mime' => mime_content_type($attachment['path']),
+                    ]);
+                }
             }
         });
-    }
-
-    private function getSettingId()
-    {
-        return Imap::query()->where('user_id', Auth::id())->first()->id;
     }
 }

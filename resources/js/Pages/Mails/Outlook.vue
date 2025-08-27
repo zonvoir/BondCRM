@@ -49,6 +49,14 @@ const viewInbox = message_id => {
 const clearMessage = () => {
     message.value = null;
 };
+
+const selectedItem = row => {
+    viewInbox(row?.data?.id);
+};
+
+const selectRows = e => {
+    console.log(e);
+};
 </script>
 
 <template>
@@ -119,6 +127,9 @@ const clearMessage = () => {
                                 :showSerialNumber="false"
                                 :data="mails"
                                 :otherArgument="pageToken"
+                                :checkbox="true"
+                                @rowClick="selectedItem"
+                                @update:modelSelection="selectRows"
                             >
                                 <Column
                                     field="name"
@@ -126,12 +137,7 @@ const clearMessage = () => {
                                     :sortable="false"
                                 >
                                     <template #body="slotProps">
-                                        <div
-                                            @click="
-                                                viewInbox(slotProps?.data?.id)
-                                            "
-                                            class="flex cursor-pointer gap-2"
-                                        >
+                                        <div class="flex cursor-pointer gap-2">
                                             {{
                                                 slotProps?.data?.from
                                                     ?.emailAddress?.name

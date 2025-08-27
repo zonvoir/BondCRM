@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { Head } from '@inertiajs/vue3';
-import { useFlashMessages } from '@/Composables/useFlashMessage';
+import { useFlashMessages } from '@/composables/useFlashMessage';
 const { showFlashMessages } = useFlashMessages();
 
 defineProps({

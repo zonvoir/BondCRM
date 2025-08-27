@@ -48,6 +48,9 @@ const viewInbox = message_id => {
 const clearMessage = () => {
     message.value = null;
 };
+const selectedItem = row => {
+    viewInbox(row?.data?.id);
+};
 </script>
 
 <template>
@@ -118,6 +121,7 @@ const clearMessage = () => {
                             <CommonDataTable
                                 :showSerialNumber="false"
                                 :data="mails"
+                                @rowClick="selectedItem"
                             >
                                 <Column
                                     field="name"
@@ -138,18 +142,7 @@ const clearMessage = () => {
                                     field="sender_name"
                                     header=""
                                     :sortable="false"
-                                >
-                                    <template #body="slotProps">
-                                        <div
-                                            @click="
-                                                viewInbox(slotProps?.data?.id)
-                                            "
-                                            class="cursor-pointer"
-                                        >
-                                            {{ slotProps?.data?.sender_name }}
-                                        </div>
-                                    </template>
-                                </Column>
+                                />
                                 <Column
                                     field="subject"
                                     header=""

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\SocialiteAuthController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Email\BlackListEmailController;
 use App\Http\Controllers\Email\BulkImportController;
+use App\Http\Controllers\Lead\LeadController;
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\SettingsController;
@@ -75,16 +76,23 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
         Route::get('/', 'index')->name('dashboard');
     });
 
+    Route::prefix('lead')->controller(LeadController::class)->as('lead.')->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
+
     Route::prefix('mail')->controller(MailController::class)->group(function () {
         Route::get('/gmail/{type}', 'gmailList')->name('gmail');
         Route::post('/gmail-view-inbox', 'gmailInboxView')->name('gmail.view');
+        Route::post('gmail-reply/', 'gmailMailReply')->name('gmail.reply');
         Route::get('/outlook/{type}', 'outlookList')->name('outlook');
         Route::post('/outlook-view-inbox', 'outlookInboxView')->name('outlook.view');
+        Route::post('outlook-reply/', 'outlookMailReply')->name('outlook.reply');
         Route::get('/webmail/{type}', 'webMailList')->name('webmail');
         Route::post('/webmail-view-inbox', 'webmailInboxView')->name('webmail.view');
+        Route::post('/mail-delete/{type}', 'deleteMailSmtp')->name('smtp.mail.delete');
         Route::get('/apple-mail/{type}', 'appleMailList')->name('apple-mail');
         Route::post('/apple-mail-view-inbox', 'appleMailInboxView')->name('apple-mail.view');
-
+        Route::post('mail-reply/{type}/{folder}', 'webMailReply')->name('webmail.reply');
     });
 
     Route::prefix('setup')->controller(SetupController::class)->group(function () {

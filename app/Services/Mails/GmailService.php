@@ -6,6 +6,7 @@ use App\Models\Settings\SocialiteSetting;
 use App\Models\SocialCredential;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 
 class GmailService
@@ -323,6 +324,35 @@ class GmailService
         ];
     }
 
+    public function gmailReplySend(array $data, string $messageId): bool
+    {
+        $credential = $this->getCredential();
+        if (! $credential) {
+            return false;
+        }
+
+        $token = $this->ensureValidToken($credential);
+        if (! $token) {
+            return false;
+        }
+
+        $original = $this->fetchMessageDetail($token, $messageId);
+        $threadId = $original['threadId'] ?? null;
+        $inReplyTo = $this->extractHeader($original, 'Message-ID');
+
+        $encoded = $this->buildReplyMimeMessage($data, $inReplyTo);
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$token}",
+            'Content-Type' => 'application/json',
+        ])->post(self::GMAIL_API_BASE.'/messages/send', [
+            'raw' => $encoded,
+            'threadId' => $threadId,
+        ]);
+
+        return $response->successful();
+    }
+
     private function processMessages(string $token, array $messages, string $folder = 'inbox'): array
     {
         $data = [];
@@ -492,5 +522,57 @@ class GmailService
         unset($att);
 
         return $attachments;
+    }
+
+    private function extractHeader(?array $message, string $name): ?string
+    {
+        if (isset($message['payload']['headers'])) {
+            foreach ($message['payload']['headers'] as $header) {
+                if (strcasecmp($header['name'], $name) === 0) {
+                    return $header['value'];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function buildReplyMimeMessage(array $data, ?string $inReplyTo): string
+    {
+        $boundary = uniqid('boundary_', true);
+
+        $raw = "MIME-Version: 1.0\r\n"
+            ."Content-Type: multipart/mixed; boundary=\"{$boundary}\"\r\n"
+            ."To: {$data['to']}\r\n"
+            ."Subject: {$data['subject']}\r\n";
+
+        if ($inReplyTo) {
+            $raw .= "In-Reply-To: {$inReplyTo}\r\nReferences: {$inReplyTo}\r\n";
+        }
+
+        $raw .= "\r\n--{$boundary}\r\n"
+            ."Content-Type: text/html; charset=UTF-8\r\n"
+            ."Content-Transfer-Encoding: 7bit\r\n\r\n"
+            ."{$data['message']}\r\n";
+
+        if (! empty($data['attachments']) && is_array($data['attachments'])) {
+            foreach ($data['attachments'] as $file) {
+                if ($file instanceof UploadedFile && $file->isValid()) {
+                    $dataEncoded = chunk_split(base64_encode(file_get_contents($file->getRealPath())));
+                    $name = $file->getClientOriginalName();
+                    $mimeType = $file->getMimeType();
+
+                    $raw .= "\r\n--{$boundary}\r\n"
+                        ."Content-Type: {$mimeType}; name=\"{$name}\"\r\n"
+                        ."Content-Disposition: attachment; filename=\"{$name}\"\r\n"
+                        ."Content-Transfer-Encoding: base64\r\n\r\n"
+                        ."{$dataEncoded}\r\n";
+                }
+            }
+        }
+
+        $raw .= "--{$boundary}--";
+
+        return rtrim(strtr(base64_encode($raw), '+/', '-_'), '=');
     }
 }
