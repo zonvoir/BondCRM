@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Settings\GeneralSettings;
+use App\Models\Setup\GeneralSettings;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;

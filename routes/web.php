@@ -2,15 +2,16 @@
 
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Auth\SocialiteAuthController;
+use App\Http\Controllers\Black\BlackingController;
+use App\Http\Controllers\Black\BulkImportController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Email\BlackListEmailController;
-use App\Http\Controllers\Email\BulkImportController;
 use App\Http\Controllers\Lead\LeadController;
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Settings\SettingsController;
 use App\Http\Controllers\Settings\SmtpSettingsController;
 use App\Http\Controllers\Setup\SetupController;
+use App\Http\Controllers\Setup\SetupEmployeeController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,24 +30,7 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(f
         Route::get('/', 'index')->name('dashboard')->middleware('permissions:dashboard');
     });
 
-    Route::prefix('settings')->controller(SettingsController::class)->group(function () {
-        Route::get('/', 'show')->name('settings');
-        Route::post('general-settings-save', 'generalSettingsSave')->name('settings.general.save');
-        Route::post('general-settings-pwa', 'settingsPwaSave')->name('settings.general.pwa');
-        Route::post('general-settings-socialite', 'settingsSocialiteSave')->name('settings.socialite');
-        Route::post('general-settings-chat', 'settingsChatSave')->name('settings.chat');
-        Route::post('general-settings-clear-cache', 'clearCache')->name('settings.clear.cache');
-        Route::post('general-settings-storage-link', 'storageLink')->name('settings.storage.link');
-        Route::post('general-settings-run-cron', 'runCron')->name('settings.run.cron');
-    });
-
-    // For Email Settings
-    Route::prefix('settings')->controller(SmtpSettingsController::class)->group(function () {
-        Route::post('email-settings-save', 'saveEmailSetting')->name('settings.email.save');
-        Route::post('email-settings-test', 'testEmailSetting')->name('settings.email.test');
-    });
-
-    Route::prefix('black-list-email')->controller(BlackListEmailController::class)->group(function () {
+    Route::prefix('black-list-email')->controller(BlackingController::class)->group(function () {
         Route::get('/', 'index')->name('email.blacklist.index');
         Route::post('/file', 'saveBlackListEmail')->name('email.blacklist.save');
         Route::delete('file/{blackList}', 'destroyBlackListEmail')->name('email.blacklist.destroy');
@@ -69,6 +53,31 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(f
         Route::delete('/destroy/{role}', 'destroy')->name('user.role.destroy');
     });
 
+    Route::prefix('setup')->controller(SetupController::class)->as('setup.')->group(function () {
+        Route::get('/', 'generalSettings')->name('general');
+        Route::get('/pwa', 'pwaSettings')->name('pwa');
+        Route::get('/smtp', 'smtpSettings')->name('smtp');
+        Route::get('/social', 'socialSettings')->name('social');
+        Route::get('/chat', 'chatSettings')->name('chat');
+        Route::get('/openai', 'openAiSettings')->name('openai');
+        Route::post('/openai', 'openAiSaveSettings')->name('openai.save');
+    });
+
+    Route::prefix('settings')->controller(SettingsController::class)->group(function () {
+        Route::post('general-settings-save', 'generalSettingsSave')->name('settings.general.save');
+        Route::post('general-settings-pwa', 'settingsPwaSave')->name('settings.general.pwa');
+        Route::post('general-settings-socialite', 'settingsSocialiteSave')->name('settings.socialite');
+        Route::post('general-settings-chat', 'settingsChatSave')->name('settings.chat');
+        Route::post('general-settings-clear-cache', 'clearCache')->name('settings.clear.cache');
+        Route::post('general-settings-storage-link', 'storageLink')->name('settings.storage.link');
+        Route::post('general-settings-run-cron', 'runCron')->name('settings.run.cron');
+    });
+
+    Route::prefix('settings')->controller(SmtpSettingsController::class)->group(function () {
+        Route::post('email-settings-save', 'saveEmailSetting')->name('settings.email.save');
+        Route::post('email-settings-test', 'testEmailSetting')->name('settings.email.test');
+    });
+
 });
 
 Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->prefix('employee')->as('employee.')->group(function () {
@@ -78,6 +87,14 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
 
     Route::prefix('lead')->controller(LeadController::class)->as('lead.')->group(function () {
         Route::get('/', 'index')->name('index');
+    });
+
+    Route::prefix('black')->controller(BlackingController::class)->as('black.')->group(function () {
+        Route::get('/', 'blackEmail')->name('email');
+        Route::post('/email', 'blackEmailSave')->name('email.save');
+        Route::delete('email/{blackEmail}', 'destroyBlackEmail')->name('email.destroy');
+        Route::post('email-destroys', 'destroyBlackEmails')->name('email.destroys');
+
     });
 
     Route::prefix('mail')->controller(MailController::class)->group(function () {
@@ -95,7 +112,7 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
         Route::post('mail-reply/{type}/{folder}', 'webMailReply')->name('webmail.reply');
     });
 
-    Route::prefix('setup')->controller(SetupController::class)->group(function () {
+    Route::prefix('setup')->controller(SetupEmployeeController::class)->group(function () {
         Route::get('/', 'employeeSetup')->name('setup.index');
         Route::get('/authorized-gmail', 'authorizedGmail')->name('authorized.gmail');
         Route::get('/authorized-outlook', 'authorizedOutlook')->name('authorized.outlook');

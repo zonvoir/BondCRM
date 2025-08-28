@@ -68,7 +68,7 @@ const updateModelValue = value => {
             filter
             :optionLabel="optionLabel"
             :placeholder="placeholder"
-            :class="[selectClass, 'h-10 w-full md:w-68']"
+            :class="[selectClass, 'h-10 w-full']"
             @update:model-value="updateModelValue"
         >
             <template #value="slotProps">

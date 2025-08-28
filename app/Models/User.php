@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Setup\SmtpUser;
+use App\Models\Setup\SocialCredential;
 use Database\Factories\UserFactory;
 use EragPermission\Traits\HasPermissionsTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Email\TestEmailSettingRequest;
-use App\Http\Requests\Settings\EmailSettingsRequest;
-use App\Services\Settings\EmailSettingsService;
+use App\Http\Requests\Black\TestEmailSettingRequest;
+use App\Http\Requests\Setup\EmailSettingsRequest;
+use App\Services\Setup\EmailSettingsService;
 
 class SmtpSettingsController extends Controller
 {

@@ -11,7 +11,16 @@ class SideNav
     public static function menu(): array
     {
         if (hasRole(RoleEnum::ADMIN->value)) {
-            return self::adminMenu();
+
+            if (request()->routeIs('setup.*') || Str::contains(url()->current(), 'setup')) {
+                return array_values(array_filter(self::adminMenu(), function ($item) {
+                    return $item['name'] === 'Setup';
+                }));
+            }
+
+            return array_values(
+                array_filter(self::adminMenu(), fn ($item) => $item['name'] !== 'Setup')
+            );
         }
 
         if (hasRole(RoleEnum::USER->value)) {
@@ -83,6 +92,51 @@ class SideNav
                 'active' => $currentRouteName === 'email.blacklist.index',
                 'subMenu' => [],
             ],
+            [
+                'name' => 'Setup',
+                'permission' => hasPermissions('email-black-view'),
+                'icon' => 'material-icon-theme:folder-config-open',
+                'active' => in_array($currentRouteName, ['setup.general', 'setup.pwa', 'setup.smtp', 'setup.social', 'setup.chat', 'setup.openai'], true),
+                'subMenu' => [
+                    [
+                        'name' => 'General Settings',
+                        'permission' => hasPermissions('email-black-view'),
+                        'href' => route('setup.general'),
+                        'active' => $currentRouteName === 'setup.general',
+                    ],
+                    [
+                        'name' => 'Pwa Settings',
+                        'permission' => hasPermissions('email-black-view'),
+                        'href' => route('setup.pwa'),
+                        'active' => $currentRouteName === 'setup.pwa',
+                    ],
+                    [
+                        'name' => 'Smtp Settings',
+                        'permission' => hasPermissions('email-black-view'),
+                        'href' => route('setup.smtp'),
+                        'active' => $currentRouteName === 'setup.smtp',
+                    ],
+                    [
+                        'name' => 'Social Settings',
+                        'permission' => hasPermissions('email-black-view'),
+                        'href' => route('setup.social'),
+                        'active' => $currentRouteName === 'setup.social',
+                    ],
+                    [
+                        'name' => 'Chat Settings',
+                        'permission' => hasPermissions('email-black-view'),
+                        'href' => route('setup.chat'),
+                        'active' => $currentRouteName === 'setup.chat',
+                    ],
+                    [
+                        'name' => 'OpenAi Settings',
+                        'permission' => hasPermissions('email-black-view'),
+                        'href' => route('setup.openai'),
+                        'active' => $currentRouteName === 'setup.openai',
+                    ],
+                ],
+            ],
+
         ];
     }
 
@@ -154,10 +208,30 @@ class SideNav
                 'active' => in_array($currentRouteName, ['employee.lead.index'], true),
                 'subMenu' => [
                     [
-                        'name' => 'List',
+                        'name' => 'Create',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.lead.index'),
                         'active' => $currentRouteName === 'employee.lead.index',
+                    ],
+                    [
+                        'name' => 'Lead',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.black.email'),
+                        'active' => $currentRouteName === 'employee.black.email',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Black',
+                'permission' => hasPermissions('dashboard-view-employee'),
+                'icon' => 'material-icon-theme:folder-private-open',
+                'active' => in_array($currentRouteName, ['employee.black.email'], true),
+                'subMenu' => [
+                    [
+                        'name' => 'Email',
+                        'permission' => hasPermissions('dashboard-view-employee'),
+                        'href' => route('employee.black.email'),
+                        'active' => $currentRouteName === 'employee.black.email',
                     ],
                 ],
             ],

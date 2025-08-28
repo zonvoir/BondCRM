@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Settings\SocialiteSettingsResource;
-use App\Repositories\Settings\SettingsRepository;
+use App\Repositories\Setup\SetupRepository;
 use App\Services\RoleRedirectService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function __construct(protected SettingsRepository $SettingsRepository, protected RoleRedirectService $roleRedirectService) {}
+    public function __construct(protected SetupRepository $SettingsRepository, protected RoleRedirectService $roleRedirectService) {}
 
     /**
      * Display the login view.

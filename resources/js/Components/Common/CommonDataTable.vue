@@ -23,7 +23,8 @@
             <Column v-if="showSerialNumber" :header="serialNumberText">
                 <template #body="slotProps">
                     {{
-                        (data?.meta?.current_page - 1) * data?.meta?.per_page +
+                        ((data?.meta?.current_page ?? data?.current_page) - 1) *
+                            (data?.meta?.per_page ?? data?.current_page) +
                         slotProps.index +
                         1
                     }}

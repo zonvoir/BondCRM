@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Settings\GeneralSettings;
+use App\Models\Setup\GeneralSettings;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -45,12 +45,12 @@ class GeneralSettingsSeeder extends Seeder
             'logo_dark' => $uploaded['logo_dark'],
             'logo_white' => $uploaded['logo_white'],
             'favicon' => $uploaded['favicon'],
-            'app_name' => 'InboxSync App',
+            'app_name' => 'Bond CRM',
             'app_description' => 'Email Marketing App',
             'app_logo' => 'logo.png',
             'theme_color' => '#6777ef',
-            'countries' => json_encode(['India', 'USA', 'UK']),
-            'timezones' => json_encode(['code' => 'Asia/Kolkata', 'name' => 'Asia/Kolkata']),
+            'countries' => ['code' => 'AU', 'name' => 'Australia'],
+            'timezones' => ['code' => 'Asia/Kolkata', 'name' => 'Asia/Kolkata'],
         ]);
 
     }

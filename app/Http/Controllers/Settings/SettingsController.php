@@ -3,40 +3,17 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\GeneralSettingsRequest;
-use App\Http\Requests\Settings\LiveChatSettingsRequest;
-use App\Http\Requests\Settings\PwaSettingsRequest;
-use App\Http\Requests\Settings\SettingsSocialiteRequest;
-use App\Http\Resources\Settings\EmailSettingsResource;
-use App\Http\Resources\Settings\GeneralSettingsResource;
-use App\Http\Resources\Settings\LiveChatSettingsResource;
-use App\Http\Resources\Settings\SocialiteSettingsResource;
-use App\Models\Settings\GeneralSettings;
-use App\Repositories\Settings\SettingsRepository;
-use App\Services\Settings\SettingsService;
-use Illuminate\Http\Request;
+use App\Http\Requests\Setup\GeneralSettingsRequest;
+use App\Http\Requests\Setup\LiveChatSettingsRequest;
+use App\Http\Requests\Setup\PwaSettingsRequest;
+use App\Http\Requests\Setup\SettingsSocialiteRequest;
+use App\Repositories\Setup\SetupRepository;
+use App\Services\Setup\SettingsService;
 use Illuminate\Support\Facades\Artisan;
-use Inertia\Inertia;
 
 class SettingsController extends Controller
 {
-    public function __construct(protected SettingsService $settingsService, protected SettingsRepository $SettingsRepository) {}
-
-    public function show(Request $request)
-    {
-        $props = [
-            'timezones' => timezones(),
-            'generalSettings' => new GeneralSettingsResource(GeneralSettings::first()),
-            'emailSettings' => new EmailSettingsResource($this->SettingsRepository->getEmailSettings()),
-            'liveChatSettings' => new LiveChatSettingsResource($this->SettingsRepository->getChatSettings()),
-            'socialiteSettings' => [
-                'microsoft' => new SocialiteSettingsResource($this->SettingsRepository->getSocialiteSettings('microsoft')),
-                'google' => new SocialiteSettingsResource($this->SettingsRepository->getSocialiteSettings('google')),
-            ],
-        ];
-
-        return Inertia::render('Settings/index', $props);
-    }
+    public function __construct(protected SettingsService $settingsService, protected SetupRepository $SettingsRepository) {}
 
     public function generalSettingsSave(GeneralSettingsRequest $request)
     {

@@ -1,5 +1,4 @@
 <script setup>
-import Textarea from 'primevue/textarea';
 const props = defineProps({
     label: {
         type: String,

@@ -2,8 +2,8 @@
 
 namespace App\Services\Mails;
 
-use App\Models\Settings\SocialiteSetting;
-use App\Models\SocialCredential;
+use App\Models\Setup\SocialCredential;
+use App\Models\Setup\SocialiteSetting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Client\RequestException;

@@ -2,8 +2,8 @@
 
 namespace App\Services\Mails;
 
-use App\Models\Settings\Imap;
-use App\Models\SmtpUser;
+use App\Models\Setup\Imap;
+use App\Models\Setup\SmtpUser;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTimeInterface;

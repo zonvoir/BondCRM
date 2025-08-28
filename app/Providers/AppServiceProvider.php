@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Settings\SocialiteSetting;
+use App\Models\Setup\SocialiteSetting;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Vite;

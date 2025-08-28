@@ -2,9 +2,10 @@
 
 namespace App\Services\Setup;
 
-use App\Models\Settings\Imap;
-use App\Models\SmtpUser;
-use App\Models\SocialCredential;
+use App\Models\Setup\Imap;
+use App\Models\Setup\OpenAiSetting;
+use App\Models\Setup\SmtpUser;
+use App\Models\Setup\SocialCredential;
 use Illuminate\Database\Eloquent\Model;
 
 class SetupService
@@ -97,6 +98,16 @@ class SetupService
         return SmtpUser::query()->updateOrCreate(
             ['id' => $smtp->id ?? null],
             array_merge($data, ['user_id' => auth()->id()])
+        );
+    }
+
+    public function saveOpenAiSettings(array $data): OpenAiSetting|Model
+    {
+        $settings = OpenAiSetting::query()->first() ?? new OpenAiSetting();
+
+        return OpenAiSetting::query()->updateOrCreate(
+            ['id' => $settings->id ?? null],
+            $data
         );
     }
 }

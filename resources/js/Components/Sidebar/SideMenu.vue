@@ -167,9 +167,19 @@ const shortName = (name, type = false) => {
                     />
                 </template>
                 <template
-                    v-if="useRoles(RoleEnum.EMPLOYEE) && usePage().props.setup"
+                    v-if="hasRole(RoleEnum.EMPLOYEE) && usePage().props.setup"
                 >
                     <Link :href="route('employee.dashboard')">
+                        <CommonIcon
+                            class="h-6 w-6 cursor-pointer"
+                            icon="mdi:close"
+                        />
+                    </Link>
+                </template>
+                <template
+                    v-else-if="hasRole(RoleEnum.ADMIN) && usePage().props.setup"
+                >
+                    <Link :href="route('dashboard')">
                         <CommonIcon
                             class="h-6 w-6 cursor-pointer"
                             icon="mdi:close"
@@ -195,7 +205,7 @@ const shortName = (name, type = false) => {
                         </template>
                         <template v-else>
                             <CommonLink
-                                :href="route('settings')"
+                                :href="route('setup.general')"
                                 :active="route().current('settings')"
                             >
                                 <CommonIcon
