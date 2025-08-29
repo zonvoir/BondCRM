@@ -24,6 +24,10 @@ auth.json
 npm-debug.log
 yarn-error.log
 
+# Allow icons folder inside public
+!/public/icons
+!/public/icons/**
+
 # IDE/editor config files
 /.idea
 /.vscode
