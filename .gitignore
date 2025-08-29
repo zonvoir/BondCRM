@@ -24,10 +24,6 @@ auth.json
 npm-debug.log
 yarn-error.log
 
-# Allow icons folder inside public
-!/public/icons
-!/public/icons/**
-
 # IDE/editor config files
 /.idea
 /.vscode
@@ -36,20 +32,12 @@ yarn-error.log
 /.zed
 .phpactor.json
 
-# OS-specific system files
-
 # macOS
 .DS_Store
-.AppleDouble
-.LSOverride
-Icon?
-._*
 
 # Windows
 Thumbs.db
 ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
 
 # Linux
 *~
