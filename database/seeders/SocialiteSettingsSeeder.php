@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Settings\SocialiteSetting;
+use App\Models\Setup\SocialiteSetting;
 use Illuminate\Database\Seeder;
 
 class SocialiteSettingsSeeder extends Seeder
@@ -14,17 +14,17 @@ class SocialiteSettingsSeeder extends Seeder
     {
         $socialiteSettings = [
             [
-                'provider' => 'linkedin',
-                'client_id' => '86rqzisqgyenbe',
-                'client_secret' => 'WPL_AP1.ftIHuGh5w5lbdjhd.pbtMMw==',
-                'redirect_url' => route('auth.linkedin.callback'),
+                'provider' => 'microsoft',
+                'client_id' => 'b428d529-fae6-441b-9352-d1528494d033',
+                'client_secret' => '7So8Q~LO111j6F..wTXzLfs.C.Sen-rQVugYFcIw',
+                'redirect_url' => 'https://fwd.host/'.route('auth.microsoft.callback'),
                 'status' => true,
             ],
             [
                 'provider' => 'google',
-                'client_id' => '1041820112911-pkn1mc6gq7au68mdk8dlop3bf8j049t3.apps.googleusercontent.com',
-                'client_secret' => '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',
-                'redirect_url' => route('auth.google.callback'),
+                'client_id' => '907512095123-q4j831ms6b4vsc12tiooibq261bmsnmc.apps.googleusercontent.com',
+                'client_secret' => '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',
+                'redirect_url' => 'https://fwd.host/'.route('auth.google.callback'),
                 'status' => true,
             ],
         ];
