@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\RoleRedirectService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +18,7 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
-    public function __construct(protected RoleRedirectService $roleRedirectService) {}
+    public function __construct() {}
 
     /**
      * Display the registration view.
@@ -56,6 +55,6 @@ class RegisteredUserController extends Controller
 
         $user->assignRole(RoleEnum::EMPLOYEE->value);
 
-        return $this->roleRedirectService->redirectToDashboard();
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 }

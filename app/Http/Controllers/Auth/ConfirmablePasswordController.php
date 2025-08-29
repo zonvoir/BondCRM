@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\RoleRedirectService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +12,7 @@ use Inertia\Response;
 
 class ConfirmablePasswordController extends Controller
 {
-    public function __construct(protected RoleRedirectService $roleRedirectService) {}
+    public function __construct() {}
 
     /**
      * Show the confirm password view.
@@ -39,6 +38,6 @@ class ConfirmablePasswordController extends Controller
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        return $this->roleRedirectService->redirectToDashboard();
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 }

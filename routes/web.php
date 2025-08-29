@@ -25,11 +25,11 @@ Route::controller(SocialiteAuthController::class)->group(function () {
     Route::get('/auth/outlook/callback', 'handleMicrosoftCallback')->name('auth.microsoft.callback');
 });
 
-Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(function () {
-    Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
-        Route::get('/', 'index')->name('dashboard')->middleware('permissions:dashboard');
-    });
+Route::middleware('auth', 'verified')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+});
 
+Route::middleware('auth', 'verified', 'role:'.RoleEnum::ADMIN->value)->group(function () {
     Route::prefix('black-list-email')->controller(BlackingController::class)->group(function () {
         Route::get('/', 'index')->name('email.blacklist.index');
         Route::post('/file', 'saveBlackListEmail')->name('email.blacklist.save');
@@ -80,7 +80,7 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::ADMIN->value])->group(f
 
 });
 
-Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->prefix('employee')->as('employee.')->group(function () {
+Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix('employee')->as('employee.')->group(function () {
     Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });
@@ -94,6 +94,10 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
         Route::post('/email', 'blackEmailSave')->name('email.save');
         Route::delete('email/{blackEmail}', 'destroyBlackEmail')->name('email.destroy');
         Route::post('email-destroys', 'destroyBlackEmails')->name('email.destroys');
+        Route::get('/keyword', 'blackWord')->name('word');
+        Route::post('/keyword-save', 'saveBlackWord')->name('word.save');
+        Route::delete('keyword/{blackListKeyword}', 'destroyBlackListKeyword')->name('word.destroy');
+        Route::post('keyword-destroys', 'destroyBlackListKeywords')->name('work.destroys');
 
     });
 
@@ -124,7 +128,7 @@ Route::middleware(['auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value])->pref
 
 });
 
-Route::middleware(['auth', 'verified', 'role:'.RoleEnum::USER->value])->prefix('user')->as('user.')->group(function () {
+Route::middleware('auth', 'verified', 'role:'.RoleEnum::USER->value)->prefix('user')->as('user.')->group(function () {
     Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });

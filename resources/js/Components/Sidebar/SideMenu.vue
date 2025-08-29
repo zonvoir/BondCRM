@@ -17,6 +17,7 @@ import CommonLink from '@/Components/Common/CommonLink.vue';
 import { isDark, switchTheme } from '@/Composables/theme';
 import { RoleEnum } from '@/enums/RoleEnum';
 import { useRoles } from '@/composables/useRoles';
+import SetupNavigation from '@/Components/Sidebar/SetupNavigation.vue';
 
 const { hasRole } = useRoles();
 const { props } = usePage();
@@ -113,12 +114,20 @@ const shortName = (name, type = false) => {
                                     />
                                 </template>
                             </div>
+
                             <nav class="flex flex-1 flex-col">
                                 <ul
                                     role="list"
                                     class="flex flex-1 flex-col gap-y-1"
                                 >
-                                    <Navigation />
+                                    <template
+                                        v-if="usePage().props?.setup?.isSetup"
+                                    >
+                                        <SetupNavigation />
+                                    </template>
+                                    <template v-else>
+                                        <Navigation />
+                                    </template>
 
                                     <li class="mt-auto">
                                         <CommonLink
@@ -166,19 +175,8 @@ const shortName = (name, type = false) => {
                         alt="logo"
                     />
                 </template>
-                <template
-                    v-if="hasRole(RoleEnum.EMPLOYEE) && usePage().props.setup"
-                >
-                    <Link :href="route('employee.dashboard')">
-                        <CommonIcon
-                            class="h-6 w-6 cursor-pointer"
-                            icon="mdi:close"
-                        />
-                    </Link>
-                </template>
-                <template
-                    v-else-if="hasRole(RoleEnum.ADMIN) && usePage().props.setup"
-                >
+
+                <template v-if="usePage().props?.setup?.isSetup">
                     <Link :href="route('dashboard')">
                         <CommonIcon
                             class="h-6 w-6 cursor-pointer"
@@ -189,32 +187,23 @@ const shortName = (name, type = false) => {
             </div>
             <nav class="flex flex-1 flex-col">
                 <ul role="list" class="flex flex-1 flex-col gap-y-2">
-                    <Navigation />
+                    <template v-if="usePage().props?.setup?.isSetup">
+                        <SetupNavigation />
+                    </template>
+                    <template v-else>
+                        <Navigation />
+                    </template>
                     <li class="mt-auto">
-                        <template v-if="hasRole(RoleEnum.EMPLOYEE)">
-                            <CommonLink
-                                :href="route('employee.setup.index')"
-                                :active="usePage().props.setup"
-                            >
-                                <CommonIcon
-                                    class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                    icon="vscode-icons:file-type-config"
-                                />
-                                Setup
-                            </CommonLink>
-                        </template>
-                        <template v-else>
-                            <CommonLink
-                                :href="route('setup.general')"
-                                :active="route().current('settings')"
-                            >
-                                <CommonIcon
-                                    class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                    icon="vscode-icons:file-type-config"
-                                />
-                                Setup
-                            </CommonLink>
-                        </template>
+                        <CommonLink
+                            :href="usePage().props?.setup?.url"
+                            :active="usePage().props.setup.isSetup"
+                        >
+                            <CommonIcon
+                                class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+                                icon="vscode-icons:file-type-config"
+                            />
+                            Setup
+                        </CommonLink>
                     </li>
                 </ul>
             </nav>

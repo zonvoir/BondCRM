@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Menu\SetupMenu;
 use App\Menu\SideNav;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -40,7 +41,11 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'menu' => SideNav::menu(),
-            'setup' => Str::contains(url()->current(), 'setup'),
+            'setup' => [
+                'url' => SetupMenu::indexRouteName(),
+                'menu' => SetupMenu::mainMenuSetup(),
+                'isSetup' => Str::contains(url()->current(), 'setup'),
+            ],
             'auth' => function () use ($request) {
                 return [
                     'user' => $request->user() ? $request->user() : null,

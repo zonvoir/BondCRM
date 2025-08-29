@@ -4,23 +4,13 @@ namespace App\Menu;
 
 use App\Enums\RoleEnum;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 class SideNav
 {
     public static function menu(): array
     {
         if (hasRole(RoleEnum::ADMIN->value)) {
-
-            if (request()->routeIs('setup.*') || Str::contains(url()->current(), 'setup')) {
-                return array_values(array_filter(self::adminMenu(), function ($item) {
-                    return $item['name'] === 'Setup';
-                }));
-            }
-
-            return array_values(
-                array_filter(self::adminMenu(), fn ($item) => $item['name'] !== 'Setup')
-            );
+            return self::adminMenu();
         }
 
         if (hasRole(RoleEnum::USER->value)) {
@@ -29,15 +19,7 @@ class SideNav
 
         if (hasRole(RoleEnum::EMPLOYEE->value)) {
 
-            if (request()->routeIs('employee.setup.*') || Str::contains(url()->current(), 'setup')) {
-                return array_values(array_filter(self::employeeMenu(), function ($item) {
-                    return $item['name'] === 'Setup';
-                }));
-            }
-
-            return array_values(
-                array_filter(self::employeeMenu(), fn ($item) => $item['name'] !== 'Setup')
-            );
+            return self::employeeMenu();
         }
 
         return [];
@@ -56,14 +38,6 @@ class SideNav
                 'active' => $currentRouteName === 'dashboard',
                 'subMenu' => [],
             ],
-            //            [
-            //                'name' => 'Bulk Import',
-            //                'permission' => hasPermissions('bulk-view'),
-            //                'href' => route('email.index'),
-            //                'icon' => 'vscode-icons:file-type-excel',
-            //                'active' => $currentRouteName === 'email.index',
-            //                'subMenu' => [],
-            //            ],
             [
                 'name' => 'User Management',
                 'permission' => hasPermissions('user-view|role-view'),
@@ -92,51 +66,6 @@ class SideNav
                 'active' => $currentRouteName === 'email.blacklist.index',
                 'subMenu' => [],
             ],
-            [
-                'name' => 'Setup',
-                'permission' => hasPermissions('email-black-view'),
-                'icon' => 'material-icon-theme:folder-config-open',
-                'active' => in_array($currentRouteName, ['setup.general', 'setup.pwa', 'setup.smtp', 'setup.social', 'setup.chat', 'setup.openai'], true),
-                'subMenu' => [
-                    [
-                        'name' => 'General Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.general'),
-                        'active' => $currentRouteName === 'setup.general',
-                    ],
-                    [
-                        'name' => 'Pwa Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.pwa'),
-                        'active' => $currentRouteName === 'setup.pwa',
-                    ],
-                    [
-                        'name' => 'Smtp Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.smtp'),
-                        'active' => $currentRouteName === 'setup.smtp',
-                    ],
-                    [
-                        'name' => 'Social Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.social'),
-                        'active' => $currentRouteName === 'setup.social',
-                    ],
-                    [
-                        'name' => 'Chat Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.chat'),
-                        'active' => $currentRouteName === 'setup.chat',
-                    ],
-                    [
-                        'name' => 'OpenAi Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.openai'),
-                        'active' => $currentRouteName === 'setup.openai',
-                    ],
-                ],
-            ],
-
         ];
     }
 
@@ -148,7 +77,7 @@ class SideNav
             [
                 'name' => 'Dashboard',
                 'permission' => hasPermissions('dashboard-view-user'),
-                'href' => route('user.dashboard'),
+                'href' => route('dashboard'),
                 'icon' => 'vscode-icons:file-type-homeassistant',
                 'active' => $currentRouteName === 'dashboard',
                 'subMenu' => [],
@@ -164,9 +93,9 @@ class SideNav
             [
                 'name' => 'Dashboard',
                 'permission' => hasPermissions('dashboard-view-employee'),
-                'href' => route('employee.dashboard'),
+                'href' => route('dashboard'),
                 'icon' => 'vscode-icons:file-type-homeassistant',
-                'active' => $currentRouteName === 'employee.dashboard',
+                'active' => $currentRouteName === 'dashboard',
                 'subMenu' => [],
             ],
             [
@@ -225,7 +154,7 @@ class SideNav
                 'name' => 'Black',
                 'permission' => hasPermissions('dashboard-view-employee'),
                 'icon' => 'material-icon-theme:folder-private-open',
-                'active' => in_array($currentRouteName, ['employee.black.email'], true),
+                'active' => in_array($currentRouteName, ['employee.black.email', 'employee.black.words'], true),
                 'subMenu' => [
                     [
                         'name' => 'Email',
@@ -233,40 +162,12 @@ class SideNav
                         'href' => route('employee.black.email'),
                         'active' => $currentRouteName === 'employee.black.email',
                     ],
-                ],
-            ],
-
-            [
-                'name' => 'Setup',
-                'permission' => hasPermissions('dashboard-view-employee'),
-                'icon' => 'material-icon-theme:folder-config-open',
-                'active' => in_array($currentRouteName, ['employee.setup.index', 'employee.imap.settings', 'employee.smtp'], true),
-                'subMenu' => [
                     [
-                        'name' => 'Mails configure',
+                        'name' => 'Keyword',
                         'permission' => hasPermissions('dashboard-view-employee'),
-                        'href' => route('employee.setup.index'),
-                        'active' => $currentRouteName === 'employee.setup.index',
+                        'href' => route('employee.black.word'),
+                        'active' => $currentRouteName === 'employee.black.word',
                     ],
-                    [
-                        'name' => 'IMAP Web Mail',
-                        'permission' => hasPermissions('dashboard-view-employee'),
-                        'href' => route('employee.imap.settings', 'webmail'),
-                        'active' => request()->is('employee/setup/imap/webmail'),
-                    ],
-                    [
-                        'name' => 'IMAP Apple Mail',
-                        'permission' => hasPermissions('dashboard-view-employee'),
-                        'href' => route('employee.imap.settings', 'applemail'),
-                        'active' => request()->is('employee/setup/imap/applemail'),
-                    ],
-                    [
-                        'name' => 'SMTP configure',
-                        'permission' => hasPermissions('dashboard-view-employee'),
-                        'href' => route('employee.smtp'),
-                        'active' => $currentRouteName === 'employee.smtp',
-                    ],
-
                 ],
             ],
         ];
