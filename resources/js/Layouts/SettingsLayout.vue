@@ -1,88 +1,9 @@
 <script setup>
 import CommonCard from '@/Components/Common/CommonCard.vue';
 import CommonIcon from '@/Components/Common/CommonIcon.vue';
+import { Link } from '@inertiajs/vue3';
 
-const navigationMenu = [
-    {
-        category: 'General',
-        items: [
-            {
-                name: 'General',
-                icon: 'heroicons:cog-6-tooth',
-                href: '#',
-                active: true,
-            },
-            {
-                name: 'Company Information',
-                icon: 'heroicons:bars-3-bottom-right',
-                href: '#',
-                hasNotification: false,
-            },
-            {
-                name: 'Localization',
-                icon: 'heroicons:globe-alt',
-                href: '#',
-                hasNotification: false,
-            },
-            {
-                name: 'Email',
-                icon: 'heroicons:envelope',
-                href: '#',
-                hasNotification: false,
-            },
-        ],
-    },
-    {
-        category: 'Finance',
-        items: [
-            {
-                name: 'General',
-                icon: 'heroicons:cog-6-tooth',
-                href: '#',
-            },
-        ],
-    },
-    {
-        category: 'Configure Features',
-        items: [
-            {
-                name: 'Leads',
-                icon: 'heroicons:document-currency-dollar',
-                href: '#',
-            },
-        ],
-    },
-    {
-        category: 'Integrations',
-        items: [
-            {
-                name: 'Google',
-                icon: 'heroicons:magnifying-glass-circle',
-                href: '#',
-            },
-            {
-                name: 'Zonvoir.com',
-                icon: 'heroicons:globe-alt',
-                href: '#',
-            },
-        ],
-    },
-    {
-        category: 'AI Integration',
-        items: [
-            {
-                name: 'General',
-                icon: 'heroicons:cog-6-tooth',
-                href: '#',
-            },
-            {
-                name: 'Open AI',
-                icon: 'heroicons:at-symbol',
-                href: '#',
-            },
-        ],
-    },
-];
+defineProps(['menu']);
 </script>
 <template>
     <div class="container mx-auto">
@@ -94,7 +15,7 @@ const navigationMenu = [
                     <div class="">
                         <nav class="space-y-2">
                             <div
-                                v-for="section in navigationMenu"
+                                v-for="section in menu"
                                 :key="section.category"
                                 class="mb-6"
                             >
@@ -105,7 +26,7 @@ const navigationMenu = [
                                 </h4>
 
                                 <div class="space-y-0">
-                                    <a
+                                    <Link
                                         v-for="item in section.items"
                                         :key="item.name"
                                         :href="item.href"
@@ -147,7 +68,8 @@ const navigationMenu = [
                                             <span
                                                 :class="[
                                                     'rounded-full px-2 py-1 text-xs font-medium',
-                                                    item.statusColor === 'green'
+                                                    item?.statusColor ===
+                                                    'green'
                                                         ? 'bg-green-100 text-green-700'
                                                         : 'bg-gray-100 text-gray-700',
                                                 ]"
@@ -157,14 +79,14 @@ const navigationMenu = [
                                         </div>
 
                                         <div
-                                            v-else-if="item.hasNotification"
+                                            v-else-if="item?.hasNotification"
                                             class="flex items-center gap-2"
                                         >
                                             <span
                                                 class="h-2 w-2 animate-pulse rounded-full bg-red-500"
                                             ></span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </nav>
@@ -173,7 +95,7 @@ const navigationMenu = [
             </div>
 
             <CommonCard
-                class="sticky top-16 max-h-fit w-full rounded-2xl border-0 bg-white/90 shadow-2xl backdrop-blur-sm"
+                class="sticky top-16 h-full w-full rounded-2xl border-0 bg-white/90 shadow-2xl backdrop-blur-sm"
             >
                 <slot />
             </CommonCard>

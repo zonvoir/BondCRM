@@ -1,26 +1,30 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-
+import SettingsLayout from '@/Layouts/SettingsLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
-import CommonCard from '@/Components/Common/CommonCard.vue';
-import CommonInput from '@/Components/Common/CommonInput.vue';
-import CommonFile from '@/Components/Common/CommonFile.vue';
-import CommonButton from '@/Components/Common/CommonButton.vue';
+import { useForm } from '@inertiajs/vue3';
 import CommonColor from '@/Components/Common/CommonColor.vue';
+import CommonInput from '@/Components/Common/CommonInput.vue';
+import CommonButton from '@/Components/Common/CommonButton.vue';
+import CommonFile from '@/Components/Common/CommonFile.vue';
 
 const props = defineProps({
-    generalSettings: {
-        type: Object,
+    menuSettings: {
+        type: Array,
         required: true,
+    },
+    data: {
+        type: Array,
     },
 });
 
+const generalSettings = props.data?.generalSettings;
+
 const form = useForm({
-    appName: props?.generalSettings?.data?.app_name,
-    description: props?.generalSettings?.data?.app_description,
+    appName: generalSettings?.data?.app_name,
+    description: generalSettings?.data?.app_description,
     appLogo: '',
-    themeColor: props?.generalSettings?.data?.theme_color,
+    themeColor: generalSettings?.data?.theme_color,
 });
 
 const submit = () => {
@@ -31,9 +35,9 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout title="Settings">
+    <AppLayout :title="data?.title">
         <PanelLayout>
-            <CommonCard>
+            <SettingsLayout :menu="menuSettings">
                 <form method="post">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-12 sm:col-auto">
@@ -90,7 +94,7 @@ const submit = () => {
                         </CommonButton>
                     </div>
                 </form>
-            </CommonCard>
+            </SettingsLayout>
         </PanelLayout>
     </AppLayout>
 </template>

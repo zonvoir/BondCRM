@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setup\GeneralSettingsRequest;
+use App\Http\Requests\Setup\GoogleSocialiteRequest;
 use App\Http\Requests\Setup\LiveChatSettingsRequest;
+use App\Http\Requests\Setup\MicrosoftSocialiteRequest;
 use App\Http\Requests\Setup\PwaSettingsRequest;
-use App\Http\Requests\Setup\SettingsSocialiteRequest;
 use App\Repositories\Setup\SetupRepository;
 use App\Services\Setup\SettingsService;
 use Illuminate\Support\Facades\Artisan;
@@ -35,9 +36,19 @@ class SettingsController extends Controller
         ]);
     }
 
-    public function settingsSocialiteSave(SettingsSocialiteRequest $request)
+    public function microsoftSocialiteSave(MicrosoftSocialiteRequest $request)
     {
-        $this->settingsService->saveSocialiteSettings($request->validated());
+        $this->settingsService->saveMicrosoftSocialiteSettings($request->validated());
+
+        return back()->with([
+            'message' => 'Updated successfully',
+            'type' => 'success',
+        ]);
+    }
+
+    public function googleSocialiteSave(GoogleSocialiteRequest $request)
+    {
+        $this->settingsService->saveGoogleSocialiteSettings($request->validated());
 
         return back()->with([
             'message' => 'Updated successfully',
@@ -65,7 +76,7 @@ class SettingsController extends Controller
 
     public function storageLink()
     {
-        Artisan::call('storage:link');
+        Artisan::call('storage:link --force');
         sleep(1);
 
         return response()->json(200);

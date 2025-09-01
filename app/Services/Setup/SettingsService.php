@@ -137,29 +137,31 @@ class SettingsService
         ]);
     }
 
-    public function saveSocialiteSettings(array $data)
+    public function saveMicrosoftSocialiteSettings(array $data)
     {
-        $providers = [
-            'microsoft' => [
+        SocialiteSetting::query()->updateOrCreate(
+            ['provider' => 'microsoft'],
+            [
                 'client_id' => $data['microsoftClientId'] ?? '',
                 'client_secret' => $data['microsoftClientSecret'] ?? '',
                 'redirect_url' => $data['microsoftRedirect'] ?? '',
                 'status' => $data['statusMicrosoft'] ?? '',
-            ],
-            'google' => [
+            ]
+        );
+    }
+
+    public function saveGoogleSocialiteSettings(array $data)
+    {
+        SocialiteSetting::query()->updateOrCreate(
+            ['provider' => 'google'],
+            [
                 'client_id' => $data['googleClientId'] ?? '',
                 'client_secret' => $data['googleClientSecret'] ?? '',
                 'redirect_url' => $data['googleRedirect'] ?? '',
                 'status' => $data['statusGoogle'] ?? '',
-            ],
-        ];
+            ]
+        );
 
-        foreach ($providers as $provider => $credentials) {
-            SocialiteSetting::query()->updateOrCreate(
-                ['provider' => $provider],
-                $credentials
-            );
-        }
     }
 
     public function saveChatSettings(array $data): Model|LiveChatSettings

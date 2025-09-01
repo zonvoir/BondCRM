@@ -30,11 +30,11 @@ class MailService
         $page = request('page', 1);
         $perPage = 10;
 
-        $items = collect($response['data']);
+        $items = collect($response['data'] ?? []);
 
         return new LengthAwarePaginator(
             $items,
-            $response['total'],
+            $response['total'] ?? 0,
             $perPage,
             $page,
             ['path' => Paginator::resolveCurrentPath()]

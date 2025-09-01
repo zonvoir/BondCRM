@@ -1,24 +1,29 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import PanelLayout from '@/Layouts/PanelLayout.vue';
+import SettingsLayout from '@/Layouts/SettingsLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import CommonCard from '@/Components/Common/CommonCard.vue';
+import PanelLayout from '@/Layouts/PanelLayout.vue';
+import { useForm } from '@inertiajs/vue3';
 import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonTextarea from '@/Components/Common/CommonTextarea.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
 
 const props = defineProps({
-    openAiSettings: {
-        type: Object,
+    menuSettings: {
+        type: Array,
         required: true,
+    },
+    data: {
+        type: Array,
     },
 });
 
+const openAiSettings = props.data.openAiSettings;
+
 const form = useForm({
-    assistantName: props?.openAiSettings?.assistant_name ?? null,
-    assistantId: props?.openAiSettings?.assistant_id ?? null,
-    apiKey: props?.openAiSettings?.api_key ?? null,
-    prompt: props?.openAiSettings?.prompt ?? null,
+    assistantName: openAiSettings?.assistant_name ?? null,
+    assistantId: openAiSettings?.assistant_id ?? null,
+    apiKey: openAiSettings?.api_key ?? null,
+    prompt: openAiSettings?.prompt ?? null,
 });
 
 const submit = () => {
@@ -29,9 +34,9 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout title="OpenAi Settings">
+    <AppLayout :title="data?.title">
         <PanelLayout>
-            <CommonCard>
+            <SettingsLayout :menu="menuSettings">
                 <form method="post" class="grid grid-cols-12 gap-3">
                     <div class="col-span-12 sm:col-span-6">
                         <CommonInput
@@ -66,7 +71,7 @@ const submit = () => {
                         <CommonButton @click="submit">Submit</CommonButton>
                     </div>
                 </form>
-            </CommonCard>
+            </SettingsLayout>
         </PanelLayout>
     </AppLayout>
 </template>

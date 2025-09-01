@@ -14,45 +14,29 @@ class SetupMenu
         return [
             [
                 'name' => 'Settings',
+                'permission' => hasPermissions('dashboard-view'),
+                'href' => route('setup.general.index', 'general'),
+                'icon' => 'material-icon-theme:settings',
+                'active' => $currentRouteName === 'setup.general.index',
+                'subMenu' => [],
+            ],
+            [
+                'name' => 'Leads',
                 'permission' => hasPermissions('email-black-view'),
-                'icon' => 'material-icon-theme:folder-config-open',
-                'active' => in_array($currentRouteName, ['setup.general', 'setup.pwa', 'setup.smtp', 'setup.social', 'setup.chat', 'setup.openai'], true),
+                'icon' => 'material-icon-theme:folder-azure-pipelines-open',
+                'active' => in_array($currentRouteName, ['setup.source', 'setup.status'], true),
                 'subMenu' => [
                     [
-                        'name' => 'General Settings',
+                        'name' => 'Sources',
                         'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.general'),
-                        'active' => $currentRouteName === 'setup.general',
+                        'href' => route('setup.source'),
+                        'active' => $currentRouteName === 'setup.source',
                     ],
                     [
-                        'name' => 'Pwa Settings',
+                        'name' => 'statuses',
                         'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.pwa'),
-                        'active' => $currentRouteName === 'setup.pwa',
-                    ],
-                    [
-                        'name' => 'Smtp Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.smtp'),
-                        'active' => $currentRouteName === 'setup.smtp',
-                    ],
-                    [
-                        'name' => 'Social Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.social'),
-                        'active' => $currentRouteName === 'setup.social',
-                    ],
-                    [
-                        'name' => 'Chat Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.chat'),
-                        'active' => $currentRouteName === 'setup.chat',
-                    ],
-                    [
-                        'name' => 'OpenAi Settings',
-                        'permission' => hasPermissions('email-black-view'),
-                        'href' => route('setup.openai'),
-                        'active' => $currentRouteName === 'setup.openai',
+                        'href' => route('setup.status'),
+                        'active' => $currentRouteName === 'setup.status',
                     ],
                 ],
             ],
@@ -74,7 +58,7 @@ class SetupMenu
 
         return [
             [
-                'name' => 'Setup',
+                'name' => 'Settings',
                 'permission' => hasPermissions('dashboard-view-employee'),
                 'icon' => 'material-icon-theme:folder-config-open',
                 'active' => in_array($currentRouteName, ['employee.setup.index', 'employee.imap.settings', 'employee.smtp'], true),
@@ -131,7 +115,7 @@ class SetupMenu
     public static function indexRouteName(): ?string
     {
         if (hasRole(RoleEnum::ADMIN->value)) {
-            return route('setup.general');
+            return route('setup.general.index', 'general');
         }
 
         if (hasRole(RoleEnum::EMPLOYEE->value)) {

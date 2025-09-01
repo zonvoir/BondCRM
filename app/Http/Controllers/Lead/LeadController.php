@@ -19,4 +19,14 @@ class LeadController extends Controller
 
         return Inertia::render('Lead/Index', $props);
     }
+
+    public function socialSync()
+    {
+        $props = [
+            'mailProviders' => $this->leadService->mapProvider(),
+            'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),
+        ];
+
+        return Inertia::render('Lead/SocialSync', $props);
+    }
 }

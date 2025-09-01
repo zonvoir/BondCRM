@@ -9,7 +9,6 @@ import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonDrawer from '@/Components/Common/CommonDrawer.vue';
 import CommonSelect from '@/Components/Common/CommonSelect.vue';
 import CommonDatePicker from '@/Components/Common/CommonDatePicker.vue';
-import CommonModal from '@/Components/Common/CommonModal.vue';
 
 const props = defineProps({
     mailProviders: {
@@ -50,7 +49,7 @@ const selectedProvider = e => {
         <PanelLayout>
             <div class="flex items-center justify-between py-4">
                 <div class="flex items-center justify-center gap-2">
-                    <div>ddd</div>
+                    <div></div>
                 </div>
                 <div>
                     <CommonButton @click="handleDrawerOpen"
@@ -59,7 +58,7 @@ const selectedProvider = e => {
                 </div>
             </div>
 
-            <CommonModal v-model:visible="showDrawer" header="Create Lead">
+            <CommonDrawer v-model:visible="showDrawer" header="Create Lead">
                 <div
                     class="mt-2 mb-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 dark:border-blue-800 dark:bg-blue-900/40 dark:text-blue-300"
                 >
@@ -117,7 +116,7 @@ const selectedProvider = e => {
                         <CommonButton>Save</CommonButton>
                     </div>
                 </template>
-            </CommonModal>
+            </CommonDrawer>
         </PanelLayout>
     </AppLayout>
 </template>

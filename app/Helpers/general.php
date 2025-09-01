@@ -20,6 +20,33 @@ if (! function_exists('timezones')) {
 
 }
 
+if (! function_exists('dateFormats')) {
+    function dateFormats(): array
+    {
+        return [
+            ['code' => 'd-m-Y', 'name' => 'd-m-Y'],
+            ['code' => 'd/m/Y', 'name' => 'd/m/Y'],
+            ['code' => 'm-d-Y', 'name' => 'm-d-Y'],
+            ['code' => 'm.d.Y', 'name' => 'm.d.Y'],
+            ['code' => 'm/d/Y', 'name' => 'm/d/Y'],
+            ['code' => 'Y-m-d', 'name' => 'Y-m-d'],
+            ['code' => 'd.m.Y', 'name' => 'd.m.Y'],
+        ];
+    }
+
+}
+
+if (! function_exists('timeFormat')) {
+    function timeFormat(): array
+    {
+        return [
+            ['code' => '24', 'name' => '24 hours'],
+            ['code' => '12', 'name' => '12 hours'],
+        ];
+    }
+
+}
+
 if (! function_exists('logos')) {
     function logos()
     {

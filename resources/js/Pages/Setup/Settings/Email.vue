@@ -1,16 +1,19 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import CommonCard from '@/Components/Common/CommonCard.vue';
-import CommonInput from '@/Components/Common/CommonInput.vue';
-import CommonButton from '@/Components/Common/CommonButton.vue';
-import CommonRadioButton from '@/Components/Common/CommonRadioButton.vue';
+import SettingsLayout from '@/Layouts/SettingsLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
+import CommonRadioButton from '@/Components/Common/CommonRadioButton.vue';
+import CommonInput from '@/Components/Common/CommonInput.vue';
+import CommonButton from '@/Components/Common/CommonButton.vue';
+import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
-    emailSettings: {
-        type: Object,
+    menuSettings: {
+        type: Array,
         required: true,
+    },
+    data: {
+        type: Array,
     },
 });
 
@@ -19,20 +22,21 @@ const encryption = [
     { label: 'SSL', value: 'ssl' },
 ];
 
+const emailSettings = props?.data?.emailSettings;
+
 const initialEncryption =
-    encryption?.find(
-        item => item.label === props.emailSettings?.data?.mailEncryption
-    )?.value ?? '';
+    encryption?.find(item => item.label === emailSettings?.data?.mailEncryption)
+        ?.value ?? '';
 
 const form = useForm({
-    mailDriver: props.emailSettings?.data?.mailDriver ?? '',
-    mailHost: props.emailSettings?.data?.mailHost ?? '',
-    mailPort: props.emailSettings?.data?.mailPort ?? '',
-    mail: props.emailSettings?.data?.mail ?? '',
-    password: props.emailSettings?.data?.password ?? '',
+    mailDriver: emailSettings?.data?.mailDriver ?? '',
+    mailHost: emailSettings?.data?.mailHost ?? '',
+    mailPort: emailSettings?.data?.mailPort ?? '',
+    mail: emailSettings?.data?.mail ?? '',
+    password: emailSettings?.data?.password ?? '',
     mailEncryption: initialEncryption,
-    mailFromAddress: props.emailSettings?.data?.mailFromAddress ?? '',
-    mailFromName: props.emailSettings?.data?.mailFromName ?? '',
+    mailFromAddress: emailSettings?.data?.mailFromAddress ?? '',
+    mailFromName: emailSettings?.data?.mailFromName ?? '',
 });
 
 const formEmailTest = useForm({
@@ -55,9 +59,9 @@ const emailTestSubmit = () => {
 </script>
 
 <template>
-    <AppLayout title="Settings">
+    <AppLayout :title="data?.title">
         <PanelLayout>
-            <CommonCard>
+            <SettingsLayout :menu="menuSettings">
                 <form
                     method="post"
                     class="mb-5 flex flex-row items-center gap-6"
@@ -163,7 +167,7 @@ const emailTestSubmit = () => {
                         </div>
                     </div>
                 </form>
-            </CommonCard>
+            </SettingsLayout>
         </PanelLayout>
     </AppLayout>
 </template>
