@@ -87,21 +87,26 @@ const handleMultipleConfirm = () => {
 </script>
 <template>
     <PanelLayout title="Black List Email">
-        <div class="p-5 bg-white rounded-md">
-            <div class="flex items-center justify-between py-4 ">
+        <div class="rounded-md bg-white p-5">
+            <div class="flex items-center justify-between py-4">
                 <div class="flex items-end justify-center gap-2">
                     <div>
-                        <CommonInput labelClass="font-semibold" label="Search"  :icon="'heroicons-outline:magnifying-glass'" v-model="searchQuery" />
+                        <CommonInput
+                            labelClass="font-semibold"
+                            label="Search"
+                            :icon="'heroicons-outline:magnifying-glass'"
+                            v-model="searchQuery"
+                        />
                     </div>
                     <div>
                         <CommonButton
                             @click="handleMultipleConfirm"
                             variant="secondary"
-                            class="!bg-gray-100 !hover:bg-indigo-100 dark:bg-dark dark:text-white !border-none "
+                            class="!hover:bg-indigo-100 dark:bg-dark !border-none !bg-gray-100 dark:text-white"
                             size="xs"
                         >
                             <CommonIcon
-                                class="h-6 w-6 text-red-500 "
+                                class="h-6 w-6 text-red-500"
                                 icon="heroicons-outline:trash"
                             />
                         </CommonButton>
@@ -111,7 +116,7 @@ const handleMultipleConfirm = () => {
                     <CommonButton @click="handleOpen">Create</CommonButton>
                 </div>
             </div>
-    
+
             <CommonDataTable
                 :showSerialNumber="true"
                 :data="emails"
@@ -119,7 +124,11 @@ const handleMultipleConfirm = () => {
                 @update:modelSelection="selectRows"
             >
                 <Column field="email" header="Email" :sortable="true" />
-                <Column field="created_at" header="Created At" :sortable="true" />
+                <Column
+                    field="created_at"
+                    header="Created At"
+                    :sortable="true"
+                />
                 <Column header="Action" :sortable="false">
                     <template #body="slotProps">
                         <div class="flex gap-2">
@@ -134,7 +143,6 @@ const handleMultipleConfirm = () => {
                     </template>
                 </Column>
             </CommonDataTable>
-
         </div>
 
         <CommonDrawer

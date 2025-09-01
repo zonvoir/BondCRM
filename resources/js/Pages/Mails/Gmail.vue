@@ -52,7 +52,7 @@ const viewInbox = message_id => {
                 message.value = response?.data;
             }
         })
-        .catch(error => { });
+        .catch(error => {});
 };
 
 const clearMessage = () => {
@@ -72,25 +72,36 @@ const selectRows = e => {
     <AppLayout title="Gmail">
         <PanelLayout>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-12">
-                <div class="col-span-1 md:col-span-3 relative ">
-                    <div class="sticky top-20 ">
-                        <CommonSidebarMail route-name="employee.gmail" :sideList="sideList" />
+                <div class="relative col-span-1 md:col-span-3">
+                    <div class="sticky top-20">
+                        <CommonSidebarMail
+                            route-name="employee.gmail"
+                            :sideList="sideList"
+                        />
                     </div>
                 </div>
 
-                <CommonCard class="col-span-1 md:col-span-9 relative">
+                <CommonCard class="relative col-span-1 md:col-span-9">
                     <div v-if="message">
-                        <div class="flex flex-col items-end ">
-                            <CommonIcon @click="clearMessage" class="h-8 w-8 cursor-pointer"
-                                icon="material-symbols:close" />
+                        <div class="flex flex-col items-end">
+                            <CommonIcon
+                                @click="clearMessage"
+                                class="h-8 w-8 cursor-pointer"
+                                icon="material-symbols:close"
+                            />
                         </div>
                         <InboxGmailDetails :message="message" />
                     </div>
                     <div v-else class="flex flex-col items-center gap-3 py-1">
                         <div class="flex w-full justify-between">
                             <div class="flex items-center gap-2">
-                                <Link class="cursor-pointer rounded-lg bg-gray-50 p-2">
-                                <CommonIcon class="h-7 w-7 text-gray-500" icon="mdi:sync-circle" />
+                                <Link
+                                    class="cursor-pointer rounded-lg bg-gray-50 p-2"
+                                >
+                                    <CommonIcon
+                                        class="h-7 w-7 text-gray-500"
+                                        icon="mdi:sync-circle"
+                                    />
                                 </Link>
 
                                 <CommonButton size="xs">
@@ -102,48 +113,89 @@ const selectRows = e => {
                             <div class="ml-auto" />
 
                             <!-- Right: Search -->
-                            <form class="relative w-full max-w-[320px]" role="search" aria-label="Search inbox">
-                                <CommonInput  icon="material-symbols:search-rounded" placeholder="Search" type="search"/>
+                            <form
+                                class="relative w-full max-w-[320px]"
+                                role="search"
+                                aria-label="Search inbox"
+                            >
+                                <CommonInput
+                                    icon="material-symbols:search-rounded"
+                                    placeholder="Search"
+                                    type="search"
+                                />
                             </form>
                         </div>
                         <div class="flex w-full justify-start">
-                            <CommonDataTable :showSerialNumber="false" :data="mails" :otherArgument="pageToken"
-                                :checkbox="true" @rowClick="selectedItem" @update:modelSelection="selectRows">
-                                <Column field="name" header="" :sortable="false">
+                            <CommonDataTable
+                                :showSerialNumber="false"
+                                :data="mails"
+                                :otherArgument="pageToken"
+                                :checkbox="true"
+                                @rowClick="selectedItem"
+                                @update:modelSelection="selectRows"
+                            >
+                                <Column
+                                    field="name"
+                                    header=""
+                                    :sortable="false"
+                                >
                                     <template #body="slotProps">
                                         <div class="flex cursor-pointer gap-2">
-                                            <CommonIcon :class="[
-                                                'h-7 w-7',
-                                                slotProps?.data?.is_starred
-                                                    ? 'text-yellow-400'
-                                                    : 'text-gray-400',
-                                            ]" :icon="slotProps?.data?.is_starred
-                                                ? 'material-symbols:star-rate-rounded'
-                                                : 'material-symbols-light:star-outline-rounded'
-                                                " />
+                                            <CommonIcon
+                                                :class="[
+                                                    'h-7 w-7',
+                                                    slotProps?.data?.is_starred
+                                                        ? 'text-yellow-400'
+                                                        : 'text-gray-400',
+                                                ]"
+                                                :icon="
+                                                    slotProps?.data?.is_starred
+                                                        ? 'material-symbols:star-rate-rounded'
+                                                        : 'material-symbols-light:star-outline-rounded'
+                                                "
+                                            />
                                         </div>
                                     </template>
                                 </Column>
 
-                                <Column field="name" header="" :sortable="false">
+                                <Column
+                                    field="name"
+                                    header=""
+                                    :sortable="false"
+                                >
                                     <template #body="slotProps">
                                         <div class="flex cursor-pointer gap-2">
-                                            <img class="h-7 w-7" v-if="
-                                                slotProps?.data?.from
-                                                    ?.avatar?.exists
-                                            " :src="slotProps?.data?.from
-                                                ?.avatar?.url
-                                                " alt="logo" />
+                                            <img
+                                                class="h-7 w-7"
+                                                v-if="
+                                                    slotProps?.data?.from
+                                                        ?.avatar?.exists
+                                                "
+                                                :src="
+                                                    slotProps?.data?.from
+                                                        ?.avatar?.url
+                                                "
+                                                alt="logo"
+                                            />
                                             <span class="text-nowrap">
                                                 {{
                                                     slotProps?.data?.from?.name
-                                                }}</span>
+                                                }}</span
+                                            >
                                         </div>
                                     </template>
                                 </Column>
 
-                                <Column field="subject" header="" :sortable="false" />
-                                <Column field="created_at" header="" :sortable="false" />
+                                <Column
+                                    field="subject"
+                                    header=""
+                                    :sortable="false"
+                                />
+                                <Column
+                                    field="created_at"
+                                    header=""
+                                    :sortable="false"
+                                />
                             </CommonDataTable>
                         </div>
                     </div>
