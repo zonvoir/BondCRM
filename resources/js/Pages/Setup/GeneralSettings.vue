@@ -6,9 +6,10 @@ import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonFile from '@/Components/Common/CommonFile.vue';
 import CommonSelect from '@/Components/Common/CommonSelect.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
-import { useCustomToast } from '@/composables/useToast.js';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
+import SettingsLayout from '@/Layouts/SettingsLayout.vue';
+import { useCustomToast } from '@/Composables/useToast';
 const { showToast } = useCustomToast();
 
 const props = defineProps({
@@ -106,7 +107,7 @@ const cronRunSubmit = () => {
 <template>
     <AppLayout title="Settings">
         <PanelLayout>
-            <CommonCard>
+            <SettingsLayout>
                 <form method="post">
                     <div class="grid grid-cols-3 gap-4 py-5">
                         <div class="col-span-12 sm:col-auto">
@@ -204,62 +205,62 @@ const cronRunSubmit = () => {
                         </CommonButton>
                     </div>
                 </form>
-            </CommonCard>
 
-            <CommonCard class="mt-5">
-                <form method="post">
-                    <div class="grid grid-cols-12 gap-3">
-                        <div class="col-span-12 sm:col-span-4">
-                            <CommonButton
-                                v-tooltip.top="
-                                    'Clear the application cache and optimize the system.'
-                                "
-                                class="w-full"
-                                variant="primary"
-                                icon="heroicons-outline:arrow-path"
-                                @click="clearCacheSubmit"
-                                :processing="clearCache"
-                            >
-                                Clear Cache
-                            </CommonButton>
+                <CommonCard class="mt-5">
+                    <form method="post">
+                        <div class="grid grid-cols-12 gap-3">
+                            <div class="col-span-12 sm:col-span-4">
+                                <CommonButton
+                                    v-tooltip.top="
+                                        'Clear the application cache and optimize the system.'
+                                    "
+                                    class="w-full"
+                                    variant="primary"
+                                    icon="heroicons-outline:arrow-path"
+                                    @click="clearCacheSubmit"
+                                    :processing="clearCache"
+                                >
+                                    Clear Cache
+                                </CommonButton>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <CommonButton
+                                    v-tooltip.top="
+                                        isLink
+                                            ? 'Storage link created.'
+                                            : 'Create a symbolic link to the storage folder. This is required for file uploads to be publicly accessible.'
+                                    "
+                                    class="w-full"
+                                    variant="primary"
+                                    :icon="
+                                        isLink
+                                            ? 'heroicons-outline:circle-stack'
+                                            : 'heroicons-outline:exclamation-circle'
+                                    "
+                                    :processing="storageLink"
+                                    @click="storageLinkSubmit"
+                                >
+                                    Storage Link
+                                </CommonButton>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <CommonButton
+                                    v-tooltip.top="
+                                        'Run all scheduled tasks immediately. This will execute any tasks that are scheduled to run in your application.'
+                                    "
+                                    class="w-full"
+                                    variant="primary"
+                                    icon="heroicons-outline:cpu-chip"
+                                    :processing="manuallyCronRun"
+                                    @click="cronRunSubmit"
+                                >
+                                    Manually Cron Run
+                                </CommonButton>
+                            </div>
                         </div>
-                        <div class="col-span-12 sm:col-span-4">
-                            <CommonButton
-                                v-tooltip.top="
-                                    isLink
-                                        ? 'Storage link created.'
-                                        : 'Create a symbolic link to the storage folder. This is required for file uploads to be publicly accessible.'
-                                "
-                                class="w-full"
-                                variant="primary"
-                                :icon="
-                                    isLink
-                                        ? 'heroicons-outline:circle-stack'
-                                        : 'heroicons-outline:exclamation-circle'
-                                "
-                                :processing="storageLink"
-                                @click="storageLinkSubmit"
-                            >
-                                Storage Link
-                            </CommonButton>
-                        </div>
-                        <div class="col-span-12 sm:col-span-4">
-                            <CommonButton
-                                v-tooltip.top="
-                                    'Run all scheduled tasks immediately. This will execute any tasks that are scheduled to run in your application.'
-                                "
-                                class="w-full"
-                                variant="primary"
-                                icon="heroicons-outline:cpu-chip"
-                                :processing="manuallyCronRun"
-                                @click="cronRunSubmit"
-                            >
-                                Manually Cron Run
-                            </CommonButton>
-                        </div>
-                    </div>
-                </form>
-            </CommonCard>
+                    </form>
+                </CommonCard>
+            </SettingsLayout>
         </PanelLayout>
     </AppLayout>
 </template>
