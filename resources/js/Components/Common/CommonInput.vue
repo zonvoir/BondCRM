@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import CommonIcon from './CommonIcon.vue';
 
 const props = defineProps({
     label: {
@@ -62,6 +63,10 @@ const props = defineProps({
         default: 'w-full',
         required: false,
     },
+    icon: {
+        type: String,
+        default: null
+    }
 });
 
 const model = defineModel({
@@ -81,35 +86,30 @@ defineExpose({ focus: () => input?.value?.focus() });
 </script>
 
 <template>
-    <label
-        :class="[
-            labelClass,
-            'mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300',
-        ]"
-    >
+    <label :class="[
+        labelClass,
+        'mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300',
+    ]">
         <span class="flex items-center" v-if="label">
             {{ label }}
             <p class="mx-1 text-red-600" v-if="required">*</p>
         </span>
     </label>
 
-    <input
-        ref="input"
-        :type="type"
-        :maxlength="maxlength"
-        :placeholder="placeholder"
-        :readonly="readonly"
-        :disabled="disabled"
-        :required="required"
-        v-model="model"
-        :autocomplete="autocomplete"
-        :autofocus="autofocus"
-        :class="[
-            InputClass,
-            'rounded-md border-gray-300 text-gray-900 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600',
-        ]"
-    />
+    <div class="relative w-full">
 
+        <CommonIcon v-if="icon" :is="icon" :icon="icon"
+            class="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+
+        <input ref="input" :type="type" :maxlength="maxlength" :placeholder="placeholder" :readonly="readonly"
+            :disabled="disabled" :required="required" v-model="model" :autocomplete="autocomplete"
+            :autofocus="autofocus" :class="[
+                InputClass,
+                icon ? 'pl-10' : '',
+                'rounded-md border-gray-300 text-gray-900 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600',
+
+            ]" />
+    </div>
     <div class="mt-1" v-show="error">
         <p class="text-sm text-red-600 dark:text-red-400">
             {{ error }}
