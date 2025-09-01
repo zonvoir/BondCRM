@@ -12,8 +12,8 @@ const props = defineProps({
 <template>
     <AppLayout :title="title">
         <SideMenu>
-            <main class="bg-light dark:bg-dark min-h-screen py-10">
-                <div class="px-4 sm:px-6 lg:px-8">
+            <main class="bg-light dark:bg-dark min-h-screen py-3">
+                <div class="px-4 sm:px-6 lg:px-3">
                     <slot />
                 </div>
             </main>
