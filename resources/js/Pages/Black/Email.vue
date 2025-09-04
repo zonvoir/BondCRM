@@ -94,6 +94,7 @@ const handleMultipleConfirm = () => {
                         <CommonInput
                             labelClass="font-semibold"
                             label="Search"
+                            placeholder="Email"
                             :icon="'heroicons-outline:magnifying-glass'"
                             v-model="searchQuery"
                         />
@@ -101,14 +102,12 @@ const handleMultipleConfirm = () => {
                     <div>
                         <CommonButton
                             @click="handleMultipleConfirm"
-                            variant="secondary"
-                            class="!hover:bg-indigo-100 dark:bg-dark !border-none !bg-gray-100 dark:text-white"
+                            variant="gray"
+                            iconClass="!w-6 !h-6 text-red-500"
+                            icon="heroicons-outline:trash"
+                            class="p-2"
                             size="xs"
                         >
-                            <CommonIcon
-                                class="h-6 w-6 text-red-500"
-                                icon="heroicons-outline:trash"
-                            />
                         </CommonButton>
                     </div>
                 </div>

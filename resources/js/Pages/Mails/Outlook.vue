@@ -63,11 +63,16 @@ const selectRows = e => {
     <AppLayout title="Outlook">
         <PanelLayout>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-12">
-                <CommonSidebarMail
-                    route-name="employee.outlook"
-                    :sideList="sideList"
-                />
-                <CommonCard class="col-span-1 md:col-span-9">
+                <div class="relative col-span-1 md:col-span-3">
+                    <div class="sticky top-20">
+                        <CommonSidebarMail
+                            route-name="employee.outlook"
+                            :sideList="sideList"
+                        />
+                    </div>
+                </div>
+
+                <CommonCard class="relative col-span-1 md:col-span-9">
                     <div v-if="message">
                         <div class="flex flex-col items-end">
                             <CommonIcon
@@ -78,10 +83,7 @@ const selectRows = e => {
                         </div>
                         <InboxOutlookDetails :message="message" />
                     </div>
-                    <div
-                        v-else
-                        class="flex flex-col items-center gap-3 py-1 sm:px-5"
-                    >
+                    <div v-else class="flex flex-col items-center gap-3 py-1">
                         <div class="flex w-full justify-between">
                             <div class="flex items-center gap-2">
                                 <Link

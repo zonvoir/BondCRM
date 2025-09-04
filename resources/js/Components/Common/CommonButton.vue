@@ -10,6 +10,10 @@ const props = defineProps({
     icon: {
         type: [String, null],
     },
+    iconClass: {
+        type: String,
+        default: '',
+    },
     trailingIcon: {
         type: [String, null],
     },
@@ -83,7 +87,12 @@ const variantClass = computed(() => {
         :class="[sizeClass, disabledClass, variantClass, roundedClass]"
         :type="type"
     >
-        <CommonIcon v-if="icon" :icon="icon" class="h-5 w-5" />
+        <CommonIcon
+            v-if="icon"
+            :icon="icon"
+            class="h-5 w-5"
+            :class="iconClass"
+        />
         <slot />
         <CommonIcon v-if="trailingIcon" :icon="trailingIcon" class="h-5 w-5" />
 
