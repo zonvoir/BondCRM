@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Setup;
 
+use App\Models\Setup\Status;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class SettingsSocialiteRequest extends FormRequest
+class StatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +25,8 @@ class SettingsSocialiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'microsoftClientId' => ['required', 'string'],
-            'microsoftClientSecret' => ['required', 'string'],
-            'microsoftRedirect' => ['required', 'url'],
-            'statusMicrosoft' => ['required'],
-
-            'googleClientId' => ['required', 'string'],
-            'googleClientSecret' => ['required', 'string'],
-            'googleRedirect' => ['required', 'url'],
-            'statusGoogle' => ['required'],
+            'id' => ['nullable'],
+            'name' => ['required', Rule::unique(Status::class)->ignore(request('id'))],
         ];
     }
 }

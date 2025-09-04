@@ -28,6 +28,13 @@ class MailController extends Controller
 
         $result = $service->getFolderMessages($folder, $length, $pageToken, $search, $filter);
 
+        if (! empty($result['error'])) {
+            return back()->with([
+                'message' => $result['error'],
+                'type' => 'error',
+            ]);
+        }
+
         $props = [
             'mails' => $this->mailService->gmailPagination($result),
             'pageToken' => '&pt='.$result['nextPageToken'] ?? null,

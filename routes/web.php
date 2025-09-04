@@ -54,19 +54,22 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::ADMIN->value)->group(fun
     });
 
     Route::prefix('setup')->controller(SetupController::class)->as('setup.')->group(function () {
-        Route::get('/', 'generalSettings')->name('general');
-        Route::get('/pwa', 'pwaSettings')->name('pwa');
-        Route::get('/smtp', 'smtpSettings')->name('smtp');
-        Route::get('/social', 'socialSettings')->name('social');
-        Route::get('/chat', 'chatSettings')->name('chat');
-        Route::get('/openai', 'openAiSettings')->name('openai');
+        Route::get('/settings/{type}', 'generalSettings')->whereIn('type', ['general', 'company', 'localization', 'email', 'lead', 'google', 'openai', 'microsoft', 'pwa', 'notification'])->name('general.index');
+
         Route::post('/openai', 'openAiSaveSettings')->name('openai.save');
+        Route::get('sources', 'source')->name('source');
+        Route::post('source', 'sourcesSave')->name('source.save');
+        Route::delete('source-destroy/{source}', 'sourcesDestroy')->name('source.destroy');
+        Route::get('statuses', 'statuses')->name('status');
+        Route::post('status', 'statusSave')->name('status.save');
+        Route::delete('status-destroy/{status}', 'statusDestroy')->name('status.destroy');
     });
 
     Route::prefix('settings')->controller(SettingsController::class)->group(function () {
         Route::post('general-settings-save', 'generalSettingsSave')->name('settings.general.save');
         Route::post('general-settings-pwa', 'settingsPwaSave')->name('settings.general.pwa');
-        Route::post('general-settings-socialite', 'settingsSocialiteSave')->name('settings.socialite');
+        Route::post('microsoft-socialite', 'microsoftSocialiteSave')->name('settings.socialite.microsoft');
+        Route::post('google-socialite', 'googleSocialiteSave')->name('settings.socialite.google');
         Route::post('general-settings-chat', 'settingsChatSave')->name('settings.chat');
         Route::post('general-settings-clear-cache', 'clearCache')->name('settings.clear.cache');
         Route::post('general-settings-storage-link', 'storageLink')->name('settings.storage.link');
@@ -87,6 +90,7 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
 
     Route::prefix('lead')->controller(LeadController::class)->as('lead.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/social-sync', 'socialSync')->name('social');
     });
 
     Route::prefix('black')->controller(BlackingController::class)->as('black.')->group(function () {

@@ -2,14 +2,161 @@
 
 namespace App\Services\Setup;
 
+use App\Http\Resources\Settings\EmailSettingsResource;
+use App\Http\Resources\Settings\GeneralSettingsResource;
+use App\Http\Resources\Settings\LiveChatSettingsResource;
+use App\Http\Resources\Settings\SocialiteSettingsResource;
+use App\Models\Setup\GeneralSettings;
 use App\Models\Setup\Imap;
 use App\Models\Setup\OpenAiSetting;
 use App\Models\Setup\SmtpUser;
 use App\Models\Setup\SocialCredential;
+use App\Models\Setup\Sources;
+use App\Models\Setup\Status;
+use App\Repositories\Setup\SetupRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Route;
 
 class SetupService
 {
+    public function __construct(protected SetupRepository $setupRepository) {}
+
+    public function menuSettings(): array
+    {
+        $currentRouteName = Route::currentRouteName();
+
+        return [
+            [
+                'category' => 'General',
+                'items' => [
+                    [
+                        'name' => 'General',
+                        'icon' => 'heroicons:cog-6-tooth',
+                        'href' => route('setup.general.index', 'general'),
+                        'active' => request()->url() === route('setup.general.index', 'general'),
+                    ],
+                    [
+                        'name' => 'Localization',
+                        'icon' => 'heroicons:globe-alt',
+                        'href' => route('setup.general.index', 'localization'),
+                        'active' => request()->url() === route('setup.general.index', 'localization'),
+                        'hasNotification' => false,
+                    ],
+                    [
+                        'name' => 'Email',
+                        'icon' => 'heroicons:envelope',
+                        'href' => route('setup.general.index', 'email'),
+                        'active' => request()->url() === route('setup.general.index', 'email'),
+                        'hasNotification' => false,
+                    ],
+                ],
+            ],
+            [
+                'category' => 'APPs',
+                'items' => [
+                    [
+                        'name' => 'PWA',
+                        'icon' => 'material-symbols-light:apk-document-rounded',
+                        'href' => route('setup.general.index', 'pwa'),
+                        'active' => request()->url() === route('setup.general.index', 'pwa'),
+                    ],
+                ],
+            ],
+            [
+                'category' => 'Configure Features',
+                'items' => [
+                    [
+                        'name' => 'Leads',
+                        'icon' => 'heroicons:document-currency-dollar',
+                        'href' => route('setup.general.index', 'lead'),
+                        'active' => request()->url() === route('setup.general.index', 'lead'),
+                    ],
+                ],
+            ],
+            [
+                'category' => 'Integrations',
+                'items' => [
+                    [
+                        'name' => 'Google',
+                        'icon' => 'cbi:google-logo-circle',
+                        'href' => route('setup.general.index', 'google'),
+                        'active' => request()->url() === route('setup.general.index', 'google'),
+                    ],
+                    [
+                        'name' => 'Microsoft',
+                        'icon' => 'prime:microsoft',
+                        'href' => route('setup.general.index', 'microsoft'),
+                        'active' => request()->url() === route('setup.general.index', 'microsoft'),
+                    ],
+                    [
+                        'name' => 'Pusher/Ably',
+                        'icon' => 'material-symbols:circle-notifications',
+                        'href' => route('setup.general.index', 'notification'),
+                        'active' => request()->url() === route('setup.general.index', 'notification'),
+                    ],
+                ],
+            ],
+            [
+                'category' => 'AI Integration',
+                'items' => [
+                    [
+                        'name' => 'Open AI',
+                        'icon' => 'heroicons:at-symbol',
+                        'href' => route('setup.general.index', 'openai'),
+                        'active' => request()->url() === route('setup.general.index', 'openai'),
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function propsGeneral($type): array
+    {
+        return match ($type) {
+            'general' => [
+                'title' => 'General Settings',
+                'generalSettings' => new GeneralSettingsResource(GeneralSettings::query()->first()),
+            ],
+            'localization' => [
+                'title' => 'Localization Settings',
+                'timezones' => timezones(),
+                'dateFormats' => dateFormats(),
+                'timeFormat' => timeFormat(),
+                'generalSettings' => new GeneralSettingsResource(GeneralSettings::query()->first()),
+            ],
+            'email' => [
+                'title' => 'Email Settings',
+                'emailSettings' => new EmailSettingsResource($this->setupRepository->getEmailSettings()),
+            ],
+            'pwa' => [
+                'title' => 'Pwa Settings',
+                'generalSettings' => new GeneralSettingsResource(GeneralSettings::query()->first()),
+            ],
+            'lead' => [
+                'title' => 'Lead Settings',
+            ],
+            'google' => [
+                'title' => 'Google Settings',
+                'google' => new SocialiteSettingsResource($this->setupRepository->getSocialiteSettings('google')),
+            ],
+            'microsoft' => [
+                'title' => 'Microsoft Settings',
+                'microsoft' => new SocialiteSettingsResource($this->setupRepository->getSocialiteSettings('microsoft')),
+            ],
+            'notification' => [
+                'title' => 'Pusher/Ably',
+                'liveChatSettings' => new LiveChatSettingsResource($this->setupRepository->getChatSettings()),
+            ],
+            'openai' => [
+                'title' => 'Openai Settings',
+                'openAiSettings' => $this->setupRepository->getOpenAiSettings(),
+            ],
+            default => [
+                'title' => 'Unknown Section',
+            ],
+        };
+    }
+
     public function mailsConfigureLogo(): array
     {
         $gmail = $this->getSocialCredentials('gmail');
@@ -107,6 +254,22 @@ class SetupService
 
         return OpenAiSetting::query()->updateOrCreate(
             ['id' => $settings->id ?? null],
+            $data
+        );
+    }
+
+    public function saveSource($data): Model|Sources
+    {
+        return Sources::query()->updateOrCreate(
+            ['id' => $data['id'] ?? null],
+            $data
+        );
+    }
+
+    public function saveStatus($data): Model|Status
+    {
+        return Status::query()->updateOrCreate(
+            ['id' => $data['id'] ?? null],
             $data
         );
     }

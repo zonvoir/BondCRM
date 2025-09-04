@@ -254,7 +254,7 @@ class GmailService
         $listData = $this->fetchMessages($token, $params);
 
         if (empty($listData['messages'])) {
-            return ['data' => [], 'total' => 0];
+            return ['data' => [], 'total' => 0, 'nextPageToken' => null];
         }
 
         $data = $this->processMessages($token, $listData['messages'], 'inbox');
