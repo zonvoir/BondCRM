@@ -11,6 +11,7 @@ import Column from 'primevue/column';
 import CommonDataTable from '@/Components/Common/CommonDataTable.vue';
 import InboxOutlookDetails from '@/Pages/Mails/Partials/InboxOutlookDetails.vue';
 import InboxGmailDetails from '@/Pages/Mails/Partials/InboxGmailDetails.vue';
+import CommonInput from '@/Components/Common/CommonInput.vue';
 
 defineProps({
     mails: {
@@ -71,12 +72,16 @@ const selectRows = e => {
     <AppLayout title="Gmail">
         <PanelLayout>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-12">
-                <CommonSidebarMail
-                    route-name="employee.gmail"
-                    :sideList="sideList"
-                />
+                <div class="relative col-span-1 md:col-span-3">
+                    <div class="sticky top-20">
+                        <CommonSidebarMail
+                            route-name="employee.gmail"
+                            :sideList="sideList"
+                        />
+                    </div>
+                </div>
 
-                <CommonCard class="col-span-1 md:col-span-9">
+                <CommonCard class="relative col-span-1 md:col-span-9">
                     <div v-if="message">
                         <div class="flex flex-col items-end">
                             <CommonIcon
@@ -87,10 +92,7 @@ const selectRows = e => {
                         </div>
                         <InboxGmailDetails :message="message" />
                     </div>
-                    <div
-                        v-else
-                        class="flex flex-col items-center gap-3 py-1 sm:px-5"
-                    >
+                    <div v-else class="flex flex-col items-center gap-3 py-1">
                         <div class="flex w-full justify-between">
                             <div class="flex items-center gap-2">
                                 <Link
@@ -116,18 +118,10 @@ const selectRows = e => {
                                 role="search"
                                 aria-label="Search inbox"
                             >
-                                <span
-                                    class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-neutral-400"
-                                >
-                                    <CommonIcon
-                                        icon="material-symbols:search-rounded"
-                                    />
-                                </span>
-
-                                <input
+                                <CommonInput
+                                    icon="material-symbols:search-rounded"
+                                    placeholder="Search"
                                     type="search"
-                                    placeholder="Search inbox"
-                                    class="w-full rounded-sm border-0 bg-gray-50 py-2 pr-3 pl-10 text-[15px] text-neutral-700 shadow-inner ring-1 ring-neutral-200 ring-inset placeholder:text-neutral-400 focus:ring-2 focus:ring-blue-500/60 focus:outline-none dark:bg-neutral-800 dark:text-neutral-100 dark:ring-neutral-700 dark:placeholder:text-neutral-500"
                                 />
                             </form>
                         </div>

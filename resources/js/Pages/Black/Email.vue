@@ -87,51 +87,63 @@ const handleMultipleConfirm = () => {
 </script>
 <template>
     <PanelLayout title="Black List Email">
-        <div class="flex items-center justify-between py-4">
-            <div class="flex items-center justify-center gap-2">
-                <div>
-                    <CommonInput label="Search" v-model="searchQuery" />
-                </div>
-                <div>
-                    <CommonButton
-                        @click="handleMultipleConfirm"
-                        variant="secondary"
-                        size="xs"
-                    >
-                        <CommonIcon
-                            class="h-7 w-7 text-gray-500"
-                            icon="material-symbols:delete"
+        <div class="rounded-md bg-white p-5">
+            <div class="flex items-center justify-between py-4">
+                <div class="flex items-end justify-center gap-2">
+                    <div>
+                        <CommonInput
+                            labelClass="font-semibold"
+                            label="Search"
+                            :icon="'heroicons-outline:magnifying-glass'"
+                            v-model="searchQuery"
                         />
-                    </CommonButton>
-                </div>
-            </div>
-            <div>
-                <CommonButton @click="handleOpen">Create</CommonButton>
-            </div>
-        </div>
-
-        <CommonDataTable
-            :showSerialNumber="true"
-            :data="emails"
-            checkbox
-            @update:modelSelection="selectRows"
-        >
-            <Column field="email" header="Email" :sortable="true" />
-            <Column field="created_at" header="Created At" :sortable="true" />
-            <Column header="Action" :sortable="false">
-                <template #body="slotProps">
-                    <div class="flex gap-2">
+                    </div>
+                    <div>
                         <CommonButton
-                            type="button"
-                            @click="handleDestroy(slotProps?.data?.id)"
+                            @click="handleMultipleConfirm"
                             variant="secondary"
+                            class="!hover:bg-indigo-100 dark:bg-dark !border-none !bg-gray-100 dark:text-white"
+                            size="xs"
                         >
-                            <CommonIcon icon="bi:trash" />
+                            <CommonIcon
+                                class="h-6 w-6 text-red-500"
+                                icon="heroicons-outline:trash"
+                            />
                         </CommonButton>
                     </div>
-                </template>
-            </Column>
-        </CommonDataTable>
+                </div>
+                <div>
+                    <CommonButton @click="handleOpen">Create</CommonButton>
+                </div>
+            </div>
+
+            <CommonDataTable
+                :showSerialNumber="true"
+                :data="emails"
+                checkbox
+                @update:modelSelection="selectRows"
+            >
+                <Column field="email" header="Email" :sortable="true" />
+                <Column
+                    field="created_at"
+                    header="Created At"
+                    :sortable="true"
+                />
+                <Column header="Action" :sortable="false">
+                    <template #body="slotProps">
+                        <div class="flex gap-2">
+                            <CommonButton
+                                type="button"
+                                @click="handleDestroy(slotProps?.data?.id)"
+                                variant="secondary"
+                            >
+                                <CommonIcon icon="bi:trash" />
+                            </CommonButton>
+                        </div>
+                    </template>
+                </Column>
+            </CommonDataTable>
+        </div>
 
         <CommonDrawer
             v-model:visible="showDrawer"

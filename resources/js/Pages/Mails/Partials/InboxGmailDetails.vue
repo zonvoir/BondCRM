@@ -3,6 +3,7 @@ import CommonButton from '@/Components/Common/CommonButton.vue';
 import CommonEditor from '@/Components/Common/CommonEditor.vue';
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
+import CommonIcon from '@/Components/Common/CommonIcon.vue';
 
 const props = defineProps({
     message: {
@@ -32,93 +33,120 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-white text-slate-800">
-        <div class="flex items-start gap-3 border-b border-slate-200">
+    <div
+        class="min-h-screen text-gray-900 transition-colors duration-300 dark:text-gray-100"
+    >
+        <!-- Header -->
+        <div
+            class="flex items-center gap-3 rounded-md border border-gray-200 bg-white/50 px-6 py-4 shadow backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/50"
+        >
             <button
-                class="grid size-8 place-items-center rounded hover:bg-slate-100"
+                class="grid place-items-center rounded-md bg-gray-100 transition hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
             >
-                <span class="i-heroicons-arrow-left-20-solid size-5"></span>
+                <span
+                    class="i-heroicons-arrow-left-20-solid size-6 text-gray-700 dark:text-gray-200"
+                ></span>
             </button>
-            <h1 class="text-lg font-medium">{{ message?.subject }}</h1>
+            <h1 class="text-md font-semibold tracking-wide">
+                {{ message?.subject }}
+            </h1>
             <span
-                class="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs font-medium"
-                >{{ route().params.type }}</span
+                class="ml-2 rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow"
             >
+                {{ route().params.type }}
+            </span>
         </div>
 
-        <div class="px-8 py-6">
-            <div class="flex items-center gap-3">
+        <!-- Body -->
+        <div class="mt-6 space-y-6">
+            <!-- Sender Info -->
+            <div
+                class="flex items-center gap-3 rounded-md border border-gray-200 bg-white/50 px-6 py-4 shadow transition-colors duration-300 dark:border-gray-700 dark:bg-gray-800/50"
+            >
                 <div
-                    class="flex size-8 items-center justify-center rounded bg-slate-200 font-bold"
+                    class="flex size-10 items-center justify-center rounded-full bg-indigo-600 font-bold text-white shadow"
                 >
                     {{ message?.email?.sender_name[0] }}
                 </div>
-                <div class="flex items-center gap-2 text-sm text-slate-500">
-                    <span class="inline-flex items-center gap-1">
+                <div class="flex flex-col text-sm">
+                    <span class="flex items-center gap-2 font-medium">
                         {{ message?.email.sender_name }}
                         <span class="size-2 rounded-full bg-emerald-500"></span>
-                        {{ message?.email?.created_at }}
                     </span>
-                    <span>•</span>
-                    <span>to me</span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ message?.email?.created_at }} • to me
+                    </span>
                 </div>
             </div>
 
-            <p class="mt-6" v-html="message?.email?.body"></p>
+            <!-- Email Body -->
+            <div
+                class="rounded-md border border-gray-200 bg-white/50 px-6 py-6 leading-relaxed shadow transition-colors duration-300 dark:border-gray-700 dark:bg-gray-800/50"
+                v-html="message?.email?.body"
+            ></div>
 
-            <div class="my-6 h-px bg-slate-200"></div>
-
-            <div class="overflow-hidden">
+            <!-- Reply Section -->
+            <div
+                class="overflow-hidden rounded-md border border-gray-200 bg-white/50 shadow transition-colors duration-300 dark:border-gray-700 dark:bg-gray-800/50"
+            >
                 <!-- To -->
-                <div class="border-b border-slate-200 px-4 py-3 text-sm">
-                    <div class="flex items-center gap-2">
-                        <span class="w-8 text-slate-500">To:</span>
-                        <div
-                            class="inline-flex items-center gap-2 rounded bg-slate-100 px-2 py-0.5"
-                        >
-                            <span class="text-slate-700">{{
-                                message?.email?.sender_email
-                            }}</span>
-                            <button class="text-slate-500 hover:text-slate-700">
-                                ×
-                            </button>
-                        </div>
-                        <div
-                            class="ml-auto flex items-center gap-4 text-slate-500"
-                        ></div>
+                <div
+                    class="flex items-center gap-2 border-b border-gray-200 px-6 py-4 text-sm dark:border-gray-700"
+                >
+                    <span class="w-10 text-gray-500 dark:text-gray-400"
+                        >To:</span
+                    >
+                    <div
+                        class="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-900 dark:bg-gray-700 dark:text-gray-100"
+                    >
+                        <span>{{ message?.email?.sender_email }}</span>
+                        <button class="transition hover:text-pink-500">
+                            ×
+                        </button>
                     </div>
                 </div>
 
                 <!-- Subject -->
-                <div class="border-b border-slate-200 px-4 py-3 text-sm">
-                    <span class="text-slate-700">{{ message?.subject }}</span>
+                <div
+                    class="border-b border-gray-200 px-6 py-3 text-sm font-medium dark:border-gray-700"
+                >
+                    {{ message?.subject }}
                 </div>
 
                 <!-- Toolbar -->
                 <div
-                    class="flex items-center gap-4 border-b border-slate-200 px-4 py-2 text-sm text-slate-600"
+                    class="flex items-center gap-4 border-b border-gray-200 px-6 py-2 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300"
                 >
-                    <span>Normal</span>
-                    <div class="h-4 w-px bg-slate-300"></div>
-                    <button class="font-bold">B</button>
-                    <button class="italic">I</button>
-                    <button class="underline">U</button>
-                    <button class="line-through">S</button>
-                    <button class="underline decoration-dotted">U</button>
+                    <span class="text-gray-500 dark:text-gray-400">Normal</span>
+                    <div class="h-4 w-px bg-gray-300 dark:bg-gray-600"></div>
+                    <button class="font-bold hover:text-gray-800">B</button>
+                    <button class="italic hover:text-gray-800">I</button>
+                    <button class="underline hover:text-gray-800">U</button>
+                    <button class="line-through hover:text-gray-800">S</button>
+                    <button
+                        class="underline decoration-dotted hover:text-gray-800"
+                    >
+                        U
+                    </button>
                 </div>
 
+                <!-- Editor -->
                 <CommonEditor
                     v-model="contentText"
                     @textChange="onTextChange"
-                    editorStyle="height: 240px"
+                    editorStyle="height: 240px; background: transparent; color: inherit;"
                 />
 
                 <!-- Actions -->
                 <div
-                    class="flex items-center justify-between border-t border-slate-200 px-4 py-3"
+                    class="flex items-center justify-between border-t border-gray-200 px-6 py-4 dark:border-gray-700"
                 >
                     <CommonButton @click="submit" :processing="form.processing">
                         Send
+                        <CommonIcon
+                            class="rotate-45 transform"
+                            icon="heroicons-outline:paper-airplane"
+                        />
                     </CommonButton>
                 </div>
             </div>
