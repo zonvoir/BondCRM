@@ -7,7 +7,7 @@ import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
 import { ref } from 'vue';
 import { useCustomToast } from '@/Composables/useToast';
-import ImageUpload from '@/Components/ImageUpload.vue';
+import CommonFile from '@/Components/Common/CommonFile.vue';
 const { showToast } = useCustomToast();
 
 const props = defineProps({
@@ -19,13 +19,9 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    generalSettings: {
-        type: Object,
-        default: {},
-    },
 });
 
-const generalSettings = props.data.generalSettings;
+const generalSettings = props.data?.generalSettings;
 
 const clearCache = ref(false);
 const storageLink = ref(false);
@@ -33,16 +29,22 @@ const manuallyCronRun = ref(false);
 const isLink = ref(generalSettings?.data?.storage_link);
 
 const form = useForm({
-    companyName: props.generalSettings?.data?.companyName ?? '',
+    companyName: generalSettings?.data?.company_name ?? '',
+    allowedFileTypes: generalSettings?.data?.allowed_file_types ?? '',
     iconLogoDark: '',
     iconLogoWhite: '',
     logoDark: '',
     logoWhite: '',
     favicon: '',
-    allowFileTypes: props.generalSettings?.data?.allowFileTypes ?? '',
 });
 
-const submit = () => {};
+const submit = () => {
+    form.post(route('settings.general.save'), {
+        onSuccess: () => {
+            // Optional: success logic
+        },
+    });
+};
 
 const clearCacheSubmit = () => {
     clearCache.value = true;
@@ -137,8 +139,8 @@ const cronRunSubmit = () => {
                                     <CommonInput
                                         label="Allowed file types"
                                         required
-                                        v-model="form.allowFileTypes"
-                                        :error="form.errors.allowFileTypes"
+                                        v-model="form.allowedFileTypes"
+                                        :error="form.errors.allowedFileTypes"
                                     />
                                 </div>
                             </div>
@@ -157,7 +159,7 @@ const cronRunSubmit = () => {
                                 <hr />
                             </div>
                             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                <ImageUpload
+                                <CommonFile
                                     label="Icon Logo Dark (512 x 512)"
                                     acceptedFormats="image/png"
                                     required
@@ -167,7 +169,7 @@ const cronRunSubmit = () => {
                                         generalSettings?.data?.icon_logo_dark
                                     "
                                 />
-                                <ImageUpload
+                                <CommonFile
                                     label="Icon Logo White (512 x 512)"
                                     acceptedFormats="image/png"
                                     required
@@ -177,7 +179,7 @@ const cronRunSubmit = () => {
                                         generalSettings?.data?.icon_logo_white
                                     "
                                 />
-                                <ImageUpload
+                                <CommonFile
                                     label="Logo Dark (300 x 55)"
                                     acceptedFormats="image/png"
                                     required
@@ -185,7 +187,7 @@ const cronRunSubmit = () => {
                                     :error="form.errors.logoDark"
                                     :image="generalSettings?.data?.logo_dark"
                                 />
-                                <ImageUpload
+                                <CommonFile
                                     label="Logo White (300 x 55)"
                                     acceptedFormats="image/png"
                                     required
@@ -193,7 +195,7 @@ const cronRunSubmit = () => {
                                     :error="form.errors.logoWhite"
                                     :image="generalSettings?.data?.logo_white"
                                 />
-                                <ImageUpload
+                                <CommonFile
                                     label="Favicon (40 x 40)"
                                     acceptedFormats="image/png"
                                     required

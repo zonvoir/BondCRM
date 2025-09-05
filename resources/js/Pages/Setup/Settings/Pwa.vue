@@ -58,8 +58,8 @@ const submit = () => {
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-3 xl:grid-cols-2">
-                        <div class="grid grid-cols-1 gap-3 py-3 xl:grid-cols-3">
-                            <div>
+                        <div>
+                            <div class="w-full">
                                 <CommonFile
                                     label="Logo (512 x 512)"
                                     acceptedFormats="image/png"
@@ -70,7 +70,6 @@ const submit = () => {
                                 />
                             </div>
                         </div>
-
                         <div class="my-3 grid grid-cols-12">
                             <div class="col-span-12 sm:col-6">
                                 <CommonColor

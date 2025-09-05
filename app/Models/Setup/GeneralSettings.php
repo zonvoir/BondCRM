@@ -24,10 +24,16 @@ class GeneralSettings extends Model
         'app_logo',
         'theme_color',
         'id',
+        'company_name',
+        'allowed_file_types',
+        'date_format',
+        'time_format',
     ];
 
     protected $casts = [
         'countries' => 'array',
         'timezones' => 'array',
+        'date_format' => 'array',
+        'time_format' => 'array',
     ];
 }

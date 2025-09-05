@@ -1,22 +1,23 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
-import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonCard from '@/Components/Common/CommonCard.vue';
-import CommonButton from '@/Components/Common/CommonButton.vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import SettingsLayout from '@/Layouts/SettingsLayout.vue';
+import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonRadioButton from '@/Components/Common/CommonRadioButton.vue';
-import { useForm } from '@inertiajs/vue3';
+import CommonButton from '@/Components/Common/CommonButton.vue';
 
 const props = defineProps({
-    settings: {
-        type: Object,
-        required: false,
+    menuSettings: {
+        type: Array,
     },
-    smtpType: {
-        type: String,
-        required: true,
+    data: {
+        type: Array,
     },
 });
+
+const settings = props.data?.settings;
 
 const encryption = [
     { label: 'TLS', value: 'tls' },
@@ -24,17 +25,17 @@ const encryption = [
 ];
 
 const initialEncryption =
-    encryption?.find(item => item.label === props.settings?.imap_encryption)
-        ?.value ?? '';
+    encryption?.find(item => item.label === settings?.imap_encryption)?.value ??
+    '';
 
 const form = useForm({
-    imapServer: props.settings?.imap_server ?? '',
-    imapUserName: props.settings?.imap_user_name ?? '',
-    password: props.settings?.password ?? '',
-    imapPort: props.settings?.imap_port ?? '',
-    folder: props.settings?.folder ?? '',
+    imapServer: settings?.imap_server ?? '',
+    imapUserName: settings?.imap_user_name ?? '',
+    password: settings?.password ?? '',
+    imapPort: settings?.imap_port ?? '',
+    folder: settings?.folder ?? '',
     imapEncryption: initialEncryption,
-    type: props.smtpType,
+    type: props.data.type,
 });
 
 const submit = () => {
@@ -45,9 +46,9 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout title="Settings">
+    <AppLayout :title="data?.title">
         <PanelLayout>
-            <CommonCard>
+            <SettingsLayout :menu="menuSettings">
                 <form method="post">
                     <div class="grid grid-cols-12 gap-3">
                         <div class="col-span-12 sm:col-span-4">
@@ -114,7 +115,7 @@ const submit = () => {
                         </div>
                     </div>
                 </form>
-            </CommonCard>
+            </SettingsLayout>
         </PanelLayout>
     </AppLayout>
 </template>

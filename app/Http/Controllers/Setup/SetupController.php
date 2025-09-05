@@ -21,16 +21,11 @@ class SetupController extends Controller
     public function generalSettings(Request $request, $type)
     {
         $props = [
-            'menuSettings' => $this->setupService->menuSettings(),
-            'data' => $this->setupService->propsGeneral($type),
+            'menuSettings' => $this->setupService->adminMenuSettings(),
+            'data' => $this->setupService->propsAdminGeneral($type),
         ];
 
         return Inertia::render('Setup/Settings/'.ucfirst($type), $props);
-    }
-
-    public function generalSettingsSave(Request $request, $type)
-    {
-        dd($request->all(), $type);
     }
 
     public function openAiSaveSettings(OpenAiRequest $request)

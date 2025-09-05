@@ -7,6 +7,7 @@ use App\Http\Requests\Setup\ImapRequest;
 use App\Http\Requests\Setup\SmtpUserRequest;
 use App\Repositories\Setup\SetupRepository;
 use App\Services\Setup\SetupService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -14,13 +15,15 @@ class SetupEmployeeController extends Controller
 {
     public function __construct(protected SetupService $setupService, protected SetupRepository $settings) {}
 
-    public function employeeSetup()
+    public function settings(Request $request, $type)
     {
         $props = [
-            'configurations' => $this->setupService->mailsConfigureLogo(),
+            'menuSettings' => $this->setupService->employeeMenuSettings(),
+            'data' => $this->setupService->propsEmployeeGeneral($type),
         ];
 
-        return Inertia::render('Setup/Employee/Index', $props);
+        return Inertia::render('Setup/Employee/'.ucfirst($type), $props);
+
     }
 
     public function authorizedGmail()
@@ -35,18 +38,6 @@ class SetupEmployeeController extends Controller
             ->redirect();
     }
 
-    public function authorizedOutlook() {}
-
-    public function imapSettings($type)
-    {
-        $props = [
-            'smtpType' => $type,
-            'settings' => $this->settings->getImapSettings($type),
-        ];
-
-        return Inertia::render('Setup/Employee/Imap', $props);
-    }
-
     public function saveImapSettings(ImapRequest $request)
     {
         $this->setupService->saveImap($request->validated());
@@ -55,15 +46,6 @@ class SetupEmployeeController extends Controller
             'message' => 'Save successfully',
             'type' => 'success',
         ]);
-    }
-
-    public function smtp()
-    {
-        $props = [
-            'smtpSettings' => $this->settings->getSmtpUserSettings(),
-        ];
-
-        return Inertia::render('Setup/Employee/Smtp', $props);
     }
 
     public function smtpSave(SmtpUserRequest $request)

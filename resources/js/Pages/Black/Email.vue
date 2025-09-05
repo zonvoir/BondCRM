@@ -17,6 +17,7 @@ const searchQuery = ref(null);
 const openConfirmation = ref(false);
 const openMultipleConfirmation = ref(false);
 const deleteId = ref(null);
+const isDelete = ref(false);
 
 const form = useForm({
     email: '',
@@ -67,11 +68,13 @@ const handleSubmit = () => {
 
 const selectRows = e => {
     selectForm.ids = e?.map(item => item?.id);
+    isDelete.value = !isDelete.value;
 };
 
 const handleMultipleDelete = () => {
     selectForm.post(route('employee.black.email.destroys'), {
         onSuccess: () => {
+            isDelete.value = false;
             handleClose();
         },
     });

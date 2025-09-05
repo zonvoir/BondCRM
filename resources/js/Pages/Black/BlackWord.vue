@@ -16,6 +16,7 @@ const showDrawer = ref(false);
 const searchQuery = ref(null);
 const openConfirmation = ref(false);
 const openMultipleConfirmation = ref(false);
+const isDelete = ref(false);
 const deleteId = ref(null);
 
 const form = useForm({
@@ -69,11 +70,13 @@ const handleSubmit = () => {
 
 const selectRows = e => {
     selectForm.ids = e?.map(item => item?.id);
+    isDelete.value = !isDelete.value;
 };
 
 const handleMultipleDelete = () => {
     selectForm.post(route('employee.black.work.destroys'), {
         onSuccess: () => {
+            isDelete.value = false;
             handleClose();
         },
     });
@@ -90,19 +93,26 @@ const handleMultipleConfirm = () => {
 <template>
     <PanelLayout title="Black List Email">
         <div class="flex items-center justify-between py-4">
-            <div class="flex items-center justify-center gap-2">
+            <div class="flex items-end justify-center gap-2">
                 <div>
-                    <CommonInput label="Search" v-model="searchQuery" />
+                    <CommonInput
+                        labelClass="font-semibold"
+                        label="Search"
+                        :icon="'heroicons-outline:magnifying-glass'"
+                        v-model="searchQuery"
+                    />
                 </div>
                 <div>
                     <CommonButton
+                        :disabled="!isDelete"
                         @click="handleMultipleConfirm"
                         variant="secondary"
+                        class="!hover:bg-indigo-100 dark:bg-dark !border-none !bg-gray-100 dark:text-white"
                         size="xs"
                     >
                         <CommonIcon
-                            class="h-7 w-7 text-gray-500"
-                            icon="material-symbols:delete"
+                            class="h-6 w-6 text-red-500"
+                            icon="heroicons-outline:trash"
                         />
                     </CommonButton>
                 </div>

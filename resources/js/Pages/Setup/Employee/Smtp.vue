@@ -1,18 +1,23 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
-import CommonInput from '@/Components/Common/CommonInput.vue';
-import CommonRadioButton from '@/Components/Common/CommonRadioButton.vue';
-import CommonButton from '@/Components/Common/CommonButton.vue';
-import { useForm } from '@inertiajs/vue3';
 import CommonCard from '@/Components/Common/CommonCard.vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import SettingsLayout from '@/Layouts/SettingsLayout.vue';
+import CommonInput from '@/Components/Common/CommonInput.vue';
+import CommonButton from '@/Components/Common/CommonButton.vue';
+import CommonRadioButton from '@/Components/Common/CommonRadioButton.vue';
 
 const props = defineProps({
-    smtpSettings: {
-        type: Object,
-        required: false,
+    menuSettings: {
+        type: Array,
+    },
+    data: {
+        type: Array,
     },
 });
+
+const smtpSettings = props?.data?.smtpSettings;
 
 const encryption = [
     { label: 'TLS', value: 'tls' },
@@ -20,18 +25,18 @@ const encryption = [
 ];
 
 const initialEncryption =
-    encryption?.find(item => item.label === props.smtpSettings?.mail_encryption)
+    encryption?.find(item => item.label === smtpSettings.mail_encryption)
         ?.value ?? '';
 
 const form = useForm({
-    mailDriver: props.smtpSettings?.mail_driver ?? '',
-    mailHost: props.smtpSettings?.mail_host ?? '',
-    mailPort: props.smtpSettings?.mail_port ?? '',
-    mail: props.smtpSettings?.mail ?? '',
-    password: props.smtpSettings?.password ?? '',
+    mailDriver: smtpSettings.mail_driver ?? '',
+    mailHost: smtpSettings.mail_host ?? '',
+    mailPort: smtpSettings.mail_port ?? '',
+    mail: smtpSettings.mail ?? '',
+    password: smtpSettings.password ?? '',
     mailEncryption: initialEncryption,
-    mailFromAddress: props.smtpSettings?.mail_from_address ?? '',
-    mailFromName: props.smtpSettings?.mail_from_name ?? '',
+    mailFromAddress: smtpSettings.mail_from_address ?? '',
+    mailFromName: smtpSettings.mail_from_name ?? '',
 });
 
 const formEmailTest = useForm({
@@ -54,9 +59,9 @@ const emailTestSubmit = () => {
 </script>
 
 <template>
-    <AppLayout title="smtp">
+    <AppLayout :title="data?.title">
         <PanelLayout>
-            <CommonCard>
+            <SettingsLayout :menu="menuSettings">
                 <form
                     method="post"
                     class="mb-5 flex flex-row items-center gap-6"
@@ -162,7 +167,7 @@ const emailTestSubmit = () => {
                         </div>
                     </div>
                 </form>
-            </CommonCard>
+            </SettingsLayout>
         </PanelLayout>
     </AppLayout>
 </template>

@@ -100,7 +100,7 @@ const variantClass = computed(() => {
                     class="bg-opacity-80 flex h-full w-full items-center justify-center rounded-sm bg-indigo-700"
                 >
                     <CommonIcon
-                        class="h-5 w-5 animate-spin"
+                        class="h-5 w-5 animate-spin text-white"
                         icon="fa6-solid:spinner"
                     />
                 </div>

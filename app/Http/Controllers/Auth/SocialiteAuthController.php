@@ -64,7 +64,7 @@ class SocialiteAuthController extends Controller
             ]
         );
 
-        return redirect()->route('employee.setup.index');
+        return redirect()->route('employee.setup.settings', 'general');
     }
 
     public function handleMicrosoftCallback(Request $request)
@@ -90,6 +90,6 @@ class SocialiteAuthController extends Controller
             ]
         );
 
-        return redirect()->route('employee.setup.index');
+        return redirect()->route('employee.setup.settings', 'general');
     }
 }

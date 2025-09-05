@@ -19,12 +19,16 @@ const props = defineProps({
 const localization = props.data.generalSettings;
 
 const form = useForm({
-    dateFormat: localization.data?.dateFormat ?? '',
-    timezones: localization.data?.timezones ?? '',
-    timeFormat: localization.data?.timeFormat ?? '',
+    dateFormat: localization?.data?.date_format ?? null,
+    timezones: localization?.data?.timezones ?? '',
+    timeFormat: localization?.data?.time_format ?? '',
 });
 
-const submit = () => {};
+const submit = () => {
+    form.post(route('localization.save'), {
+        onSuccess: () => {},
+    });
+};
 </script>
 
 <template>
@@ -34,7 +38,7 @@ const submit = () => {};
                 <div class="col-span-12 my-3">
                     <CommonSelect
                         v-model="form.dateFormat"
-                        :options="data?.dateFormat"
+                        :options="data?.dateFormats"
                         label="Date Format "
                         required
                         optionLabel="name"
@@ -65,7 +69,7 @@ const submit = () => {};
                     />
                 </div>
 
-                <div class="flex justify-start py-5">
+                <div class="flex justify-start py-2">
                     <CommonButton
                         :processing="form.processing"
                         variant="primary"

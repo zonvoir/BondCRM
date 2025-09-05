@@ -39,17 +39,20 @@ class GeneralSettingsSeeder extends Seeder
         }
 
         GeneralSettings::query()->create([
-            'footer_text' => 'footerText',
             'icon_logo_dark' => $uploaded['icon_logo_dark'],
             'icon_logo_white' => $uploaded['icon_logo_white'],
             'logo_dark' => $uploaded['logo_dark'],
             'logo_white' => $uploaded['logo_white'],
             'favicon' => $uploaded['favicon'],
+            'company_name' => 'Bond crm pvt. ltd',
+            'allowed_file_types' => '.png,.jpg,.pdf,.doc,.docx,.xls,.xlsx,.zip,.rar,.txt',
             'app_name' => 'Bond CRM',
             'app_description' => 'Email Marketing App',
             'app_logo' => 'logo.png',
             'theme_color' => '#6777ef',
             'countries' => ['code' => 'AU', 'name' => 'Australia'],
+            'date_format' => ['code' => 'd-m-Y', 'name' => 'd-m-Y'],
+            'time_format' => ['code' => '12', 'name' => '12 hours'],
             'timezones' => ['code' => 'Asia/Kolkata', 'name' => 'Asia/Kolkata'],
         ]);
 

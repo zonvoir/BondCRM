@@ -20,52 +20,52 @@ class SettingsService
     {
         $generalSettings = GeneralSettings::query()->first();
 
-        if (isset($data['iconLogoDark']) && $data['iconLogoDark'] instanceof UploadedFile) {
+        if (isset($data['icon_logo_dark']) && $data['icon_logo_dark'] instanceof UploadedFile) {
             $uploadPath = storage_path('app/public/logo');
-            $data['iconLogoDark'] = $this->uploadFile(
-                $data['iconLogoDark'],
+            $data['icon_logo_dark'] = $this->uploadFile(
+                $data['icon_logo_dark'],
                 $uploadPath,
                 $generalSettings?->icon_logo_dark,
                 time().'_icon_logo_dark.png'
             );
         } else {
-            $data['iconLogoDark'] = $generalSettings?->icon_logo_dark;
+            $data['icon_logo_dark'] = $generalSettings?->icon_logo_dark;
         }
 
-        if (isset($data['iconLogoWhite']) && $data['iconLogoWhite'] instanceof UploadedFile) {
+        if (isset($data['icon_logo_white']) && $data['icon_logo_white'] instanceof UploadedFile) {
             $uploadPath = storage_path('app/public/logo');
-            $data['iconLogoWhite'] = $this->uploadFile(
-                $data['iconLogoWhite'],
+            $data['icon_logo_white'] = $this->uploadFile(
+                $data['icon_logo_white'],
                 $uploadPath,
                 $generalSettings?->icon_logo_white,
                 time().'_icon_logo_white.png'
             );
         } else {
-            $data['iconLogoWhite'] = $generalSettings?->icon_logo_white;
+            $data['icon_logo_white'] = $generalSettings?->icon_logo_white;
         }
 
-        if (isset($data['logoDark']) && $data['logoDark'] instanceof UploadedFile) {
+        if (isset($data['logo_dark']) && $data['logo_dark'] instanceof UploadedFile) {
             $uploadPath = storage_path('app/public/logo');
-            $data['logoDark'] = $this->uploadFile(
-                $data['logoDark'],
+            $data['logo_dark'] = $this->uploadFile(
+                $data['logo_dark'],
                 $uploadPath,
                 $generalSettings?->logo_dark,
                 time().'_logo_dark.png'
             );
         } else {
-            $data['logoDark'] = $generalSettings?->logo_dark;
+            $data['logo_dark'] = $generalSettings?->logo_dark;
         }
 
-        if (isset($data['logoWhite']) && $data['logoWhite'] instanceof UploadedFile) {
+        if (isset($data['logo_white']) && $data['logo_white'] instanceof UploadedFile) {
             $uploadPath = storage_path('app/public/logo');
-            $data['logoWhite'] = $this->uploadFile(
-                $data['logoWhite'],
+            $data['logo_white'] = $this->uploadFile(
+                $data['logo_white'],
                 $uploadPath,
                 $generalSettings?->logo_white,
                 time().'logo_white.png'
             );
         } else {
-            $data['logoWhite'] = $generalSettings?->logo_white;
+            $data['logo_white'] = $generalSettings?->logo_white;
         }
 
         if (isset($data['favicon']) && $data['favicon'] instanceof UploadedFile) {
@@ -82,14 +82,13 @@ class SettingsService
 
         $this->generalSettingsSave(
             [
-                'footer_text' => $data['footerText'],
-                'icon_logo_dark' => $data['iconLogoDark'],
-                'icon_logo_white' => $data['iconLogoWhite'],
-                'logo_dark' => $data['logoDark'],
-                'logo_white' => $data['logoWhite'],
+                'icon_logo_dark' => $data['icon_logo_dark'],
+                'icon_logo_white' => $data['icon_logo_white'],
+                'logo_dark' => $data['logo_dark'],
+                'logo_white' => $data['logo_white'],
                 'favicon' => $data['favicon'],
-                'countries' => $data['countries'],
-                'timezones' => $data['timezones'],
+                'company_name' => $data['company_name'],
+                'allowed_file_types' => $data['allowed_file_types'],
             ]
         );
     }
@@ -223,6 +222,16 @@ class SettingsService
         Cache::forget("settings:{$group}");
 
         return $setting;
+    }
+
+    public function saveLocalization(array $data): Model|GeneralSettings
+    {
+        $generalSettings = GeneralSettings::query()->first();
+
+        return GeneralSettings::query()->updateOrCreate(
+            ['id' => $generalSettings?->id],
+            $data
+        );
     }
 
     protected function generalSettingsSave(array $data): Model|GeneralSettings

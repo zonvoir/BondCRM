@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Settings;
+namespace App\Http\Controllers\Setup;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setup\GeneralSettingsRequest;
 use App\Http\Requests\Setup\GoogleSocialiteRequest;
 use App\Http\Requests\Setup\LiveChatSettingsRequest;
+use App\Http\Requests\Setup\LocalizationRequest;
 use App\Http\Requests\Setup\MicrosoftSocialiteRequest;
 use App\Http\Requests\Setup\PwaSettingsRequest;
 use App\Repositories\Setup\SetupRepository;
@@ -18,6 +19,7 @@ class SettingsController extends Controller
 
     public function generalSettingsSave(GeneralSettingsRequest $request)
     {
+
         $this->settingsService->saveGeneralSettings($request->validated());
 
         return back()->with([
@@ -90,5 +92,15 @@ class SettingsController extends Controller
 
         return response()->json(200);
 
+    }
+
+    public function saveLocalization(LocalizationRequest $request)
+    {
+        $this->settingsService->saveLocalization($request->validated());
+
+        return back()->with([
+            'message' => 'Save successfully',
+            'type' => 'success',
+        ]);
     }
 }

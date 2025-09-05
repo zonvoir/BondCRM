@@ -21,7 +21,7 @@ class SetupService
 {
     public function __construct(protected SetupRepository $setupRepository) {}
 
-    public function menuSettings(): array
+    public function adminMenuSettings(): array
     {
         $currentRouteName = Route::currentRouteName();
 
@@ -110,7 +110,7 @@ class SetupService
         ];
     }
 
-    public function propsGeneral($type): array
+    public function propsAdminGeneral($type): array
     {
         return match ($type) {
             'general' => [
@@ -181,14 +181,14 @@ class SetupService
                 'color' => 'bg-cyan-50',
             ],
             'WebMail' => [
-                'routeName' => route('employee.imap.settings', 'webmail'),
+                'routeName' => route('employee.setup.settings', 'webmail'),
                 'icon' => asset('assets/icons/webmail.png'),
                 'isConfigure' => (bool) $this->getImap('webmail')->type,
                 'email' => $this->getImap('webmail')->imap_user_name,
                 'color' => 'bg-blue-50',
             ],
             'AppleMail' => [
-                'routeName' => route('employee.imap.settings', 'applemail'),
+                'routeName' => route('employee.setup.settings', 'applemail'),
                 'icon' => asset('assets/icons/apple.svg'),
                 'isConfigure' => (bool) $this->getImap('applemail')->type,
                 'email' => $this->getImap('applemail')->imap_user_name,
@@ -272,5 +272,76 @@ class SetupService
             ['id' => $data['id'] ?? null],
             $data
         );
+    }
+
+    public function employeeMenuSettings(): array
+    {
+        $currentRouteName = Route::currentRouteName();
+
+        return [
+            [
+                'category' => 'General',
+                'items' => [
+                    [
+                        'name' => 'General',
+                        'icon' => 'heroicons:cog-6-tooth',
+                        'href' => route('employee.setup.settings', 'general'),
+                        'active' => request()->url() === route('employee.setup.settings', 'general'),
+                    ],
+                    [
+                        'name' => 'Smtp',
+                        'icon' => 'tabler:mail-cog',
+                        'href' => route('employee.setup.settings', 'smtp'),
+                        'active' => request()->url() === route('employee.setup.settings', 'smtp'),
+                    ],
+                ],
+            ],
+            [
+                'category' => 'Imap Settings',
+                'items' => [
+                    [
+                        'name' => 'Web Mail',
+                        'icon' => 'mdi:web',
+                        'href' => route('employee.setup.settings', 'webmail'),
+                        'active' => request()->url() === route('employee.setup.settings', 'webmail'),
+                    ],
+                    [
+                        'name' => 'Apple Mail',
+                        'icon' => 'mdi:apple',
+                        'href' => route('employee.setup.settings', 'applemail'),
+                        'active' => request()->url() === route('employee.setup.settings', 'applemail'),
+                    ],
+                ],
+            ],
+
+        ];
+    }
+
+    public function propsEmployeeGeneral($type): array
+    {
+        return match ($type) {
+            'general' => [
+                'title' => 'General Settings',
+                'configurations' => $this->mailsConfigureLogo(),
+            ],
+            'webmail' => [
+                'title' => 'Webmail',
+                'settings' => $this->setupRepository->getImapSettings($type),
+                'type' => $type,
+            ],
+            'applemail' => [
+                'title' => 'Apple mail',
+                'settings' => $this->setupRepository->getImapSettings($type),
+                'type' => $type,
+            ],
+            'smtp' => [
+                'title' => 'Smtp Settings',
+                'smtpSettings' => $this->setupRepository->getSmtpUserSettings(),
+            ],
+
+            default => [
+                'title' => 'Unknown Section',
+            ],
+        };
     }
 }

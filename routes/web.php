@@ -8,10 +8,10 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Lead\LeadController;
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Settings\SettingsController;
-use App\Http\Controllers\Settings\SmtpSettingsController;
+use App\Http\Controllers\Setup\SettingsController;
 use App\Http\Controllers\Setup\SetupController;
 use App\Http\Controllers\Setup\SetupEmployeeController;
+use App\Http\Controllers\Setup\SmtpSettingsController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -67,6 +67,7 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::ADMIN->value)->group(fun
 
     Route::prefix('settings')->controller(SettingsController::class)->group(function () {
         Route::post('general-settings-save', 'generalSettingsSave')->name('settings.general.save');
+        Route::post('localization-save', 'saveLocalization')->name('localization.save');
         Route::post('general-settings-pwa', 'settingsPwaSave')->name('settings.general.pwa');
         Route::post('microsoft-socialite', 'microsoftSocialiteSave')->name('settings.socialite.microsoft');
         Route::post('google-socialite', 'googleSocialiteSave')->name('settings.socialite.google');
@@ -121,10 +122,9 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
     });
 
     Route::prefix('setup')->controller(SetupEmployeeController::class)->group(function () {
-        Route::get('/', 'employeeSetup')->name('setup.index');
+        Route::get('/settings/{type}', 'settings')->name('setup.settings');
         Route::get('/authorized-gmail', 'authorizedGmail')->name('authorized.gmail');
         Route::get('/authorized-outlook', 'authorizedOutlook')->name('authorized.outlook');
-        Route::get('imap/{type}', 'imapSettings')->where('type', 'webmail|applemail')->name('imap.settings');
         Route::post('imap/save', 'saveImapSettings')->name('imap.settings.save');
         Route::get('smtp', 'smtp')->name('smtp');
         Route::post('smtp-save', 'smtpSave')->name('smtp.save');
