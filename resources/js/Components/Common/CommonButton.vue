@@ -64,8 +64,8 @@ const variants = {
     primary:
         'bg-indigo-700 hover:bg-indigo-600 text-white border border-transparent focus-visible:ring-2 focus-visible:ring-indigo-700 ring-offset-1 active:bg-indigo-900',
     secondary:
-        'bg-transparent text-indigo-700 border border-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-700 ring-offset-1 active:text-indigo-300',
-    gray: 'bg-gray-100 text-gray-700 border border-transparent focus-visible:ring-2 focus-visible:ring-indigo-700 ring-offset-1 active:text-gray-300',
+        'bg-transparent text-indigo-600 border border-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-600 ring-offset-1 active:text-indigo-300',
+    gray: 'bg-gray-100 text-gray-700 border border-transparent focus-visible:ring-2 focus-visible:ring-indigo-600 ring-offset-1 active:text-gray-300',
     transparent:
         'bg-transparent text-gray-700 border border-transparent focus-visible:ring-2 focus-visible:ring-indigo-700 ring-offset-1 active:text-gray-300',
     danger: 'bg-transparent text-red-700 border border-red-700 hover:ring-red-600 hover:text-red-600 focus-visible:ring-2 focus-visible:ring-red-700 ring-offset-1',
