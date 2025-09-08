@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             SocialiteSettingsSeeder::class,
             EmailSettingSeeder::class,
+            CountrySeeder::class,
+            StatusSeeder::class,
+            SourcesSeeder::class,
         ]);
 
     }

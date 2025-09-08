@@ -6,8 +6,16 @@
         maximizable
         modal
         :header="title"
-        :style="{ width: '50rem' }"
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+        :position="position"
+        :pt="{
+            root: {
+                class: className,
+            },
+            mask: {
+                class: 'backdrop-blur-sm bg-black/40',
+            },
+        }"
     >
         <slot></slot>
     </Dialog>
@@ -18,10 +26,21 @@ import { defineProps, defineEmits } from 'vue';
 import Dialog from 'primevue/dialog';
 
 const props = defineProps({
-    visible: Boolean,
+    visible: {
+        type: Boolean,
+        default: false,
+    },
     title: {
         type: String,
         default: 'Header',
+    },
+    position: {
+        type: String,
+        default: 'center',
+    },
+    className: {
+        type: String,
+        default: '',
     },
 });
 

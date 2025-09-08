@@ -62,6 +62,7 @@ const submit = () => {
 
                     <div class="col-span-12 sm:col-span-12">
                         <CommonTextarea
+                            placeholder="Rules"
                             v-model="form.prompt"
                             :error="form.errors.apiKey"
                         />

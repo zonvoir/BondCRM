@@ -36,7 +36,7 @@ class EmailSettingsService
         $settings = GeneralSettings::query()->select('app_name')->first();
         Config::set('app.name', $settings->app_name ?? 'App');
 
-        App::getInstance()->register('App\Providers\MailConfigProvider');
+        App::getInstance()->register('App\Providers\ConfigProvider');
         Notification::route('mail', [$data['email'] => 'demo'])->notify(new TestEmailConfiguration());
 
     }

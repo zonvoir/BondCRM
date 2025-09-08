@@ -91,6 +91,7 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
 
     Route::prefix('lead')->controller(LeadController::class)->as('lead.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::post('/save', 'saveLead')->name('save');
         Route::get('/social-sync', 'socialSync')->name('social');
     });
 

@@ -51,7 +51,7 @@ class GeneralSettingsSeeder extends Seeder
             'app_logo' => 'logo.png',
             'theme_color' => '#6777ef',
             'countries' => ['code' => 'AU', 'name' => 'Australia'],
-            'date_format' => ['code' => 'd-m-Y', 'name' => 'd-m-Y'],
+            'date_format' => ['code' => 'd-m-Y', 'name' => 'DD-MM-YYYY'],
             'time_format' => ['code' => '12', 'name' => '12 hours'],
             'timezones' => ['code' => 'Asia/Kolkata', 'name' => 'Asia/Kolkata'],
         ]);

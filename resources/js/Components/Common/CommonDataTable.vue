@@ -38,6 +38,10 @@ const props = defineProps({
         type: [Array, Object, null],
         default: null,
     },
+    loading: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const links = ref(props?.data?.meta?.links ?? props?.data?.links);
@@ -74,6 +78,7 @@ const onRowClick = event => {
                     dataKey="id"
                     tableStyle="min-width: 50rem"
                     @row-click="onRowClick"
+                    :loading="loading"
                     :pt="{
                         column: {
                             headerCell: {

@@ -64,14 +64,6 @@ class SetupService
             ],
             [
                 'category' => 'Configure Features',
-                'items' => [
-                    [
-                        'name' => 'Leads',
-                        'icon' => 'heroicons:document-currency-dollar',
-                        'href' => route('setup.general.index', 'lead'),
-                        'active' => request()->url() === route('setup.general.index', 'lead'),
-                    ],
-                ],
             ],
             [
                 'category' => 'Integrations',
@@ -131,9 +123,6 @@ class SetupService
             'pwa' => [
                 'title' => 'Pwa Settings',
                 'generalSettings' => new GeneralSettingsResource(GeneralSettings::query()->first()),
-            ],
-            'lead' => [
-                'title' => 'Lead Settings',
             ],
             'google' => [
                 'title' => 'Google Settings',

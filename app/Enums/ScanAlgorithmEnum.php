@@ -11,4 +11,12 @@ enum ScanAlgorithmEnum: string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::CHATGPT => 'ChatGPT',
+            self::CUSTOM => 'Custom',
+        };
+    }
 }

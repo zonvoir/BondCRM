@@ -9,8 +9,10 @@ import CommonIcon from '@/Components/Common/CommonIcon.vue';
 import CommonDataTable from '@/Components/Common/CommonDataTable.vue';
 import Column from 'primevue/column';
 import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
+import CommonSelect from '@/Components/Common/CommonSelect.vue';
+import CommonColor from '@/Components/Common/CommonColor.vue';
 
-const props = defineProps(['statuses']);
+const props = defineProps(['statuses', 'colors']);
 
 const showDrawer = ref(false);
 const searchQuery = ref(null);
@@ -20,6 +22,7 @@ const deleteId = ref(null);
 const form = useForm({
     id: null,
     name: '',
+    color: '',
 });
 
 const handleOpen = () => {
@@ -66,6 +69,7 @@ const handleSubmit = () => {
 const handleEdit = data => {
     showDrawer.value = true;
     form.name = data?.name;
+    form.color = data?.color;
     form.id = data?.id;
 };
 </script>
@@ -84,6 +88,18 @@ const handleEdit = data => {
 
         <CommonDataTable :showSerialNumber="true" :data="statuses">
             <Column field="name" header="Name" :sortable="true" />
+            <Column header="Color" :sortable="false">
+                <template #body="slotProps">
+                    <div class="flex gap-2">
+                        <span
+                            class="h-6 w-6 rounded-md"
+                            :style="{
+                                backgroundColor: '#' + slotProps.data?.color,
+                            }"
+                        ></span>
+                    </div>
+                </template>
+            </Column>
             <Column field="created_at" header="Created At" :sortable="true" />
             <Column header="Action" :sortable="false">
                 <template #body="slotProps">
@@ -109,7 +125,7 @@ const handleEdit = data => {
         </CommonDataTable>
 
         <CommonDrawer v-model:visible="showDrawer" header="Create Source">
-            <div class="mt-12 grid grid-cols-12 gap-3">
+            <div class="mt-6 grid grid-cols-12 gap-3">
                 <div class="col-span-12">
                     <CommonInput
                         v-model="form.name"
@@ -117,6 +133,14 @@ const handleEdit = data => {
                         label="Source"
                         type="text"
                         required
+                    />
+                </div>
+
+                <div class="col-span-12">
+                    <CommonColor
+                        v-model="form.color"
+                        label="Color"
+                        :error="form.errors.color"
                     />
                 </div>
             </div>

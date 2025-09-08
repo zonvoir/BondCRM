@@ -24,13 +24,16 @@ if (! function_exists('dateFormats')) {
     function dateFormats(): array
     {
         return [
-            ['code' => 'd-m-Y', 'name' => 'd-m-Y'],
-            ['code' => 'd/m/Y', 'name' => 'd/m/Y'],
-            ['code' => 'm-d-Y', 'name' => 'm-d-Y'],
-            ['code' => 'm.d.Y', 'name' => 'm.d.Y'],
-            ['code' => 'm/d/Y', 'name' => 'm/d/Y'],
-            ['code' => 'Y-m-d', 'name' => 'Y-m-d'],
-            ['code' => 'd.m.Y', 'name' => 'd.m.Y'],
+            ['code' => 'd-m-Y', 'name' => 'DD-MM-YYYY'], // 05-09-2025
+            ['code' => 'd/m/Y', 'name' => 'DD/MM/YYYY'], // 05/09/2025
+            ['code' => 'd.m.Y', 'name' => 'DD.MM.YYYY'], // 05.09.2025
+            ['code' => 'm-d-Y', 'name' => 'MM-DD-YYYY'], // 09-05-2025
+            ['code' => 'm.d.Y', 'name' => 'MM.DD.YYYY'], // 09.05.2025
+            ['code' => 'm/d/Y', 'name' => 'MM/DD/YYYY'], // 09/05/2025
+            ['code' => 'Y-m-d', 'name' => 'YYYY-MM-DD'], // 2025-09-05
+            ['code' => 'M d, Y', 'name' => 'Mon DD, YYYY'], // Sep 05, 2025
+            ['code' => 'd M Y', 'name' => 'DD Mon YYYY'], // 05 Sep 2025
+            ['code' => 'F d, Y', 'name' => 'Month DD, YYYY'], // September 05, 2025
         ];
     }
 

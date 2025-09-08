@@ -27,6 +27,7 @@ class StatusRequest extends FormRequest
         return [
             'id' => ['nullable'],
             'name' => ['required', Rule::unique(Status::class)->ignore(request('id'))],
+            'color' => 'nullable',
         ];
     }
 }

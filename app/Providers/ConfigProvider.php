@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
-class MailConfigProvider extends ServiceProvider
+class ConfigProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -32,5 +32,8 @@ class MailConfigProvider extends ServiceProvider
                 Config::set('mail.from.name', $emailSettings->mail_from_name);
             }
         }
+
+        config(['app.date_format' => 'd-m-Y']);
+
     }
 }

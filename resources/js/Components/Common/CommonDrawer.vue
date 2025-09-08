@@ -4,6 +4,11 @@
         :header="header"
         :position="position"
         :style="{ ...drawerStyle, width }"
+        :pt="{
+            mask: {
+                class: 'backdrop-blur-xs bg-black/20',
+            },
+        }"
     >
         <!-- Header Slot -->
         <template #header>

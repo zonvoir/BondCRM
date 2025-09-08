@@ -11,6 +11,8 @@
         </label>
 
         <DatePicker
+            :showTime="showTime"
+            :hourFormat="hourFormat"
             v-model="localValue"
             :input-class="'w-full'"
             :placeholder="placeholder"
@@ -58,6 +60,14 @@ const props = defineProps({
     placeholder: {
         type: String,
         default: 'Select date',
+    },
+    showTime: {
+        type: Boolean,
+        default: false,
+    },
+    hourFormat: {
+        type: String,
+        default: 12,
     },
 });
 

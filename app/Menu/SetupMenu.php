@@ -33,7 +33,7 @@ class SetupMenu
                         'active' => $currentRouteName === 'setup.source',
                     ],
                     [
-                        'name' => 'statuses',
+                        'name' => 'Statuses',
                         'permission' => hasPermissions('email-black-view'),
                         'href' => route('setup.status'),
                         'active' => $currentRouteName === 'setup.status',

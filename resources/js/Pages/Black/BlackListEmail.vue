@@ -15,7 +15,6 @@ const props = defineProps(['blackListEmail']);
 
 const showDrawer = ref(false);
 const searchQuery = ref(null);
-const isVisible = ref(false);
 const openConfirmation = ref(false);
 const deleteId = ref(null);
 
