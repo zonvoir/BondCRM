@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
@@ -76,6 +76,18 @@ const isContactedToday = ref(false);
 const deleteId = ref(null);
 const openConfirmation = ref(false);
 const isEdit = ref(false);
+const selectedGridOption = ref('list');
+
+const columnVisibility = ref({
+    'Lead Name': true,
+    Company: true,
+    Email: true,
+    Phone: true,
+    Status: true,
+    Source: true,
+    Created: true,
+    Action: true,
+});
 
 const toggle = event => {
     op.value.popover.toggle(event);
@@ -114,12 +126,18 @@ const menuItems = [
 
 const leadColumns = [
     { name: 'Lead Name' },
-    { name: 'Company Name' },
+    { name: 'Company' },
+    { name: 'Email' },
     { name: 'Phone' },
-    { name: 'Lead Owner' },
-    { name: 'Created At' },
+    { name: 'Status' },
+    { name: 'Source' },
+    { name: 'Created' },
     { name: 'Action' },
 ];
+
+const toggleColumnVisibility = columnName => {
+    columnVisibility.value[columnName] = !columnVisibility.value[columnName];
+};
 
 const viewOptions = [
     { label: 'Grid', value: 'grid', icon: 'grid-view-outline-rounded' },
@@ -214,14 +232,27 @@ const handleEditLead = lead => {
                     </div>
                 </div>
                 <div class="flex justify-between border-b pb-4">
-                    <div class="w-full max-w-full sm:max-w-1/2 md:max-w-1/3">
-                        <CommonInput
-                            v-model="searchQuery"
-                            icon="heroicons:magnifying-glass"
-                            placeholder="search"
-                            InputClass="!py-2 "
-                            class="w-full"
-                        />
+                    <div
+                        class="flex w-full max-w-full sm:max-w-1/2 md:max-w-1/3"
+                    >
+                        <div>
+                            <CommonInput
+                                v-model="searchQuery"
+                                icon="heroicons:magnifying-glass"
+                                placeholder="search"
+                                InputClass="!py-2 "
+                                class="w-full"
+                            />
+                        </div>
+
+                        <div>
+                            <CommonSelectButton
+                                v-model="selectedGridOption"
+                                :options="viewOptions"
+                                optionLabel="label"
+                                optionValue="value"
+                            />
+                        </div>
                     </div>
                     <CommonButton
                         @click="handleDrawerOpen"
@@ -231,127 +262,156 @@ const handleEditLead = lead => {
                         Lead
                     </CommonButton>
                 </div>
-                <div class="flex items-center justify-between py-4">
-                    <div
-                        class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
-                    >
-                        <div>
-                            <CommonButton
-                                ref="buttonRef"
-                                @click="openMenu"
-                                variant="gray"
-                                class="!py-2 text-sm"
-                            >
-                                <CommonIcon icon="heroicons:bars-arrow-down" />
-                                Sort by
-                                <CommonIcon icon="heroicons:chevron-down" />
-                            </CommonButton>
-                            <CommonDropDown
-                                ref="dropdownRef"
-                                :items="menuItems"
-                            />
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div>
-                            <CommonButton
-                                variant="gray"
-                                class="relative border text-sm"
-                                @click="toggle($event)"
-                            >
-                                <Badge
-                                    class="absolute -top-1 -right-1 rounded-full bg-indigo-600 p-1 text-[10px] text-white"
-                                >
-                                </Badge>
-                                <CommonIcon icon="heroicons:funnel" /> Filters
-                            </CommonButton>
 
-                            <CommonPopover ref="op">
-                                this is popover
-                            </CommonPopover>
-                        </div>
-                        <div>
-                            <CommonButton
-                                variant="primary"
-                                class="relative border text-sm"
-                                @click="columnsDrawerToggle"
+                <div v-if="selectedGridOption === 'list'">
+                    <div class="flex justify-between border-b pb-4">
+                        <div class="flex items-center justify-between py-4">
+                            <div
+                                class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
                             >
-                                Manage Columns
-                            </CommonButton>
-
-                            <CommonPopover ref="columns" unstyled>
-                                <div
-                                    class="mt-2 max-h-80 overflow-y-auto rounded-md border shadow-xl"
+                                <div>
+                                    <CommonButton
+                                        ref="buttonRef"
+                                        @click="openMenu"
+                                        variant="gray"
+                                        class="!py-2 text-sm"
+                                    >
+                                        <CommonIcon
+                                            icon="heroicons:bars-arrow-down"
+                                        />
+                                        Sort by
+                                        <CommonIcon
+                                            icon="heroicons:chevron-down"
+                                        />
+                                    </CommonButton>
+                                    <CommonDropDown
+                                        ref="dropdownRef"
+                                        :items="menuItems"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div>
+                                <CommonButton
+                                    variant="gray"
+                                    class="relative border text-sm"
+                                    @click="toggle"
                                 >
+                                    <Badge
+                                        class="absolute -top-1 -right-1 rounded-full bg-indigo-600 p-1 text-[10px] text-white"
+                                    >
+                                    </Badge>
+                                    <CommonIcon icon="heroicons:funnel" />
+                                    Filters
+                                </CommonButton>
+
+                                <CommonPopover ref="op">
+                                    this is popover
+                                </CommonPopover>
+                            </div>
+                            <div>
+                                <CommonButton
+                                    variant="primary"
+                                    class="relative border text-sm"
+                                    @click="columnsDrawerToggle"
+                                >
+                                    Manage Columns
+                                </CommonButton>
+
+                                <CommonPopover ref="columns" unstyled>
                                     <div
-                                        v-for="(value, index) in leadColumns"
-                                        :key="index"
-                                        :class="[
-                                            index % 2 === 0
-                                                ? 'bg-white'
-                                                : 'bg-gray-100',
-                                        ]"
-                                        class="min-w-xs"
+                                        class="mt-2 max-h-80 overflow-y-auto rounded-md border shadow-xl"
                                     >
                                         <div
-                                            class="flex items-center justify-between p-3"
+                                            v-for="(
+                                                column, index
+                                            ) in leadColumns"
+                                            :key="index"
+                                            :class="[
+                                                index % 2 === 0
+                                                    ? 'bg-white'
+                                                    : 'bg-gray-100',
+                                            ]"
+                                            class="min-w-xs"
                                         >
                                             <div
-                                                class="flex items-center gap-3"
+                                                class="flex items-center justify-between p-3"
                                             >
-                                                <CommonIcon
-                                                    icon="material-symbols:circle"
-                                                    class="h-2 w-2"
+                                                <div
+                                                    class="flex items-center gap-3"
+                                                >
+                                                    <CommonIcon
+                                                        icon="material-symbols:circle"
+                                                        class="h-2 w-2"
+                                                        :class="
+                                                            columnVisibility[
+                                                                column.name
+                                                            ]
+                                                                ? 'text-green-500'
+                                                                : 'text-gray-300'
+                                                        "
+                                                    />
+                                                    <h4 class="text-sm">
+                                                        {{ column.name }}
+                                                    </h4>
+                                                </div>
+                                                <CommonToggleSwitch
+                                                    :modelValue="
+                                                        columnVisibility[
+                                                            column.name
+                                                        ]
+                                                    "
+                                                    @update:modelValue="
+                                                        toggleColumnVisibility(
+                                                            column.name
+                                                        )
+                                                    "
+                                                    :disabled="
+                                                        column.name === 'Action'
+                                                    "
                                                 />
-                                                <h4 class="text-sm">
-                                                    {{ value.name }}
-                                                </h4>
                                             </div>
-                                            <CommonToggleSwitch />
                                         </div>
                                     </div>
-                                </div>
-                            </CommonPopover>
-                        </div>
-                        <div
-                            class="flex items-center gap-2 rounded-md bg-gray-100"
-                        >
-                            <CommonSelectButton
-                                :options="viewOptions"
-                                optionLabel="label"
-                                optionValue="value"
-                            >
-                                <template #option="{ option }">
-                                    <div class="flex items-center">
-                                        <CommonIcon
-                                            :icon="`material-symbols:${option.icon}`"
-                                            class="h-5 w-5"
-                                        />
-                                    </div>
-                                </template>
-                            </CommonSelectButton>
+                                </CommonPopover>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div>
                     <CommonDataTable :showSerialNumber="true" :data="leads">
                         <Column
+                            v-if="columnVisibility['Lead Name']"
                             field="name"
                             header="Lead Name"
                             :sortable="true"
                         />
 
                         <Column
+                            v-if="columnVisibility['Company']"
                             field="company"
                             header="Company"
                             :sortable="true"
                         />
-                        <Column field="email" header="Email" :sortable="true" />
+                        <Column
+                            v-if="columnVisibility['Email']"
+                            field="email"
+                            header="Email"
+                            :sortable="true"
+                        />
 
-                        <Column field="phone" header="Phone" :sortable="true" />
+                        <Column
+                            v-if="columnVisibility['Phone']"
+                            field="phone"
+                            header="Phone"
+                            :sortable="true"
+                        />
 
-                        <Column header="Status" :sortable="false">
+                        <Column
+                            v-if="columnVisibility['Status']"
+                            header="Status"
+                            sortField="status.name"
+                            :sortable="true"
+                        >
                             <template #body="slotProps">
                                 <div>
                                     <Badge
@@ -368,7 +428,12 @@ const handleEditLead = lead => {
                             </template>
                         </Column>
 
-                        <Column header="Sources" :sortable="true">
+                        <Column
+                            v-if="columnVisibility['Source']"
+                            header="Sources"
+                            sortField="source.source"
+                            :sortable="true"
+                        >
                             <template #body="slotProps">
                                 <CommonBadge
                                     :value="slotProps.data?.source?.source"
@@ -378,11 +443,16 @@ const handleEditLead = lead => {
                         </Column>
 
                         <Column
+                            v-if="columnVisibility['Created']"
                             field="created_at"
                             header="Created"
                             :sortable="true"
                         />
-                        <Column header="Action" :sortable="false">
+                        <Column
+                            v-if="columnVisibility['Action']"
+                            header="Action"
+                            :sortable="false"
+                        >
                             <template #body="slotProps">
                                 <div class="flex gap-2">
                                     <CommonButton

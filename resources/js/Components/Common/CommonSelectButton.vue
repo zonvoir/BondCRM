@@ -1,6 +1,7 @@
 <script setup>
 import { SelectButton } from 'primevue';
 import { ref, defineProps, defineEmits, computed } from 'vue';
+import CommonIcon from '@/Components/Common/CommonIcon.vue';
 
 const props = defineProps({
     modelValue: [String, Number, Array, Object],
@@ -10,11 +11,11 @@ const props = defineProps({
     },
     optionLabel: {
         type: String,
-        default: null,
+        default: 'label',
     },
     optionValue: {
         type: String,
-        default: null,
+        default: 'value',
     },
     multiple: {
         type: Boolean,
@@ -22,7 +23,8 @@ const props = defineProps({
     },
     size: {
         type: String,
-        default: '',
+        default: 'medium',
+        validator: value => ['small', 'medium', 'large'].includes(value),
     },
     disabled: {
         type: Boolean,
@@ -40,38 +42,70 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    iconField: {
+        type: String,
+        default: 'icon',
+    },
+    showLabel: {
+        type: Boolean,
+        default: false,
+    },
+    iconPrefix: {
+        type: String,
+        default: 'material-symbols:',
+    },
+});
+
+const emit = defineEmits(['update:modelValue', 'change']);
+
+const internalValue = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        emit('update:modelValue', value);
+        emit('change', value);
+    },
 });
 
 const sizeClass = computed(() => {
-    if (props.size === 'small') return 'p-1 text-sm';
-    if (props.size === 'large') return 'p-3 text-lg';
-    return '';
+    const sizeMap = {
+        small: 'p-1 text-sm',
+        medium: 'p-2 text-base',
+        large: 'p-3 text-lg',
+    };
+    return sizeMap[props.size] || sizeMap.medium;
 });
-const emit = defineEmits(['update:modelValue']);
 
-function updateValue(val) {
-    emit('update:modelValue', val);
-}
+const getIconName = iconName => {
+    return props.iconPrefix + iconName;
+};
 </script>
 
 <template>
     <SelectButton
-        v-model="props.modelValue"
-        :options="props.options"
-        :option-label="props.optionLabel"
-        :option-value="props.optionValue"
-        :multiple="props.multiple"
-        :disabled="props.disabled"
-        :invalid="props.invalid"
-        :aria-labelledby="props.ariaLabelledby"
-        :allow-empty="props.allowEmpty"
+        v-model="internalValue"
+        :options="options"
+        :option-label="optionLabel"
+        :option-value="optionValue"
+        :multiple="multiple"
+        :disabled="disabled"
+        :invalid="invalid"
+        :aria-labelledby="ariaLabelledby"
+        :allow-empty="allowEmpty"
         :class="sizeClass"
-        @update:modelValue="updateValue"
     >
-        <template #option="slotProps">
-            <slot name="option" v-bind="slotProps">{{
-                slotProps.option[props.optionLabel] || slotProps.option
-            }}</slot>
+        <template #option="{ option }">
+            <div class="flex items-center gap-2">
+                <CommonIcon
+                    v-if="option[iconField]"
+                    :icon="getIconName(option[iconField])"
+                    class="h-5 w-5"
+                />
+                <span v-if="showLabel && option[optionLabel]">
+                    {{ option[optionLabel] }}
+                </span>
+            </div>
         </template>
     </SelectButton>
 </template>
