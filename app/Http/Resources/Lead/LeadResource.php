@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Lead;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -31,6 +32,9 @@ class LeadResource extends JsonResource
             'lead_value' => $this->lead_value,
             'company' => $this->company,
             'description' => $this->description,
+            'date_contacted' => $this->date_contacted ? Carbon::parse($this->date_contacted)->format('d-m-Y h:i A') : null,
+            'public' => $this->public,
+            'is_date_contacted' => $this->is_date_contacted,
             'created_at' => $this->created_at->format('Y-m-d'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];

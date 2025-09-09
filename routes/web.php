@@ -93,6 +93,7 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
         Route::get('/', 'index')->name('index');
         Route::post('/save', 'saveLead')->name('save');
         Route::get('/social-sync', 'socialSync')->name('social');
+        Route::delete('/destroy/{lead}', 'destroyLead')->name('destroy');
     });
 
     Route::prefix('black')->controller(BlackingController::class)->as('black.')->group(function () {

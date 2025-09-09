@@ -11,12 +11,14 @@
         </label>
 
         <DatePicker
+            :dateFormat="dateFormat"
             :showTime="showTime"
             :hourFormat="hourFormat"
             v-model="localValue"
             :input-class="'w-full'"
             :placeholder="placeholder"
             :disabled="disabled"
+            hide-on-date-time-select
         />
 
         <div class="mt-1" v-if="error">
@@ -68,6 +70,10 @@ const props = defineProps({
     hourFormat: {
         type: String,
         default: 12,
+    },
+    dateFormat: {
+        type: String,
+        default: 'dd/mm/yy',
     },
 });
 

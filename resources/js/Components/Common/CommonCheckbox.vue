@@ -1,6 +1,6 @@
 <template>
     <div class="card flex justify-center">
-        <Checkbox v-model="internalValue" binary />
+        <Checkbox v-model="internalValue" binary @valueChange="onChange" />
     </div>
 </template>
 
@@ -15,7 +15,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'change']);
 
 const internalValue = computed({
     get() {
@@ -23,6 +23,11 @@ const internalValue = computed({
     },
     set(value) {
         emit('update:modelValue', value);
+        onChange(value);
     },
 });
+
+const onChange = value => {
+    emit('change', value);
+};
 </script>

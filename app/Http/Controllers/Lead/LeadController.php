@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Lead;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Resources\Lead\LeadResource;
+use App\Models\Lead;
 use App\Repositories\Lead\LeadRepository;
 use App\Services\Lead\LeadService;
 use Inertia\Inertia;
@@ -46,5 +47,15 @@ class LeadController extends Controller
         ];
 
         return Inertia::render('Lead/SocialSync', $props);
+    }
+
+    public function destroyLead(Lead $lead)
+    {
+        $lead->delete();
+
+        return back()->with([
+            'message' => 'Deleted successfully',
+            'type' => 'success',
+        ]);
     }
 }

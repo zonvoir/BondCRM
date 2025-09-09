@@ -35,9 +35,9 @@ class Lead extends Model
     protected $casts = [
         'phone' => 'integer',
         'zip_code' => 'integer',
-        'date_contacted' => 'datetime',
         'public' => 'boolean',
         'is_date_contacted' => 'boolean',
+        'date_contacted' => 'datetime',
     ];
 
     /**

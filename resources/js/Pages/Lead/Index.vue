@@ -1,6 +1,6 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
@@ -18,6 +18,8 @@ import CommonTextarea from '@/Components/Common/CommonTextarea.vue';
 import CommonDatePicker from '@/Components/Common/CommonDatePicker.vue';
 import CommonCheckbox from '@/Components/Common/CommonCheckbox.vue';
 import CommonBadge from '@/Components/Common/CommonBadge.vue';
+import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
+import { useSelectMapper } from '@/Composables/useSelectMapper.js';
 
 const props = defineProps({
     mailProviders: {
@@ -44,6 +46,7 @@ const props = defineProps({
 });
 
 const form = useForm({
+    id: null,
     name: '',
     source: '',
     status: '',
@@ -70,6 +73,9 @@ const dropdownRef = ref();
 const searchQuery = ref(null);
 const showDrawer = ref(false);
 const isContactedToday = ref(false);
+const deleteId = ref(null);
+const openConfirmation = ref(false);
+const isEdit = ref(false);
 
 const toggle = event => {
     op.value.popover.toggle(event);
@@ -79,97 +85,16 @@ const columnsDrawerToggle = event => {
 };
 
 const handleDrawerOpen = () => {
+    form.reset();
     showDrawer.value = true;
 };
 
 const handleDrawerClose = () => {
+    form.reset();
+    isEdit.value = false;
     showDrawer.value = false;
 };
 
-const mapLeads = {
-    data: [
-        {
-            id: 1,
-            lead_name: 'Amit G',
-            company_name: 'Zonvoir Pvt Ltd',
-            phone: '+91 9876543210',
-            lead_status: 'Rahul Verma',
-            created_at: '2025-09-01',
-        },
-        {
-            id: 2,
-            lead_name: 'Priya Mehta',
-            company_name: 'NextGen Solutions',
-            phone: '+91 8765432109',
-            lead_status: 'Anjali Singh',
-            created_at: '2025-08-29',
-        },
-        {
-            id: 3,
-            lead_name: 'Ravi Kumar',
-            company_name: 'Skyline Corp',
-            phone: '+91 7654321098',
-            lead_status: 'Suresh Gupta',
-            created_at: '2025-08-25',
-        },
-        {
-            id: 4,
-            lead_name: 'Sneha Rani',
-            company_name: 'WebX Labs',
-            phone: '+91 6543210987',
-            lead_status: 'Nitin Joshi',
-            created_at: '2025-08-20',
-        },
-        {
-            id: 5,
-            lead_name: 'Arjun Yadav',
-            company_name: 'SmartTech Global',
-            phone: '+91 9123456780',
-            lead_status: 'Vikas Sharma',
-            created_at: '2025-08-18',
-        },
-        {
-            id: 6,
-            lead_name: 'Neha Kapoor',
-            company_name: 'CloudByte Inc',
-            phone: '+91 9988776655',
-            lead_status: 'Manish Rao',
-            created_at: '2025-08-15',
-        },
-        {
-            id: 7,
-            lead_name: 'Vivek Sinha',
-            company_name: 'Bright Future Ltd',
-            phone: '+91 8899776655',
-            lead_status: 'Rohit Bansal',
-            created_at: '2025-08-10',
-        },
-        {
-            id: 8,
-            lead_name: 'Divya Agarwal',
-            company_name: 'NextTech AI',
-            phone: '+91 7788996655',
-            lead_status: 'Meena Kumari',
-            created_at: '2025-08-05',
-        },
-        {
-            id: 9,
-            lead_name: 'Karan Patel',
-            company_name: 'Global Vision',
-            phone: '+91 6677889900',
-            lead_status: 'Shweta Malhotra',
-            created_at: '2025-08-02',
-        },
-        {
-            id: 10,
-            lead_name: 'Ankita Joshi',
-            company_name: 'InnoWorks',
-            phone: '+91 9988007766',
-            lead_status: 'Deepak Yadav',
-            created_at: '2025-07-30',
-        },
-    ],
-};
 const openMenu = event => {
     dropdownRef.value.toggle(event);
 };
@@ -201,21 +126,10 @@ const viewOptions = [
     { label: 'List', value: 'list', icon: 'lists-rounded' },
 ];
 
-const handleSource = source => {
-    form.source = source.code;
-};
-
-const handleStatus = status => {
-    form.status = status.code;
-};
-
-const handleCountry = country => {
-    form.country = country.code;
-};
-
-const handleContactedToday = () => {
-    form.isDateContacted = true;
-    isContactedToday.value = !isContactedToday.value;
+const handleContactedToday = value => {
+    form.isDateContacted = value;
+    form.dateContacted = value === false ? null : form.dateContacted;
+    isContactedToday.value = value;
 };
 
 const handleSubmit = () => {
@@ -224,6 +138,61 @@ const handleSubmit = () => {
             handleDrawerClose();
         },
     });
+};
+
+const handleDestroy = id => {
+    deleteId.value = id;
+    openConfirmation.value = true;
+};
+
+const handleDestroyCancel = () => {
+    openConfirmation.value = false;
+    deleteId.value = null;
+};
+
+const handleDelete = () => {
+    form.delete(
+        route('employee.lead.destroy', {
+            lead: deleteId.value,
+        }),
+        {
+            onSuccess: () => {
+                openConfirmation.value = false;
+                deleteId.value = null;
+            },
+        }
+    );
+};
+
+const handleEditLead = lead => {
+    handleDrawerOpen();
+    isEdit.value = true;
+    const { mappedData: mappedCountry } = useSelectMapper(lead?.country, false);
+    const { mappedData: mappedStatus } = useSelectMapper(lead?.status, false);
+    const { mappedData: mappedSource } = useSelectMapper(lead?.source, false, {
+        nameField: 'source',
+        codeField: 'id',
+    });
+
+    form.id = lead?.id;
+    form.source = mappedSource?.value;
+    form.status = mappedStatus?.value;
+    form.name = lead?.name;
+    form.address = lead?.address;
+    form.position = lead?.position;
+    form.city = lead?.city;
+    form.email = lead?.email;
+    form.state = lead?.state;
+    form.website = lead?.website;
+    form.country = mappedCountry;
+    form.phone = lead?.phone;
+    form.zipCode = lead?.zip_code;
+    form.leadValue = lead?.lead_value;
+    form.description = lead?.description;
+    form.public = lead?.public;
+    form.isDateContacted = lead?.is_date_contacted;
+    form.dateContacted = lead?.date_contacted;
+    isContactedToday.value = lead?.is_date_contacted;
 };
 </script>
 
@@ -418,6 +387,17 @@ const handleSubmit = () => {
                                 <div class="flex gap-2">
                                     <CommonButton
                                         type="button"
+                                        @click="handleEditLead(slotProps?.data)"
+                                        variant="secondary"
+                                    >
+                                        <CommonIcon icon="bi:pencil-square" />
+                                    </CommonButton>
+
+                                    <CommonButton
+                                        @click="
+                                            handleDestroy(slotProps?.data?.id)
+                                        "
+                                        type="button"
                                         variant="secondary"
                                     >
                                         <CommonIcon icon="bi:trash" />
@@ -433,13 +413,13 @@ const handleSubmit = () => {
                 v-model:visible="showDrawer"
                 position="top"
                 className="w-7xl"
-                header="Create Lead"
+                :header="isEdit ? 'Update Lead' : 'Create Lead'"
             >
                 <div class="grid grid-cols-12 gap-4">
                     <!-- Lead Source -->
                     <div class="col-span-3">
                         <CommonSelect
-                            @update:modelValue="handleSource"
+                            v-model="form.source"
                             label="Lead Source"
                             :options="source"
                             optionLabel="name"
@@ -451,7 +431,7 @@ const handleSubmit = () => {
                     <!-- Status -->
                     <div class="col-span-3">
                         <CommonSelect
-                            @update:modelValue="handleStatus"
+                            v-model="form.status"
                             label="Status"
                             :options="status"
                             optionLabel="name"
@@ -524,7 +504,6 @@ const handleSubmit = () => {
                     </div>
                     <div class="col-span-6">
                         <CommonSelect
-                            @update:modelValue="handleCountry"
                             label="Country"
                             v-model="form.country"
                             :options="countries"
@@ -597,7 +576,8 @@ const handleSubmit = () => {
                         <!-- Contacted Today -->
                         <label class="flex cursor-pointer items-center gap-2">
                             <CommonCheckbox
-                                @update:modelValue="handleContactedToday"
+                                v-model="form.isDateContacted"
+                                :onChange="handleContactedToday"
                             />
                             <span>Contacted Today</span>
                         </label>
@@ -613,6 +593,15 @@ const handleSubmit = () => {
                     </div>
                 </div>
             </CommonModal>
+            <CommonConfirmation
+                v-model="openConfirmation"
+                title="Delete Confirmation"
+                message="Are you sure you want to delete this item? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                @confirm="handleDelete"
+                @cancel="handleDestroyCancel"
+            />
         </PanelLayout>
     </AppLayout>
 </template>
