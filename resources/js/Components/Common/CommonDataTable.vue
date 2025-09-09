@@ -4,7 +4,17 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import CommonIcon from '@/Components/Common/CommonIcon.vue';
 
+const params = route().params;
+
 const props = defineProps({
+    routeName: {
+        type: String,
+        default: '',
+    },
+    routeParams: {
+        type: Object,
+        default: null,
+    },
     data: {
         type: Object,
         required: true,
@@ -25,10 +35,6 @@ const props = defineProps({
     serialNumberText: {
         type: String,
         default: 'S.N',
-    },
-    otherArgument: {
-        type: String,
-        default: '',
     },
     checkbox: {
         type: Boolean,
@@ -61,6 +67,15 @@ watch(internalSelection, val => {
 
 const onRowClick = event => {
     emit('rowClick', event);
+};
+
+const updatedUrlParams = pageNo => {
+    const mergedParams = {
+        ...params,
+        ...pageNo,
+        ...props?.routeParams,
+    };
+    return route(props?.routeName, mergedParams);
 };
 </script>
 
@@ -143,7 +158,7 @@ const onRowClick = event => {
                                 'border-indigo-500 text-indigo-500':
                                     link?.active,
                             }"
-                            :href="link?.url + otherArgument"
+                            :href="updatedUrlParams({ page: link?.page })"
                             v-html="link?.label"
                         />
                     </template>

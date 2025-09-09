@@ -83,7 +83,11 @@ const handleEdit = data => {
             </div>
         </div>
 
-        <CommonDataTable :showSerialNumber="true" :data="sources">
+        <CommonDataTable
+            routeName="setup.source"
+            :showSerialNumber="true"
+            :data="sources"
+        >
             <Column field="source" header="Name" :sortable="true" />
             <Column field="created_at" header="Created At" :sortable="true" />
             <Column header="Action" :sortable="false">

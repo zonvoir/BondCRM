@@ -119,6 +119,7 @@ const selectedItem = row => {
                         </div>
                         <div class="flex w-full justify-start">
                             <CommonDataTable
+                                routeName="employee.apple-mail"
                                 :showSerialNumber="false"
                                 :data="mails"
                                 @rowClick="selectedItem"

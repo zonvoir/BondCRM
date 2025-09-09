@@ -155,6 +155,7 @@ const handleConfirm = () => {
 
                         <div class="flex w-full justify-start">
                             <CommonDataTable
+                                routeName="employee.webmail"
                                 :showSerialNumber="false"
                                 :data="mails"
                                 :checkbox="true"

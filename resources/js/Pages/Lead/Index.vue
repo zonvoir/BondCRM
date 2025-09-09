@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
@@ -20,6 +20,7 @@ import CommonCheckbox from '@/Components/Common/CommonCheckbox.vue';
 import CommonBadge from '@/Components/Common/CommonBadge.vue';
 import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
 import { useSelectMapper } from '@/Composables/useSelectMapper.js';
+import { useDebounce } from '@vueuse/core';
 
 const props = defineProps({
     mailProviders: {
@@ -67,16 +68,18 @@ const form = useForm({
     isDateContacted: null,
 });
 
+const params = route().params;
 const op = ref();
 const columns = ref();
-const dropdownRef = ref();
-const searchQuery = ref(null);
+const sortByDropdownRef = ref();
 const showDrawer = ref(false);
 const isContactedToday = ref(false);
 const deleteId = ref(null);
 const openConfirmation = ref(false);
 const isEdit = ref(false);
 const selectedGridOption = ref('list');
+const selectedSortOption = ref(params?.sort || 'desc');
+const searchQuery = ref(params?.search || '');
 
 const columnVisibility = ref({
     'Lead Name': true,
@@ -89,13 +92,6 @@ const columnVisibility = ref({
     Action: true,
 });
 
-const toggle = event => {
-    op.value.popover.toggle(event);
-};
-const columnsDrawerToggle = event => {
-    columns.value.popover.toggle(event);
-};
-
 const handleDrawerOpen = () => {
     form.reset();
     showDrawer.value = true;
@@ -107,42 +103,30 @@ const handleDrawerClose = () => {
     showDrawer.value = false;
 };
 
-const openMenu = event => {
-    dropdownRef.value.toggle(event);
+const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+watch(debouncedSearchQuery, newValue => {
+    const updatedParams = {
+        ...params,
+        search: newValue,
+    };
+    router.visit(route('employee.lead.index', updatedParams));
+});
+
+const handleSortBy = event => {
+    sortByDropdownRef.value.toggle(event);
 };
 
-const menuItems = [
-    {
-        label: 'Newest',
-        class: 'text-sm',
-        command: () => console.log('Profile clicked'),
-    },
-    {
-        label: 'Oldest',
-        class: 'text-sm',
-        command: () => console.log('Settings clicked'),
-    },
-];
-
-const leadColumns = [
-    { name: 'Lead Name' },
-    { name: 'Company' },
-    { name: 'Email' },
-    { name: 'Phone' },
-    { name: 'Status' },
-    { name: 'Source' },
-    { name: 'Created' },
-    { name: 'Action' },
-];
+const toggle = event => {
+    op.value.popover.toggle(event);
+};
+const columnsDrawerToggle = event => {
+    columns.value.popover.toggle(event);
+};
 
 const toggleColumnVisibility = columnName => {
     columnVisibility.value[columnName] = !columnVisibility.value[columnName];
 };
-
-const viewOptions = [
-    { label: 'Grid', value: 'grid', icon: 'grid-view-outline-rounded' },
-    { label: 'List', value: 'list', icon: 'lists-rounded' },
-];
 
 const handleContactedToday = value => {
     form.isDateContacted = value;
@@ -212,6 +196,57 @@ const handleEditLead = lead => {
     form.dateContacted = lead?.date_contacted;
     isContactedToday.value = lead?.is_date_contacted;
 };
+
+const updateSortInURL = sortValue => {
+    const updatedParams = {
+        ...params,
+        sort: sortValue,
+    };
+    router.visit(route('employee.lead.index', updatedParams));
+};
+
+const filterStatus = status => {
+    const updatedParams = {
+        ...params,
+        status: status,
+    };
+    return route('employee.lead.index', updatedParams);
+};
+
+const viewOptions = [
+    { label: 'Grid', value: 'grid', icon: 'grid-view-outline-rounded' },
+    { label: 'List', value: 'list', icon: 'lists-rounded' },
+];
+
+const sortByMenu = [
+    {
+        label: 'Newest',
+        class: 'text-sm',
+        command: () => {
+            selectedSortOption.value = 'desc';
+            updateSortInURL('desc');
+        },
+    },
+    {
+        label: 'Oldest',
+        class: 'text-sm',
+        command: () => {
+            selectedSortOption.value = 'asc';
+            updateSortInURL('asc');
+        },
+    },
+];
+
+const leadColumns = [
+    { name: 'Lead Name' },
+    { name: 'Company' },
+    { name: 'Email' },
+    { name: 'Phone' },
+    { name: 'Status' },
+    { name: 'Source' },
+    { name: 'Created' },
+    { name: 'Action' },
+];
 </script>
 
 <template>
@@ -222,12 +257,14 @@ const handleEditLead = lead => {
                     <!-- filters  -->
                     <div class="flex flex-wrap gap-2 gap-y-5 py-5">
                         <div v-for="(s, index) in status" :key="index">
-                            <Badge
-                                class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
-                                :style="{ backgroundColor: '#' + s.color }"
-                            >
-                                {{ s?.leads_count }} {{ s.name }}
-                            </Badge>
+                            <Link :href="filterStatus(s?.code)">
+                                <Badge
+                                    class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
+                                    :style="{ backgroundColor: '#' + s.color }"
+                                >
+                                    {{ s?.leads_count }} {{ s.name }}
+                                </Badge>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -237,6 +274,7 @@ const handleEditLead = lead => {
                     >
                         <div>
                             <CommonInput
+                                type="search"
                                 v-model="searchQuery"
                                 icon="heroicons:magnifying-glass"
                                 placeholder="search"
@@ -271,8 +309,7 @@ const handleEditLead = lead => {
                             >
                                 <div>
                                     <CommonButton
-                                        ref="buttonRef"
-                                        @click="openMenu"
+                                        @click="handleSortBy"
                                         variant="gray"
                                         class="!py-2 text-sm"
                                     >
@@ -280,13 +317,18 @@ const handleEditLead = lead => {
                                             icon="heroicons:bars-arrow-down"
                                         />
                                         Sort by
+                                        {{
+                                            selectedSortOption === 'desc'
+                                                ? 'new'
+                                                : 'old'
+                                        }}
                                         <CommonIcon
                                             icon="heroicons:chevron-down"
                                         />
                                     </CommonButton>
                                     <CommonDropDown
-                                        ref="dropdownRef"
-                                        :items="menuItems"
+                                        ref="sortByDropdownRef"
+                                        :items="sortByMenu"
                                     />
                                 </div>
                             </div>
@@ -378,7 +420,11 @@ const handleEditLead = lead => {
                             </div>
                         </div>
                     </div>
-                    <CommonDataTable :showSerialNumber="true" :data="leads">
+                    <CommonDataTable
+                        routeName="employee.lead.index"
+                        :showSerialNumber="true"
+                        :data="leads"
+                    >
                         <Column
                             v-if="columnVisibility['Lead Name']"
                             field="name"

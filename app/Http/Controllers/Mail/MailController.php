@@ -21,7 +21,7 @@ class MailController extends Controller
     {
         $user = Auth::user();
         $length = (int) $request->input('length', 10);
-        $pageToken = $request->input('pt');
+        $pageToken = $request->pt;
         $search = mb_strtolower($request->input('search')['value'] ?? '');
         $filter = $request->input('filter', null);
         $service = new GmailService($user);
@@ -37,7 +37,7 @@ class MailController extends Controller
 
         $props = [
             'mails' => $this->mailService->gmailPagination($result),
-            'pageToken' => '&pt='.$result['nextPageToken'] ?? null,
+            'pageToken' => $result['nextPageToken'] ?? null,
         ];
 
         return Inertia::render('Mails/Gmail', $props);
@@ -79,8 +79,7 @@ class MailController extends Controller
 
         $length = (int) $request->input('length', 10);
         $search = mb_strtolower($request->input('search')['value'] ?? '');
-        $pageToken = $request->input('pt');
-
+        $pageToken = $request->pt;
         $response = $service->getPaginatedInboxMessages(
             top: $length,
             skip: $pageToken ? (int) $pageToken : null,
@@ -97,7 +96,7 @@ class MailController extends Controller
 
         $props = [
             'mails' => $this->mailService->outlookPagination($response),
-            'pageToken' => '&pt='.$nextPageToken,
+            'pageToken' => $nextPageToken,
         ];
 
         return Inertia::render('Mails/Outlook', $props);

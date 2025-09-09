@@ -121,6 +121,7 @@ const handleMultipleConfirm = () => {
             </div>
 
             <CommonDataTable
+                routeName="employee.black.email"
                 :showSerialNumber="true"
                 :data="emails"
                 checkbox

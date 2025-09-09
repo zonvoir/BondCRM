@@ -449,7 +449,7 @@ initializeCheckedStates();
             </CommonModal>
 
             <!-- Roles Table -->
-            <CommonDataTable :data="roles">
+            <CommonDataTable routeName="user.role.index" :data="roles">
                 <Column field="name" header="Name" :sortable="true" />
                 <Column header="Permissions" :sortable="false">
                     <template #body="slotProps">

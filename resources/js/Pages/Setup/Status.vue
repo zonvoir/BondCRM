@@ -86,7 +86,11 @@ const handleEdit = data => {
             </div>
         </div>
 
-        <CommonDataTable :showSerialNumber="true" :data="statuses">
+        <CommonDataTable
+            routeName="setup.status"
+            :showSerialNumber="true"
+            :data="statuses"
+        >
             <Column field="name" header="Name" :sortable="true" />
             <Column header="Color" :sortable="false">
                 <template #body="slotProps">

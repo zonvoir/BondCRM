@@ -72,7 +72,10 @@ const handleSubmit = () => {
             </div>
         </div>
 
-        <CommonDataTable :data="blackListEmail">
+        <CommonDataTable
+            routeName="email.blacklist.index"
+            :data="blackListEmail"
+        >
             <Column field="file" header="File" :sortable="true" />
 
             <Column field="created_at" header="Created At" :sortable="true" />

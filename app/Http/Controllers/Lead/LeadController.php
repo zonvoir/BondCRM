@@ -8,15 +8,16 @@ use App\Http\Resources\Lead\LeadResource;
 use App\Models\Lead;
 use App\Repositories\Lead\LeadRepository;
 use App\Services\Lead\LeadService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class LeadController extends Controller
 {
     public function __construct(protected LeadService $leadService, protected LeadRepository $leadRepository) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $leadsPaginate = $this->leadRepository->getLeadsPaginate();
+        $leadsPaginate = $this->leadRepository->getLeadsPaginate($request->all());
         $props = [
             'mailProviders' => $this->leadService->mapProvider(),
             'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),

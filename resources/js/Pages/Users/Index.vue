@@ -204,10 +204,18 @@ const isModuleGroupChecked = actions =>
                 </div>
             </div>
 
-            <CommonDataTable :showSerialNumber="true" :data="users">
+            <CommonDataTable
+                routeName="user.index"
+                :showSerialNumber="true"
+                :data="users"
+            >
                 <Column field="name" header="Name" :sortable="true" />
                 <Column field="email" header="Email" :sortable="true" />
-                <Column header="Roles / Permissions" :sortable="false">
+                <Column
+                    header="Roles / Permissions"
+                    sortField="role.name"
+                    :sortable="true"
+                >
                     <template #body="slotProps">
                         <CommonBadge
                             class="cursor-pointer"

@@ -126,9 +126,10 @@ const selectRows = e => {
                         </div>
                         <div class="flex w-full justify-start">
                             <CommonDataTable
+                                routeName="employee.outlook"
+                                :routeParams="{ pt: pageToken }"
                                 :showSerialNumber="false"
                                 :data="mails"
-                                :otherArgument="pageToken"
                                 :checkbox="true"
                                 @rowClick="selectedItem"
                                 @update:modelSelection="selectRows"

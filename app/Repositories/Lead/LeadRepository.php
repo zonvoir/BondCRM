@@ -7,8 +7,42 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class LeadRepository
 {
-    public function getLeadsPaginate(): LengthAwarePaginator
+    public function getLeadsPaginate(array $data): LengthAwarePaginator
     {
-        return Lead::with(['status', 'source', 'country'])->orderByDesc('id')->paginate(10);
+        $sortDirection = $data['sort'] ?? 'desc';
+        $perPage = $data['per_page'] ?? 10;
+        $status = $data['status'] ?? null;
+        $search = $data['search'] ?? null;
+
+        $query = Lead::with(['status', 'source', 'country']);
+
+        if ($status) {
+            $query->where('status_id', $status);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('company', 'like', '%'.$search.'%')
+                    ->orWhere('phone', 'like', '%'.$search.'%')
+                    ->orWhere('address', 'like', '%'.$search.'%')
+                    ->orWhere('city', 'like', '%'.$search.'%')
+                    ->orWhere('position', 'like', '%'.$search.'%')
+                    ->orWhereHas('source', function ($sourceQuery) use ($search) {
+                        $sourceQuery->where('source', 'like', '%'.$search.'%');
+                    })
+                    ->orWhereHas('status', function ($statusQuery) use ($search) {
+                        $statusQuery->where('name', 'like', '%'.$search.'%');
+                    })
+                    ->orWhereHas('country', function ($countryQuery) use ($search) {
+                        $countryQuery->where('name', 'like', '%'.$search.'%');
+                    });
+            });
+        }
+
+        return $query->orderBy('created_at', $sortDirection)
+            ->paginate($perPage);
+
     }
 }

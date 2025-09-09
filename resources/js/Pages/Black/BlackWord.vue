@@ -123,6 +123,7 @@ const handleMultipleConfirm = () => {
         </div>
 
         <CommonDataTable
+            routeName="employee.black.word"
             :showSerialNumber="true"
             :data="keywords"
             checkbox
