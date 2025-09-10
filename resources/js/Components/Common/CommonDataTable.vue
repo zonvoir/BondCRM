@@ -87,6 +87,31 @@ const handlePageTotal = e => {
     };
     router.visit(route(props?.routeName, mergedParams));
 };
+
+const buildPagination = () => {
+    const meta = props.data?.meta ?? props.data;
+    const totalPages = meta?.last_page ?? meta?.lastPage ?? 1;
+    const currentPage = meta?.current_page ?? meta?.currentPage ?? 1;
+
+    const pages = [];
+
+    if (totalPages <= 7) {
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+        pages.push(1);
+        if (currentPage > 3) pages.push('...');
+
+        const start = Math.max(2, currentPage - 2);
+        const end = Math.min(totalPages - 1, currentPage + 2);
+
+        for (let i = start; i <= end; i++) pages.push(i);
+
+        if (currentPage < totalPages - 2) pages.push('...');
+        pages.push(totalPages);
+    }
+
+    return { pages, currentPage, totalPages };
+};
 </script>
 
 <template>
@@ -156,55 +181,86 @@ const handlePageTotal = e => {
                     class="mx-3 flex flex-col gap-6 py-4 lg:flex-row lg:items-center lg:justify-between"
                 >
                     <!-- Items per page selector -->
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-4">
                         <label
                             class="text-sm font-medium text-gray-700 dark:text-gray-300"
                         >
+                            Show
                         </label>
                         <select
                             @change="handlePageTotal"
                             v-model="currentPerPage"
-                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:border-gray-500 dark:focus:border-blue-400"
+                            class="rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-gray-500 dark:focus:border-blue-400"
                         >
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <span class="text-sm text-gray-600 dark:text-gray-400">
-                            Showing {{ data?.meta?.from ?? data?.from }} to
-                            {{ data?.meta?.to ?? data?.to }} of entries
+                        <span
+                            class="text-sm font-medium tracking-wide text-gray-600 dark:text-gray-400"
+                        >
+                            Showing {{ data?.meta?.from ?? data?.from }} –
+                            {{ data?.meta?.to ?? data?.to }} of
                             {{ data?.meta?.total ?? data?.total }}
                         </span>
                     </div>
 
                     <!-- Pagination links -->
                     <nav
-                        class="flex items-center gap-1"
+                        class="flex items-center gap-2"
                         aria-label="Pagination Navigation"
                     >
-                        <template v-for="(link, key) in links" :key="key">
-                            <!-- Disabled/current page indicator -->
+                        <button
+                            class="rounded-lg border px-3 py-2 text-sm hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-gray-800"
+                            :disabled="buildPagination().currentPage === 1"
+                            :href="
+                                updatedUrlParams({
+                                    page: buildPagination().currentPage - 1,
+                                })
+                            "
+                        >
+                            Prev
+                        </button>
+
+                        <template
+                            v-for="(page, i) in buildPagination().pages"
+                            :key="i"
+                        >
                             <span
-                                v-if="link?.url === null"
-                                class="flex h-10 min-w-10 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 px-3 text-sm font-medium text-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-500"
-                                v-html="link?.label"
-                            />
-                            <!-- Active page links -->
+                                v-if="page === '...'"
+                                class="px-3 py-2 text-sm text-gray-400"
+                                >…</span
+                            >
+
                             <Link
                                 v-else
-                                :key="'link-' + key"
-                                class="flex h-10 min-w-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-all duration-200 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-                                :class="{
-                                    'border-blue-500 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:border-blue-400 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30':
-                                        link?.active,
-                                    'border-gray-200 text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800':
-                                        !link?.active,
-                                }"
-                                :href="updatedUrlParams({ page: link?.page })"
-                                v-html="link?.label"
-                            />
+                                :href="updatedUrlParams({ page })"
+                                class="flex h-10 min-w-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-all duration-200"
+                                :class="
+                                    page === buildPagination().currentPage
+                                        ? 'border-blue-500 bg-blue-50 text-blue-600 dark:border-blue-400 dark:bg-blue-900/20 dark:text-blue-400'
+                                        : 'border-gray-200 text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800'
+                                "
+                            >
+                                {{ page }}
+                            </Link>
                         </template>
+
+                        <button
+                            class="rounded-lg border px-3 py-2 text-sm hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-gray-800"
+                            :disabled="
+                                buildPagination().currentPage ===
+                                buildPagination().totalPages
+                            "
+                            :href="
+                                updatedUrlParams({
+                                    page: buildPagination().currentPage + 1,
+                                })
+                            "
+                        >
+                            Next
+                        </button>
                     </nav>
                 </div>
             </div>
