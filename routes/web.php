@@ -92,6 +92,7 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
     Route::prefix('lead')->controller(LeadController::class)->as('lead.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/save', 'saveLead')->name('save');
+        Route::get('/export/{type}', 'export')->whereIn('type', ['excel', 'csv', 'pdf'])->name('export');
         Route::get('/social-sync', 'socialSync')->name('social');
         Route::delete('/destroy/{lead}', 'destroyLead')->name('destroy');
     });

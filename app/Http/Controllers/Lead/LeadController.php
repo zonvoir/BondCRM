@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Lead;
 
+use App\Exports\LeadsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Resources\Lead\LeadResource;
@@ -10,6 +11,8 @@ use App\Repositories\Lead\LeadRepository;
 use App\Services\Lead\LeadService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Excel as ExcelFormat;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LeadController extends Controller
 {
@@ -38,6 +41,29 @@ class LeadController extends Controller
             'message' => 'Save successfully',
             'type' => 'success',
         ]);
+    }
+
+    public function export(Request $request, $type)
+    {
+        $filename = 'leads_'.now()->format('Y_m_d_H_i_s');
+
+        return match ($type) {
+            'csv' => Excel::download(
+                new LeadsExport($request),
+                $filename.'.csv',
+                ExcelFormat::CSV
+            ),
+            'pdf' => Excel::download(
+                new LeadsExport($request),
+                $filename.'.pdf',
+                ExcelFormat::MPDF
+            ),
+            default => Excel::download(
+                new LeadsExport($request),
+                $filename.'.xlsx',
+                ExcelFormat::XLSX
+            ),
+        };
     }
 
     public function socialSync()

@@ -21,28 +21,32 @@ class LeadRepository
         }
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%')
-                    ->orWhere('company', 'like', '%'.$search.'%')
-                    ->orWhere('phone', 'like', '%'.$search.'%')
-                    ->orWhere('address', 'like', '%'.$search.'%')
-                    ->orWhere('city', 'like', '%'.$search.'%')
-                    ->orWhere('position', 'like', '%'.$search.'%')
-                    ->orWhereHas('source', function ($sourceQuery) use ($search) {
-                        $sourceQuery->where('source', 'like', '%'.$search.'%');
-                    })
-                    ->orWhereHas('status', function ($statusQuery) use ($search) {
-                        $statusQuery->where('name', 'like', '%'.$search.'%');
-                    })
-                    ->orWhereHas('country', function ($countryQuery) use ($search) {
-                        $countryQuery->where('name', 'like', '%'.$search.'%');
-                    });
-            });
+            $query = $this->queryLead($query, $search);
         }
 
         return $query->orderBy('created_at', $sortDirection)
             ->paginate($perPage);
+    }
 
+    public function queryLead($query, $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', '%'.$search.'%')
+                ->orWhere('email', 'like', '%'.$search.'%')
+                ->orWhere('company', 'like', '%'.$search.'%')
+                ->orWhere('phone', 'like', '%'.$search.'%')
+                ->orWhere('address', 'like', '%'.$search.'%')
+                ->orWhere('city', 'like', '%'.$search.'%')
+                ->orWhere('position', 'like', '%'.$search.'%')
+                ->orWhereHas('source', function ($sourceQuery) use ($search) {
+                    $sourceQuery->where('source', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('status', function ($statusQuery) use ($search) {
+                    $statusQuery->where('name', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('country', function ($countryQuery) use ($search) {
+                    $countryQuery->where('name', 'like', '%'.$search.'%');
+                });
+        });
     }
 }

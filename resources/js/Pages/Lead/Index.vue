@@ -72,6 +72,7 @@ const params = route().params;
 const op = ref();
 const columns = ref();
 const sortByDropdownRef = ref();
+const exportDropdownRef = ref();
 const showDrawer = ref(false);
 const isContactedToday = ref(false);
 const deleteId = ref(null);
@@ -115,6 +116,10 @@ watch(debouncedSearchQuery, newValue => {
 
 const handleSortBy = event => {
     sortByDropdownRef.value.toggle(event);
+};
+
+const handleExport = event => {
+    exportDropdownRef.value.toggle(event);
 };
 
 const toggle = event => {
@@ -217,6 +222,13 @@ const resetFilters = () => {
     router.visit(route('employee.lead.index'));
 };
 
+const exportLeads = type => {
+    window.location.href = route('employee.lead.export', {
+        ...props.params,
+        type: type,
+    });
+};
+
 const viewOptions = [
     { label: 'Grid', value: 'grid', icon: 'grid-view-outline-rounded' },
     { label: 'List', value: 'list', icon: 'lists-rounded' },
@@ -237,6 +249,30 @@ const sortByMenu = [
         command: () => {
             selectedSortOption.value = 'asc';
             updateSortInURL('asc');
+        },
+    },
+];
+
+const exportMenu = [
+    {
+        label: 'Excel',
+        class: 'text-sm',
+        command: () => {
+            exportLeads('excel');
+        },
+    },
+    {
+        label: 'CSV',
+        class: 'text-sm',
+        command: () => {
+            exportLeads('csv');
+        },
+    },
+    {
+        label: 'PDF',
+        class: 'text-sm',
+        command: () => {
+            exportLeads('pdf');
         },
     },
 ];
@@ -350,6 +386,30 @@ const leadColumns = [
                                 </div>
                             </div>
                         </div>
+
+                        <div class="flex items-center justify-between py-4">
+                            <div
+                                class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
+                            >
+                                <div>
+                                    <CommonButton
+                                        @click="handleExport"
+                                        variant="gray"
+                                        class="!py-2 text-sm"
+                                    >
+                                        Export
+                                        <CommonIcon
+                                            icon="heroicons:chevron-down"
+                                        />
+                                    </CommonButton>
+                                    <CommonDropDown
+                                        ref="exportDropdownRef"
+                                        :items="exportMenu"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="flex items-center gap-3">
                             <div>
                                 <CommonButton

@@ -20,6 +20,7 @@
         "laravel/socialite": "^5.20",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.2",
         "socialiteproviders/microsoft": "*",
         "tightenco/ziggy": "^2.0",
         "webklex/laravel-imap": "*",
