@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         $countryIds = $countries->pluck('id')->toArray();
 
         // Create 50 fake leads
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $isDateContacted = $faker->boolean(30); // 30% chance of being contacted
 
             Lead::create([
