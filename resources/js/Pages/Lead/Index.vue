@@ -409,6 +409,20 @@ const leadColumns = [
                                 </div>
                             </div>
                         </div>
+                        <div class="flex items-center justify-between py-4">
+                            <Link :href="route('employee.lead.import')">
+                                <CommonButton
+                                    variant="gray"
+                                    class="border text-sm"
+                                >
+                                    <CommonIcon
+                                        class="h-5 w-5"
+                                        icon="tabler:file-import"
+                                    />
+                                    import
+                                </CommonButton>
+                            </Link>
+                        </div>
 
                         <div class="flex items-center gap-3">
                             <div>

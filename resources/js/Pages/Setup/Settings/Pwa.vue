@@ -6,7 +6,7 @@ import { useForm } from '@inertiajs/vue3';
 import CommonColor from '@/Components/Common/CommonColor.vue';
 import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
-import CommonFile from '@/Components/Common/CommonFile.vue';
+import CommonImage from '@/Components/Common/CommonImage.vue';
 
 const props = defineProps({
     menuSettings: {
@@ -60,7 +60,7 @@ const submit = () => {
                     <div class="grid grid-cols-1 gap-3 xl:grid-cols-2">
                         <div>
                             <div class="w-full">
-                                <CommonFile
+                                <CommonImage
                                     label="Logo (512 x 512)"
                                     acceptedFormats="image/png"
                                     required

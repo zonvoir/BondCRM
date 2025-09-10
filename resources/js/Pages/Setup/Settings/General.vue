@@ -7,7 +7,7 @@ import CommonInput from '@/Components/Common/CommonInput.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
 import { ref } from 'vue';
 import { useCustomToast } from '@/Composables/useToast';
-import CommonFile from '@/Components/Common/CommonFile.vue';
+import CommonImage from '@/Components/Common/CommonImage.vue';
 const { showToast } = useCustomToast();
 
 const props = defineProps({
@@ -159,7 +159,7 @@ const cronRunSubmit = () => {
                                 <hr />
                             </div>
                             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                <CommonFile
+                                <CommonImage
                                     label="Icon Logo Dark (512 x 512)"
                                     acceptedFormats="image/png"
                                     required
@@ -169,7 +169,7 @@ const cronRunSubmit = () => {
                                         generalSettings?.data?.icon_logo_dark
                                     "
                                 />
-                                <CommonFile
+                                <CommonImage
                                     label="Icon Logo White (512 x 512)"
                                     acceptedFormats="image/png"
                                     required
@@ -179,7 +179,7 @@ const cronRunSubmit = () => {
                                         generalSettings?.data?.icon_logo_white
                                     "
                                 />
-                                <CommonFile
+                                <CommonImage
                                     label="Logo Dark (300 x 55)"
                                     acceptedFormats="image/png"
                                     required
@@ -187,7 +187,7 @@ const cronRunSubmit = () => {
                                     :error="form.errors.logoDark"
                                     :image="generalSettings?.data?.logo_dark"
                                 />
-                                <CommonFile
+                                <CommonImage
                                     label="Logo White (300 x 55)"
                                     acceptedFormats="image/png"
                                     required
@@ -195,7 +195,7 @@ const cronRunSubmit = () => {
                                     :error="form.errors.logoWhite"
                                     :image="generalSettings?.data?.logo_white"
                                 />
-                                <CommonFile
+                                <CommonImage
                                     label="Favicon (40 x 40)"
                                     acceptedFormats="image/png"
                                     required

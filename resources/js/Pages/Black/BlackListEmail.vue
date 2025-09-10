@@ -9,7 +9,7 @@ import CommonIcon from '@/Components/Common/CommonIcon.vue';
 import CommonDataTable from '@/Components/Common/CommonDataTable.vue';
 import Column from 'primevue/column';
 import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
-import CommonFile from '@/Components/Common/CommonFile.vue';
+import CommonImage from '@/Components/Common/CommonImage.vue';
 
 const props = defineProps(['blackListEmail']);
 
@@ -123,7 +123,7 @@ const handleSubmit = () => {
 
             <div class="mt-12 grid grid-cols-12 gap-3">
                 <div class="col-span-12">
-                    <CommonFile
+                    <CommonImage
                         accepted-formats=".txt"
                         v-model="form.file"
                         :error="form.errors.file"

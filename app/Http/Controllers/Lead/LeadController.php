@@ -85,4 +85,14 @@ class LeadController extends Controller
             'type' => 'success',
         ]);
     }
+
+    public function import(Request $request)
+    {
+        $props = [
+            'status' => $this->leadService->getStatus(),
+            'source' => $this->leadService->getSource(),
+        ];
+
+        return Inertia::render('Lead/import', $props);
+    }
 }

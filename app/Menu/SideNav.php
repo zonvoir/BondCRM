@@ -134,13 +134,13 @@ class SideNav
                 'name' => 'Leads',
                 'permission' => hasPermissions('dashboard-view-employee'),
                 'icon' => 'vscode-icons:file-type-azurepipelines',
-                'active' => in_array($currentRouteName, ['employee.lead.index', 'employee.lead.social'], true),
+                'active' => in_array($currentRouteName, ['employee.lead.index', 'employee.lead.social', 'employee.lead.import'], true),
                 'subMenu' => [
                     [
                         'name' => 'Lead',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.lead.index'),
-                        'active' => $currentRouteName === 'employee.lead.index',
+                        'active' => $currentRouteName === 'employee.lead.index' || $currentRouteName === 'employee.lead.import',
                     ],
 
                     [
