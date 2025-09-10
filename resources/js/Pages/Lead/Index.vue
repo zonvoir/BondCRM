@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { Link, router, useForm, usePage } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
@@ -213,6 +213,10 @@ const filterStatus = status => {
     return route('employee.lead.index', updatedParams);
 };
 
+const resetFilters = () => {
+    router.visit(route('employee.lead.index'));
+};
+
 const viewOptions = [
     { label: 'Grid', value: 'grid', icon: 'grid-view-outline-rounded' },
     { label: 'List', value: 'list', icon: 'lists-rounded' },
@@ -290,6 +294,19 @@ const leadColumns = [
                                 optionLabel="label"
                                 optionValue="value"
                             />
+                        </div>
+                        <div class="flex items-center">
+                            <CommonButton
+                                variant="gray"
+                                class="border text-sm"
+                                @click="resetFilters"
+                                v-tooltip="'Reset filters'"
+                            >
+                                <CommonIcon
+                                    class="h-5 w-5"
+                                    icon="qlementine-icons:funnel-crossed-16"
+                                />
+                            </CommonButton>
                         </div>
                     </div>
                     <CommonButton
@@ -459,18 +476,15 @@ const leadColumns = [
                             :sortable="true"
                         >
                             <template #body="slotProps">
-                                <div>
-                                    <Badge
-                                        class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
-                                        :style="{
-                                            backgroundColor:
-                                                '#' +
-                                                slotProps.data?.status?.color,
-                                        }"
-                                    >
-                                        {{ slotProps.data?.status?.name }}
-                                    </Badge>
-                                </div>
+                                <Badge
+                                    class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
+                                    :style="{
+                                        backgroundColor:
+                                            '#' + slotProps.data?.status?.color,
+                                    }"
+                                >
+                                    {{ slotProps.data?.status?.name }}
+                                </Badge>
                             </template>
                         </Column>
 

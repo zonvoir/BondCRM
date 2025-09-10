@@ -10,7 +10,7 @@ class LeadRepository
     public function getLeadsPaginate(array $data): LengthAwarePaginator
     {
         $sortDirection = $data['sort'] ?? 'desc';
-        $perPage = $data['per_page'] ?? 10;
+        $perPage = $data['perPage'] ?? 10;
         $status = $data['status'] ?? null;
         $search = $data['search'] ?? null;
 

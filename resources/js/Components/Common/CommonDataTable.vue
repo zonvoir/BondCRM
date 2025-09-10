@@ -1,10 +1,12 @@
 <script setup>
-import { defineProps, ref, watch, defineEmits } from 'vue';
+import { defineProps, ref, watch, defineEmits, handleError } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import CommonIcon from '@/Components/Common/CommonIcon.vue';
+import { router } from '@inertiajs/vue3';
 
 const params = route().params;
+const currentPerPage = ref(params?.perPage || 10);
 
 const props = defineProps({
     routeName: {
@@ -77,6 +79,14 @@ const updatedUrlParams = pageNo => {
     };
     return route(props?.routeName, mergedParams);
 };
+
+const handlePageTotal = e => {
+    const mergedParams = {
+        ...params,
+        perPage: e.target.value,
+    };
+    router.visit(route(props?.routeName, mergedParams));
+};
 </script>
 
 <template>
@@ -101,7 +111,9 @@ const updatedUrlParams = pageNo => {
                                     '!bg-indigo-50 !text-indigo-700 text-base dark:!bg-indigo-900/30 dark:!text-indigo-200 cursor-pointer !py-2',
                                 ],
                             },
-                            bodyCell: { class: 'cursor-pointer' },
+                            bodyCell: {
+                                class: 'cursor-pointer !whitespace-nowrap',
+                            },
                         },
                     }"
                 >
@@ -140,28 +152,60 @@ const updatedUrlParams = pageNo => {
                     </template>
                 </DataTable>
 
-                <div class="flex flex-wrap items-center justify-center py-5">
-                    <template v-for="(link, key) in links">
-                        <div
-                            v-if="link?.url === null"
-                            :key="key"
-                            class="mr-1 mb-1 rounded-sm border px-4 py-3 text-sm leading-4 text-gray-400 dark:border-gray-600 dark:text-gray-500"
-                            v-html="link?.label"
-                        />
-                        <Link
-                            v-else
-                            :key="'link-' + key"
-                            class="mr-1 mb-1 rounded-sm border px-4 py-3 text-sm leading-4 hover:bg-gray-100 focus:ring-3 focus:ring-indigo-300 focus:outline-hidden dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-                            :class="{
-                                'bg-white dark:border-indigo-500 dark:bg-gray-800 dark:text-indigo-400':
-                                    link?.active,
-                                'border-indigo-500 text-indigo-500':
-                                    link?.active,
-                            }"
-                            :href="updatedUrlParams({ page: link?.page })"
-                            v-html="link?.label"
-                        />
-                    </template>
+                <div
+                    class="mx-3 flex flex-col gap-6 py-4 lg:flex-row lg:items-center lg:justify-between"
+                >
+                    <!-- Items per page selector -->
+                    <div class="flex items-center gap-3">
+                        <label
+                            class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
+                        </label>
+                        <select
+                            @change="handlePageTotal"
+                            v-model="currentPerPage"
+                            class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:border-gray-500 dark:focus:border-blue-400"
+                        >
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="text-sm text-gray-600 dark:text-gray-400">
+                            Showing {{ data?.meta?.from ?? data?.from }} to
+                            {{ data?.meta?.to ?? data?.to }} of entries
+                            {{ data?.meta?.total ?? data?.total }}
+                        </span>
+                    </div>
+
+                    <!-- Pagination links -->
+                    <nav
+                        class="flex items-center gap-1"
+                        aria-label="Pagination Navigation"
+                    >
+                        <template v-for="(link, key) in links" :key="key">
+                            <!-- Disabled/current page indicator -->
+                            <span
+                                v-if="link?.url === null"
+                                class="flex h-10 min-w-10 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 px-3 text-sm font-medium text-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-500"
+                                v-html="link?.label"
+                            />
+                            <!-- Active page links -->
+                            <Link
+                                v-else
+                                :key="'link-' + key"
+                                class="flex h-10 min-w-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-all duration-200 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                                :class="{
+                                    'border-blue-500 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:border-blue-400 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30':
+                                        link?.active,
+                                    'border-gray-200 text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800':
+                                        !link?.active,
+                                }"
+                                :href="updatedUrlParams({ page: link?.page })"
+                                v-html="link?.label"
+                            />
+                        </template>
+                    </nav>
                 </div>
             </div>
         </div>
