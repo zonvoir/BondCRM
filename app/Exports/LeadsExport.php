@@ -79,7 +79,7 @@ class LeadsExport implements FromCollection, WithColumnWidths, WithHeadings, Wit
             $lead->position,
             $lead->lead_value,
             $lead->date_contacted,
-            $lead->created_at?->format('Y-m-d H:i:s'),
+            $lead->created_at,
         ];
     }
 
