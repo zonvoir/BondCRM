@@ -17,6 +17,9 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    sampleFile: {
+        type: String,
+    },
 });
 
 const simulateData = ref();
@@ -30,20 +33,20 @@ const form = useForm({
 
 const tableHeaders = [
     { key: 'name', label: 'Name' },
-    { key: 'position', label: 'Position' },
     { key: 'company', label: 'Company' },
-    { key: 'description', label: 'Description' },
-    { key: 'country', label: 'Country' },
+    { key: 'email', label: 'Email' },
+    { key: 'phoneNumber', label: 'Phone Number' },
+    { key: 'status', label: 'Status' },
+    { key: 'source', label: 'Source' },
+    { key: 'address', label: 'Address' },
     { key: 'zip', label: 'Zip' },
     { key: 'city', label: 'City' },
     { key: 'state', label: 'State' },
-    { key: 'address', label: 'Address' },
-    { key: 'status', label: 'Status' },
-    { key: 'source', label: 'Source' },
-    { key: 'email', label: 'Email' },
+    { key: 'country', label: 'Country' },
     { key: 'website', label: 'Website' },
-    { key: 'phoneNumber', label: 'Phone Number' },
+    { key: 'position', label: 'Position' },
     { key: 'leadValue', label: 'Lead Value' },
+    { key: 'description', label: 'Description' },
 ];
 
 const simulateImportFile = e => {
@@ -84,13 +87,13 @@ const handleSubmit = () => {
             <div class="flex items-center justify-between">
                 <div class="text-xl leading-tight font-bold">Import Leads</div>
                 <div>
-                    <Link>
+                    <a :href="sampleFile" download>
                         <div
                             class="flex items-center justify-center rounded-md bg-indigo-100 p-1 py-1 transition-colors group-hover:bg-indigo-200 dark:bg-gray-700 dark:text-white"
                         >
                             Download Sample
                         </div>
-                    </Link>
+                    </a>
                 </div>
             </div>
 
@@ -159,7 +162,18 @@ const handleSubmit = () => {
                                         <td
                                             class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
                                         >
-                                            {{ data[5] }}
+                                            <span
+                                                class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
+                                            >{{ data[5] }}</span
+                                            >
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            <span
+                                                class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+                                            >{{ data[6] }}</span
+                                            >
                                         </td>
                                         <td
                                             class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
@@ -184,18 +198,13 @@ const handleSubmit = () => {
                                         <td
                                             class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
                                         >
-                                            <span
-                                                class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
-                                                >{{ data[10] }}</span
-                                            >
+                                            {{ data[10] }}
                                         </td>
+
                                         <td
                                             class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
                                         >
-                                            <span
-                                                class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
-                                                >{{ data[11] }}</span
-                                            >
+                                            {{ data[11] }}
                                         </td>
                                         <td
                                             class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
@@ -212,99 +221,92 @@ const handleSubmit = () => {
                                         >
                                             {{ data[14] }}
                                         </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            {{ data[15] }}
-                                        </td>
                                     </tr>
 
                                     <tr
                                         v-if="!simulateData"
                                         class="transition-colors duration-150 hover:bg-gray-50"
                                     >
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
+                                        <!-- Name -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
                                             Sample Data
                                         </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
+
+                                        <!-- Company -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
                                             Sample Data
                                         </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            Sample Data
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            Sample Data
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            India
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            Sample Data
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            Sample Data
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            Sample Data
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            Sample Data
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            <span
-                                                class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
-                                                >New</span
-                                            >
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            <span
-                                                class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
-                                                >Facebook</span
-                                            >
-                                        </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800"
-                                        >
+
+                                        <!-- Email -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800">
                                             user@example.com
                                         </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800"
-                                        >
-                                            Sample Data
+
+                                        <!-- Phone Number -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            +91-9876543210
                                         </td>
-                                        <td
-                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
-                                        >
-                                            Sample Data
+
+                                        <!-- Status -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+        <span
+            class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
+        >New</span>
                                         </td>
-                                        <td
-                                            class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-600"
-                                        >
-                                            Sample Data
+
+                                        <!-- Source -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+        <span
+            class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+        >Facebook</span>
+                                        </td>
+
+                                        <!-- Address -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            123 Tech Street
+                                        </td>
+
+                                        <!-- Zip -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            226001
+                                        </td>
+
+                                        <!-- City -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            Lucknow
+                                        </td>
+
+                                        <!-- State -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            UP
+                                        </td>
+
+                                        <!-- Country -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            India
+                                        </td>
+
+                                        <!-- Website -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800">
+                                            https://fastcodelab.com
+                                        </td>
+
+                                        <!-- Position -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            Software Engineer
+                                        </td>
+
+                                        <!-- Lead Value -->
+                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                            5000
+                                        </td>
+
+                                        <!-- Description -->
+                                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-600">
+                                            Interested in Laravel solutions
                                         </td>
                                     </tr>
+
                                 </tbody>
                             </table>
                         </div>

@@ -94,6 +94,7 @@ class LeadController extends Controller
         $props = [
             'status' => $this->leadService->getStatus(),
             'source' => $this->leadService->getSource(),
+            'sampleFile' => asset('assets/lead/leads_example.xlsx'),
         ];
 
         return Inertia::render('Lead/import', $props);

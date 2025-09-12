@@ -127,17 +127,17 @@ class LeadService
         $headers = array_shift($new);
 
         foreach ($new as &$row) {
-            $insertAt10 = data_get($data, 'status.name');
-            $insertAt11 = data_get($data, 'source.name');
+            $insertAt5 = data_get($data, 'status.name');
+            $insertAt6 = data_get($data, 'source.name');
 
             if (! is_array($row)) {
                 $row = (array) $row;
             }
-            array_splice($row, 10, 0, [$insertAt10, $insertAt11]);
+            array_splice($row, 5, 0, [$insertAt5, $insertAt6]);
         }
         unset($row);
 
-        array_splice($headers, 10, 0, ['NewColA', 'NewColB']);
+        array_splice($headers, 5, 0, ['NewColA', 'NewColB']);
 
         array_unshift($new, $headers);
 
