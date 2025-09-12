@@ -337,13 +337,6 @@ const leadColumns = [
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <CommonButton
-                            @click="handleDrawerOpen"
-                            class="h-fit text-sm"
-                        >
-                            <CommonIcon icon="heroicons:plus" class="h-4 w-4" />
-                            Add Lead
-                        </CommonButton>
                         <div>
                             <CommonSelectButton
                                 class="p-.5"
@@ -353,6 +346,13 @@ const leadColumns = [
                                 optionValue="value"
                             />
                         </div>
+                        <CommonButton
+                            @click="handleDrawerOpen"
+                            class="h-fit text-sm"
+                        >
+                            <CommonIcon icon="heroicons:plus" class="h-4 w-4" />
+                            Add Lead
+                        </CommonButton>
                     </div>
                 </div>
 
@@ -408,21 +408,21 @@ const leadColumns = [
                                         :items="exportMenu"
                                     />
                                 </div>
+                                <div>
+                                    <Link :href="route('employee.lead.import')">
+                                        <CommonButton
+                                            variant="gray"
+                                            class="border text-sm"
+                                        >
+                                            <CommonIcon
+                                                class="h-5 w-5"
+                                                icon="tabler:file-import"
+                                            />
+                                            import
+                                        </CommonButton>
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex items-center justify-between py-4">
-                            <Link :href="route('employee.lead.import')">
-                                <CommonButton
-                                    variant="gray"
-                                    class="border text-sm"
-                                >
-                                    <CommonIcon
-                                        class="h-5 w-5"
-                                        icon="tabler:file-import"
-                                    />
-                                    import
-                                </CommonButton>
-                            </Link>
                         </div>
 
                         <div class="flex items-center gap-3">
