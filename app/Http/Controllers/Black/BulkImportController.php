@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Black;
 
 use App\Http\Controllers\Controller;
-use App\Imports\EmailsImport;
+use App\Imports\LeadsImport;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -39,7 +39,7 @@ class BulkImportController extends Controller
 
         try {
             // Perform the import
-            Excel::import(new EmailsImport, $request->file);
+            Excel::import(new LeadsImport, $request->file);
 
             // Flash a success message to the session
             return redirect()->route('email.index')->with('success', 'Data imported successfully!');

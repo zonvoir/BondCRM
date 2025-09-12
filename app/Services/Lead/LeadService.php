@@ -9,6 +9,7 @@ use App\Models\Lead;
 use App\Models\Setup\Sources;
 use App\Models\Setup\Status;
 use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LeadService
 {
@@ -110,5 +111,36 @@ class LeadService
             'public' => $data['public'] ?? null,
             'is_date_contacted' => $data['is_date_contacted'] ?? null,
         ];
+    }
+
+    public function importSimulate($data): array
+    {
+        $sheets = Excel::toArray([], $data['file']);
+        if (empty($sheets)) {
+            return [];
+        }
+
+        $serialized = array_map('serialize', $sheets[0]);
+        $uniqueSerialized = array_unique($serialized);
+        $new = array_values(array_map('unserialize', $uniqueSerialized));
+
+        $headers = array_shift($new);
+
+        foreach ($new as &$row) {
+            $insertAt10 = data_get($data, 'status.name');
+            $insertAt11 = data_get($data, 'source.name');
+
+            if (! is_array($row)) {
+                $row = (array) $row;
+            }
+            array_splice($row, 10, 0, [$insertAt10, $insertAt11]);
+        }
+        unset($row);
+
+        array_splice($headers, 10, 0, ['NewColA', 'NewColB']);
+
+        array_unshift($new, $headers);
+
+        return array_slice($new, 1);
     }
 }

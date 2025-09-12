@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Lead;
 
 use App\Exports\LeadsExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Lead\ImportRequest;
 use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Resources\Lead\LeadResource;
+use App\Imports\LeadsImport;
 use App\Models\Lead;
 use App\Repositories\Lead\LeadRepository;
 use App\Services\Lead\LeadService;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Excel as ExcelFormat;
@@ -94,5 +97,23 @@ class LeadController extends Controller
         ];
 
         return Inertia::render('Lead/import', $props);
+    }
+
+    public function importSimulate(ImportRequest $request)
+    {
+        $data = $this->leadService->importSimulate($request->validated());
+
+        return response()->json(['data' => $data], 200);
+    }
+
+    public function importSave(ImportRequest $request)
+    {
+        try {
+            Excel::import(new LeadsImport, $request->file);
+
+            return redirect()->route('employee.lead.import')->with('success', 'Data imported successfully!');
+        } catch (Exception $e) {
+            return redirect()->route('employee.lead.import')->with('error', $e->getMessage());
+        }
     }
 }

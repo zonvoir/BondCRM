@@ -96,6 +96,8 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
         Route::get('/social-sync', 'socialSync')->name('social');
         Route::delete('/destroy/{lead}', 'destroyLead')->name('destroy');
         Route::get('/import', 'import')->name('import');
+        Route::post('/import-Simulate', 'importSimulate')->name('import.simulate');
+        Route::post('/import-save', 'importSave')->name('import.save');
     });
 
     Route::prefix('black')->controller(BlackingController::class)->as('black.')->group(function () {

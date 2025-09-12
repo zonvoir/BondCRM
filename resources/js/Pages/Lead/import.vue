@@ -5,6 +5,8 @@ import { Link, useForm } from '@inertiajs/vue3';
 import CommonCard from '@/Components/Common/CommonCard.vue';
 import CommonFile from '@/Components/Common/CommonFile.vue';
 import CommonSelect from '@/Components/Common/CommonSelect.vue';
+import CommonButton from '@/Components/Common/CommonButton.vue';
+import { reactive, ref } from 'vue';
 
 const props = defineProps({
     status: {
@@ -17,9 +19,11 @@ const props = defineProps({
     },
 });
 
+const simulateData = ref();
+const file = ref();
+
 const form = useForm({
-    id: null,
-    name: '',
+    file: '',
     source: '',
     status: '',
 });
@@ -41,6 +45,37 @@ const tableHeaders = [
     { key: 'phoneNumber', label: 'Phone Number' },
     { key: 'leadValue', label: 'Lead Value' },
 ];
+
+const simulateImportFile = e => {
+    file.value = e;
+    form.file = e;
+};
+const simulateImport = () => {
+    axios
+        .post(
+            route('employee.lead.import.simulate'),
+            {
+                file: file.value,
+                source: form.source,
+                status: form.status,
+            },
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        )
+        .then(response => {
+            simulateData.value = response?.data?.data;
+        })
+        .catch(error => {});
+};
+
+const handleSubmit = () => {
+    form.post(route('employee.lead.import.save'), {
+        onSuccess: () => {},
+    });
+};
 </script>
 
 <template>
@@ -97,6 +132,95 @@ const tableHeaders = [
                                     class="divide-y divide-gray-200 bg-white"
                                 >
                                     <tr
+                                        v-for="(data, index) in simulateData"
+                                        :key="index"
+                                        class="transition-colors duration-150 hover:bg-gray-50"
+                                    >
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[0] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[1] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[3] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[4] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[5] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[6] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[7] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[8] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[9] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            <span
+                                                class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
+                                                >{{ data[10] }}</span
+                                            >
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            <span
+                                                class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+                                                >{{ data[11] }}</span
+                                            >
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[12] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[13] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[14] }}
+                                        </td>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            {{ data[15] }}
+                                        </td>
+                                    </tr>
+
+                                    <tr
+                                        v-if="!simulateData"
                                         class="transition-colors duration-150 hover:bg-gray-50"
                                     >
                                         <td
@@ -189,10 +313,10 @@ const tableHeaders = [
                     <div class="my-5 grid grid-cols-12 gap-4">
                         <div class="col-span-3">
                             <CommonFile
+                                @update:modelValue="simulateImportFile"
                                 label="Choose file"
                                 required
-                                :multiple="true"
-                                accepted-formats=".xls,.xlsx,.csv.,.pdf"
+                                accepted-formats=".xls,.xlsx,.csv"
                             />
                         </div>
 
@@ -216,6 +340,17 @@ const tableHeaders = [
                                 :error="form.errors.source"
                                 required
                             />
+                        </div>
+
+                        <div class="col-span-12 my-4">
+                            <CommonButton
+                                @click="handleSubmit"
+                                :processing="form.processing"
+                                >Import</CommonButton
+                            >
+                            <CommonButton variant="gray" @click="simulateImport"
+                                >Simulate Import</CommonButton
+                            >
                         </div>
                     </div>
                 </CommonCard>
