@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Setup\GeneralSettings;
 use App\Models\Setup\SmtpSetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
@@ -33,7 +34,14 @@ class ConfigProvider extends ServiceProvider
             }
         }
 
-        config(['app.date_format' => 'd-m-Y']);
+        if (Schema::hasTable('general_settings')) {
+            $gs = GeneralSettings::query()->first();
+            if (! empty($gs)) {
+                $timezones = $gs->timezones['code'];
+                Config::set('app.timezone', $timezones);
+                date_default_timezone_set($timezones);
+            }
+        }
 
     }
 }
