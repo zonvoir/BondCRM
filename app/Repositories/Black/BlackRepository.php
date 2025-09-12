@@ -12,7 +12,7 @@ class BlackRepository
 {
     public function getBlackEmailTextPaginate(): LengthAwarePaginator
     {
-        return BlackEmailText::with('user')->orderByDesc('id')->paginate(10);
+        return BlackEmailText::query()->orderByDesc('id')->paginate(10);
     }
 
     public function deleteBlackListEmail(BlackEmailText $blackListEmail): ?bool

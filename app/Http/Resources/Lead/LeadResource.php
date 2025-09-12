@@ -35,8 +35,8 @@ class LeadResource extends JsonResource
             'date_contacted' => $this->date_contacted ? Carbon::parse($this->date_contacted)->format('d-m-Y h:i A') : null,
             'public' => $this->public,
             'is_date_contacted' => $this->is_date_contacted,
-            'created_at' => $this->created_at->format('Y-m-d'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

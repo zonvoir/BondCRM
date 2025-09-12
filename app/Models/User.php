@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Setup\SmtpUser;
 use App\Models\Setup\SocialCredential;
+use App\Traits\CommonTrait;
 use Database\Factories\UserFactory;
 use EragPermission\Traits\HasPermissionsTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -15,7 +16,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasPermissionsTrait, Notifiable;
+    use CommonTrait, HasFactory, HasPermissionsTrait, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -39,6 +40,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
+
+    public function getCreatedAtAttribute($value): ?string
+    {
+        return $value ? $this->asDateTime($value)->format($this->getDateFormatSettings()) : null;
+    }
 
     public function socialCredentials(): BelongsTo
     {

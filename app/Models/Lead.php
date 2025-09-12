@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Models\Setup\Sources;
 use App\Models\Setup\Status;
+use App\Traits\CommonTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Lead extends Model
 {
+    use CommonTrait;
+
     protected $fillable = [
         'user_id',
         'name',
@@ -39,6 +42,11 @@ class Lead extends Model
         'is_date_contacted' => 'boolean',
         'date_contacted' => 'datetime',
     ];
+
+    public function getCreatedAtAttribute($value): ?string
+    {
+        return $value ? $this->asDateTime($value)->format($this->getDateFormatSettings()) : null;
+    }
 
     /**
      * Lead belongs to a Source
