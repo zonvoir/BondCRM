@@ -54,6 +54,10 @@ const props = defineProps({
         type: String,
         default: 'material-symbols:',
     },
+    class: {
+        type: String,
+        default: '',
+    },
 });
 
 const emit = defineEmits(['update:modelValue', 'change']);
@@ -70,9 +74,9 @@ const internalValue = computed({
 
 const sizeClass = computed(() => {
     const sizeMap = {
-        small: 'p-1 text-sm',
-        medium: 'p-2 text-base',
-        large: 'p-3 text-lg',
+        small: ' text-sm',
+        medium: 'text-base',
+        large: ' text-lg',
     };
     return sizeMap[props.size] || sizeMap.medium;
 });
@@ -96,7 +100,7 @@ const getIconName = iconName => {
         :class="sizeClass"
     >
         <template #option="{ option }">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" :class="class">
                 <CommonIcon
                     v-if="option[iconField]"
                     :icon="getIconName(option[iconField])"

@@ -180,7 +180,6 @@ const handleEditLead = lead => {
         nameField: 'source',
         codeField: 'id',
     });
-
     form.id = lead?.id;
     form.source = mappedSource?.value;
     form.status = mappedStatus?.value;
@@ -308,9 +307,9 @@ const leadColumns = [
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-between border-b pb-4">
+                <div class="flex items-center justify-between border-b pb-4">
                     <div
-                        class="flex w-full max-w-full sm:max-w-1/2 md:max-w-1/3"
+                        class="flex w-full max-w-full items-center gap-2 sm:max-w-1/2 md:max-w-1/3"
                     >
                         <div>
                             <CommonInput
@@ -323,18 +322,10 @@ const leadColumns = [
                             />
                         </div>
 
-                        <div>
-                            <CommonSelectButton
-                                v-model="selectedGridOption"
-                                :options="viewOptions"
-                                optionLabel="label"
-                                optionValue="value"
-                            />
-                        </div>
                         <div class="flex items-center">
                             <CommonButton
                                 variant="gray"
-                                class="border text-sm"
+                                class="!py- border text-sm"
                                 @click="resetFilters"
                                 v-tooltip="'Reset filters'"
                             >
@@ -345,18 +336,31 @@ const leadColumns = [
                             </CommonButton>
                         </div>
                     </div>
-                    <CommonButton
-                        @click="handleDrawerOpen"
-                        class="h-fit text-sm"
-                    >
-                        <CommonIcon icon="heroicons:plus" class="h-4 w-4" /> Add
-                        Lead
-                    </CommonButton>
+                    <div class="flex gap-2">
+                        <CommonButton
+                            @click="handleDrawerOpen"
+                            class="h-fit text-sm"
+                        >
+                            <CommonIcon icon="heroicons:plus" class="h-4 w-4" />
+                            Add Lead
+                        </CommonButton>
+                        <div>
+                            <CommonSelectButton
+                                class="p-.5"
+                                v-model="selectedGridOption"
+                                :options="viewOptions"
+                                optionLabel="label"
+                                optionValue="value"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <div v-if="selectedGridOption === 'list'">
                     <div class="flex justify-between border-b pb-4">
-                        <div class="flex items-center justify-between py-4">
+                        <div
+                            class="flex items-center justify-between gap-2 py-4"
+                        >
                             <div
                                 class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
                             >
@@ -385,9 +389,6 @@ const leadColumns = [
                                     />
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="flex items-center justify-between py-4">
                             <div
                                 class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
                             >
@@ -611,6 +612,7 @@ const leadColumns = [
                         </Column>
                     </CommonDataTable>
                 </div>
+                <div v-else>Hello world</div>
             </div>
 
             <CommonModal
