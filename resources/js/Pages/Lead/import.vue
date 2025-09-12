@@ -1,12 +1,12 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import CommonCard from '@/Components/Common/CommonCard.vue';
 import CommonFile from '@/Components/Common/CommonFile.vue';
 import CommonSelect from '@/Components/Common/CommonSelect.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     status: {
