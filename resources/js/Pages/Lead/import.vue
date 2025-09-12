@@ -164,7 +164,7 @@ const handleSubmit = () => {
                                         >
                                             <span
                                                 class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
-                                            >{{ data[5] }}</span
+                                                >{{ data[5] }}</span
                                             >
                                         </td>
                                         <td
@@ -172,7 +172,7 @@ const handleSubmit = () => {
                                         >
                                             <span
                                                 class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
-                                            >{{ data[6] }}</span
+                                                >{{ data[6] }}</span
                                             >
                                         </td>
                                         <td
@@ -228,85 +228,116 @@ const handleSubmit = () => {
                                         class="transition-colors duration-150 hover:bg-gray-50"
                                     >
                                         <!-- Name -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             Sample Data
                                         </td>
 
                                         <!-- Company -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             Sample Data
                                         </td>
 
                                         <!-- Email -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800"
+                                        >
                                             user@example.com
                                         </td>
 
                                         <!-- Phone Number -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             +91-9876543210
                                         </td>
 
                                         <!-- Status -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
-        <span
-            class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
-        >New</span>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            <span
+                                                class="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
+                                                >New</span
+                                            >
                                         </td>
 
                                         <!-- Source -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
-        <span
-            class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
-        >Facebook</span>
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
+                                            <span
+                                                class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+                                                >Facebook</span
+                                            >
                                         </td>
 
                                         <!-- Address -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             123 Tech Street
                                         </td>
 
                                         <!-- Zip -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             226001
                                         </td>
 
                                         <!-- City -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             Lucknow
                                         </td>
 
                                         <!-- State -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             UP
                                         </td>
 
                                         <!-- Country -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             India
                                         </td>
 
                                         <!-- Website -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-blue-600 hover:text-blue-800"
+                                        >
                                             https://fastcodelab.com
                                         </td>
 
                                         <!-- Position -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             Software Engineer
                                         </td>
 
                                         <!-- Lead Value -->
-                                        <td class="px-4 py-3 text-sm whitespace-nowrap text-gray-900">
+                                        <td
+                                            class="px-4 py-3 text-sm whitespace-nowrap text-gray-900"
+                                        >
                                             5000
                                         </td>
 
                                         <!-- Description -->
-                                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-600">
+                                        <td
+                                            class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-600"
+                                        >
                                             Interested in Laravel solutions
                                         </td>
                                     </tr>
-
                                 </tbody>
                             </table>
                         </div>
