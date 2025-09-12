@@ -89,7 +89,8 @@ defineExpose({ focus: () => input?.value?.focus() });
     <label
         :class="[
             labelClass,
-            'mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300',
+            'block text-sm font-medium text-gray-700 dark:text-gray-300',
+            label ? 'mb-1' : '',
         ]"
     >
         <span class="flex items-center" v-if="label">

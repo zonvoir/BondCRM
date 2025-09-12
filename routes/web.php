@@ -85,6 +85,9 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::ADMIN->value)->group(fun
 });
 
 Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix('employee')->as('employee.')->group(function () {
+    Route::post('source', [SetupController::class, 'sourcesSave'])->name('source.save');
+    Route::post('status', [SetupController::class, 'statusSave'])->name('status.save');
+
     Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });

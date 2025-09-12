@@ -7,6 +7,7 @@ import CommonFile from '@/Components/Common/CommonFile.vue';
 import CommonSelect from '@/Components/Common/CommonSelect.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
 import { ref } from 'vue';
+import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
 
 const props = defineProps({
     status: {
@@ -354,25 +355,39 @@ const handleSubmit = () => {
                         </div>
 
                         <div class="col-span-3">
-                            <CommonSelect
-                                v-model="form.status"
+                            <CommonSelectAdd
                                 label="Status"
-                                :options="status"
-                                optionLabel="name"
-                                :error="form.errors.status"
+                                placeholder="name"
                                 required
-                            />
+                                routeName="employee.status.save"
+                                inputName="name"
+                            >
+                                <CommonSelect
+                                    v-model="form.status"
+                                    class="!w-full"
+                                    :options="status"
+                                    optionLabel="name"
+                                    :error="form.errors.status"
+                                />
+                            </CommonSelectAdd>
                         </div>
 
                         <div class="col-span-3">
-                            <CommonSelect
-                                v-model="form.source"
+                            <CommonSelectAdd
                                 label="Lead Source"
-                                :options="source"
-                                optionLabel="name"
-                                :error="form.errors.source"
+                                placeholder="source"
                                 required
-                            />
+                                routeName="employee.source.save"
+                                inputName="source"
+                            >
+                                <CommonSelect
+                                    v-model="form.source"
+                                    class="!w-full"
+                                    :options="source"
+                                    optionLabel="name"
+                                    :error="form.errors.source"
+                                />
+                            </CommonSelectAdd>
                         </div>
 
                         <div class="col-span-12 my-4">

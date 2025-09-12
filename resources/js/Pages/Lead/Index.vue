@@ -21,6 +21,7 @@ import CommonBadge from '@/Components/Common/CommonBadge.vue';
 import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
 import { useSelectMapper } from '@/Composables/useSelectMapper.js';
 import { useDebounce } from '@vueuse/core';
+import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
 
 const props = defineProps({
     mailProviders: {
@@ -624,26 +625,40 @@ const leadColumns = [
                 <div class="grid grid-cols-12 gap-4">
                     <!-- Lead Source -->
                     <div class="col-span-3">
-                        <CommonSelect
-                            v-model="form.source"
+                        <CommonSelectAdd
                             label="Lead Source"
-                            :options="source"
-                            optionLabel="name"
-                            :error="form.errors.source"
+                            placeholder="source"
                             required
-                        />
+                            routeName="employee.source.save"
+                            inputName="source"
+                        >
+                            <CommonSelect
+                                v-model="form.source"
+                                :options="source"
+                                optionLabel="name"
+                                class="!w-full"
+                                :error="form.errors.source"
+                            />
+                        </CommonSelectAdd>
                     </div>
 
                     <!-- Status -->
                     <div class="col-span-3">
-                        <CommonSelect
-                            v-model="form.status"
+                        <CommonSelectAdd
                             label="Status"
-                            :options="status"
-                            optionLabel="name"
-                            :error="form.errors.status"
+                            placeholder="name"
                             required
-                        />
+                            routeName="employee.status.save"
+                            inputName="name"
+                        >
+                            <CommonSelect
+                                v-model="form.status"
+                                class="!w-full"
+                                :options="status"
+                                optionLabel="name"
+                                :error="form.errors.status"
+                            />
+                        </CommonSelectAdd>
                     </div>
 
                     <!-- Name -->
