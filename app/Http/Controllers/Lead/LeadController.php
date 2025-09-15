@@ -130,6 +130,21 @@ class LeadController extends Controller
 
     public function bulkAction(LeadBulkActionRequest $request)
     {
-        $this->leadService->bulkAction($request->validated());
+        $action = $this->leadService->bulkAction($request->validated());
+
+        if ($action['deleted'] > 0 && $action['updated'] > 0) {
+            $message = "{$action['deleted']} leads deleted and {$action['updated']} leads updated successfully.";
+        } elseif ($action['deleted'] > 0) {
+            $message = "{$action['deleted']} leads deleted successfully.";
+        } elseif ($action['updated'] > 0) {
+            $message = "{$action['updated']} leads updated successfully.";
+        } else {
+            return back();
+        }
+
+        return back()->with([
+            'message' => $message,
+            'type' => 'success',
+        ]);
     }
 }
