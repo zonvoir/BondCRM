@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Models\Lead;
 use App\Models\Setup\Sources;
 use App\Models\Setup\Status;
+use App\Models\Tag;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             StatusSeeder::class,
             SourcesSeeder::class,
+            TagSeeder::class,
         ]);
 
         $faker = Faker::create();
@@ -32,6 +34,7 @@ class DatabaseSeeder extends Seeder
         $statuses = Status::query()->whereNotIn('name', ['Lost', 'Junk'])->get();
         $sources = Sources::all();
         $countries = Country::all();
+        $tags = Tag::all();
 
         $sourceIds = $sources->pluck('id')->toArray();
         $statusIds = $statuses->pluck('id')->toArray();
@@ -41,7 +44,7 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < 500; $i++) {
             $isDateContacted = $faker->boolean(30); // 30% chance of being contacted
 
-            Lead::query()->create([
+            $lead = Lead::query()->create([
                 'user_id' => 1, // Assuming user with ID 1 exists
                 'name' => $faker->name(),
                 'sources_id' => $faker->randomElement($sourceIds),
@@ -64,6 +67,9 @@ class DatabaseSeeder extends Seeder
                 'created_at' => $faker->dateTimeBetween('-6 months', 'now'),
                 'updated_at' => $faker->dateTimeBetween('-1 month', 'now'),
             ]);
+
+            $randomTags = $tags->random(rand(1, 3))->pluck('id')->toArray();
+            $lead->tags()->attach($randomTags);
         }
 
     }

@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Lead;
 use App\Models\Setup\Sources;
 use App\Models\Setup\Status;
+use App\Models\Tag;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Facades\Excel;
@@ -80,12 +81,21 @@ class LeadService
 
     public function leadUpdateOrCreate(array $data): Model|Lead
     {
-        return Lead::query()->updateOrCreate(
+        $lead = Lead::query()->updateOrCreate(
             [
                 'id' => $data['id'] ?? null,
             ],
             $this->leadMap($data)
         );
+
+        if (! empty($data['tags'])) {
+            $tagIds = collect($data['tags'])->map(function ($tagName) {
+                return Tag::firstOrCreate(['name' => $tagName])->id;
+            })->toArray();
+            $lead->tags()->sync($tagIds);
+        }
+
+        return $lead;
     }
 
     public function leadMap(array $data): array
@@ -189,6 +199,16 @@ class LeadService
         }
 
         $updated = Lead::query()->whereIn('id', $ids)->update($updates);
+
+        if (! empty($data['tags'])) {
+            $tagIds = collect($data['tags'])->map(function ($tagName) {
+                return Tag::firstOrCreate(['name' => $tagName])->id;
+            })->toArray();
+
+            Lead::query()->whereIn('id', $ids)->get()->each(function ($lead) use ($tagIds) {
+                $lead->tags()->sync($tagIds);
+            });
+        }
 
         return ['deleted' => 0, 'updated' => $updated];
     }

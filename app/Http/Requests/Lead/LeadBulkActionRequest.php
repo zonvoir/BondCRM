@@ -19,6 +19,7 @@ class LeadBulkActionRequest extends FormRequest
             'ids.*' => ['integer', 'distinct', 'exists:leads,id'],
             'is_delete' => ['nullable', 'boolean'],
             'mark_lost' => ['nullable', 'boolean'],
+            'tags' => ['nullable', 'array'],
             'status' => ['nullable', 'array'],
             'source' => ['nullable', 'array'],
             'last_contact' => ['nullable', 'date'],
@@ -38,6 +39,7 @@ class LeadBulkActionRequest extends FormRequest
             'ids.*.exists' => 'One or more lead ids are invalid.',
             'status.required' => 'At least one lead id is required.',
             'source.required' => 'At least one lead id is required.',
+            'tags.required' => 'At least one lead id is required.',
         ];
     }
 }

@@ -18,6 +18,7 @@ class LeadResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'tags' => $this->whenLoaded('tags', fn () => $this->tags->pluck('name')) ?? [],
             'source' => $this->whenLoaded('source'),
             'status' => $this->whenLoaded('status'),
             'address' => $this->address,

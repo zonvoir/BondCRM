@@ -51,6 +51,7 @@ const props = defineProps({
 const form = useForm({
     id: null,
     name: '',
+    tags: null,
     source: '',
     status: '',
     address: '',
@@ -72,6 +73,7 @@ const form = useForm({
 
 const bulkForm = useForm({
     ids: null,
+    tags: null,
     isDelete: false,
     markLost: false,
     status: null,
@@ -100,6 +102,7 @@ const columnVisibility = ref({
     Company: true,
     Email: true,
     Phone: true,
+    Tags: true,
     Status: true,
     Source: true,
     Created: true,
@@ -199,6 +202,7 @@ const handleEditLead = lead => {
     form.source = mappedSource?.value;
     form.status = mappedStatus?.value;
     form.name = lead?.name;
+    form.tags = lead?.tags;
     form.address = lead?.address;
     form.position = lead?.position;
     form.city = lead?.city;
@@ -324,6 +328,7 @@ const leadColumns = [
     { name: 'Company' },
     { name: 'Email' },
     { name: 'Phone' },
+    { name: 'Tags' },
     { name: 'Status' },
     { name: 'Source' },
     { name: 'Created' },
@@ -595,6 +600,33 @@ const leadColumns = [
                             header="Phone"
                             :sortable="true"
                         />
+                        <Column
+                            v-if="columnVisibility['Tags']"
+                            field="tags"
+                            header="Tags"
+                            :sortable="true"
+                        >
+                            <template #body="slotProps">
+                                <div class="flex flex-col gap-1">
+                                    <CommonBadge
+                                        v-for="tag in slotProps.data?.tags.slice(
+                                            0,
+                                            2
+                                        )"
+                                        :key="tag.id"
+                                        class="mr-1"
+                                        :value="tag"
+                                    />
+
+                                    <div
+                                        v-if="slotProps.data?.tags.length > 2"
+                                        class="cursor-pointer rounded-md px-2 py-1 text-xs font-normal text-gray-700"
+                                    >
+                                        +{{ slotProps.data?.tags.length - 2 }}
+                                    </div>
+                                </div>
+                            </template>
+                        </Column>
 
                         <Column
                             v-if="columnVisibility['Status']"
@@ -722,12 +754,12 @@ const leadColumns = [
                             required
                         />
                     </div>
+
                     <div class="col-span-12">
                         <CommonMultiTagInput
                             labelClass="mb-1"
-                            v-model="tags"
+                            v-model="form.tags"
                             label="Tags"
-                            separator=","
                         />
                     </div>
 
@@ -983,6 +1015,14 @@ const leadColumns = [
                                 v-model="bulkForm.lastContact"
                                 :error="bulkForm.errors.lastContact"
                             />
+
+                            <div class="col-span-12">
+                                <CommonMultiTagInput
+                                    labelClass="mb-1"
+                                    v-model="bulkForm.tags"
+                                    label="Tags"
+                                />
+                            </div>
                         </fieldset>
 
                         <fieldset class="space-y-2">

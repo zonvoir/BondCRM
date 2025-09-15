@@ -31,6 +31,7 @@ class LeadRequest extends FormRequest
         return [
             'id' => 'nullable',
             'name' => 'required',
+            'tags' => 'nullable',
             'source' => 'required|array',
             'status' => 'required|array',
             'address' => 'nullable|string|max:255',
