@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Lead;
 use App\Exports\LeadsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lead\ImportRequest;
+use App\Http\Requests\Lead\LeadBulkActionRequest;
 use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Resources\Lead\LeadResource;
 use App\Imports\LeadsImport;
@@ -118,12 +119,17 @@ class LeadController extends Controller
         }
     }
 
+
     public function leadDetails(Lead $lead)
     {
         $props = [
 
         ];
-
         return Inertia::render('Lead/Details', $props);
+    }
+  
+    public function bulkAction(LeadBulkActionRequest $request)
+    {
+        $this->leadService->bulkAction($request->validated());
     }
 }

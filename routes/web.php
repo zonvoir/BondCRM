@@ -102,6 +102,7 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
         Route::post('/import-Simulate', 'importSimulate')->name('import.simulate');
         Route::post('/import-save', 'importSave')->name('import.save');
         Route::get('/details/{lead}', 'leadDetails')->name('details');
+        Route::post('/bulk-action', 'bulkAction')->name('bulk.action');
     });
 
     Route::prefix('black')->controller(BlackingController::class)->as('black.')->group(function () {

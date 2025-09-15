@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
 
         $faker = Faker::create();
 
-        $statuses = Status::all();
+        $statuses = Status::query()->whereNotIn('name', ['Lost', 'Junk'])->get();
         $sources = Sources::all();
         $countries = Country::all();
 
@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         for ($i = 0; $i < 500; $i++) {
             $isDateContacted = $faker->boolean(30); // 30% chance of being contacted
 
-            Lead::create([
+            Lead::query()->create([
                 'user_id' => 1, // Assuming user with ID 1 exists
                 'name' => $faker->name(),
                 'sources_id' => $faker->randomElement($sourceIds),
