@@ -52,16 +52,16 @@ const removeTag = i => tags.value.splice(i, 1);
             <span
                 v-for="(tag, i) in tags"
                 :key="tag + i"
-                class="text-dark flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-sm"
+                class="text-dark flex items-center gap-1 rounded-full bg-gray-200 px-2 py-1 text-sm"
             >
                 {{ tag }}
                 <button
                     @click="removeTag(i)"
-                    class="text-dark ml-1 hover:text-gray-800 focus:outline-none"
+                    class="text-dark hover:text-gray-800 focus:outline-none"
                 >
                     <CommonIcon
                         icon="heroicons:x-circle"
-                        class="cursor-pointer"
+                        class="h-5 w-5 cursor-pointer"
                     />
                 </button>
             </span>
@@ -70,6 +70,8 @@ const removeTag = i => tags.value.splice(i, 1);
                 ref="inputRef"
                 v-model="newTag"
                 @keyup.enter.prevent="addTag"
+                @keydown.tab.prevent="addTag"
+                @keydown.space.prevent="addTag"
                 placeholder="Tags"
                 class="border-none outline-none focus:shadow-none focus:ring-0 focus:outline-none"
             />
