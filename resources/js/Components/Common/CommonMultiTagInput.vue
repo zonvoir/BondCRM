@@ -47,7 +47,7 @@ const removeTag = i => tags.value.splice(i, 1);
         </label>
 
         <div
-            class="flex flex-wrap items-center gap-2 rounded-md border border-gray-300 px-2 py-2"
+            class="flex flex-wrap items-center gap-2 rounded-md border border-gray-300 px-2 py-1"
         >
             <span
                 v-for="(tag, i) in tags"
