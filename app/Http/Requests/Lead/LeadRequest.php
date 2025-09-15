@@ -46,7 +46,7 @@ class LeadRequest extends FormRequest
             'company' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'date_contacted' => 'nullable|string',
-            'public' => 'nullable|boolean',
+            'public' => ['nullable', 'in:public,private'],
             'is_date_contacted' => 'nullable|boolean',
         ];
     }

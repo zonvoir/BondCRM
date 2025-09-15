@@ -39,6 +39,10 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits(['update:modelValue', 'change']);
@@ -66,6 +70,7 @@ const updateModelValue = value => {
             :model-value="modelValue"
             :options="options"
             filter
+            :disabled="disabled"
             :optionLabel="optionLabel"
             :placeholder="placeholder"
             :class="[selectClass, 'h-10 w-full']"

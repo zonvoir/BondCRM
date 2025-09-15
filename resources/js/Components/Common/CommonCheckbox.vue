@@ -1,6 +1,11 @@
 <template>
     <div class="card flex justify-center">
-        <Checkbox v-model="internalValue" binary @valueChange="onChange" />
+        <Checkbox
+            v-model="internalValue"
+            :disabled="disabled"
+            binary
+            @valueChange="onChange"
+        />
     </div>
 </template>
 
@@ -10,6 +15,10 @@ import Checkbox from 'primevue/checkbox';
 
 const props = defineProps({
     modelValue: {
+        type: Boolean,
+        default: false,
+    },
+    disabled: {
         type: Boolean,
         default: false,
     },

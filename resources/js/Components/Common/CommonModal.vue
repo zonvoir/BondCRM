@@ -2,7 +2,7 @@
     <Dialog
         :draggable="false"
         :visible="visible"
-        @update:visible="emit('update:visible', $event)"
+        @update:visible="emit('update:visible')"
         maximizable
         modal
         :header="title"

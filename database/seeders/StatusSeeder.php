@@ -26,6 +26,11 @@ class StatusSeeder extends Seeder
                 'color' => 'ef4444',  // Red
                 'user_id' => $userId,
             ],
+            [
+                'name' => 'Lost',
+                'color' => 'ef4444',  // Red
+                'user_id' => $userId,
+            ],
 
             [
                 'name' => 'Contacted',
@@ -68,6 +73,11 @@ class StatusSeeder extends Seeder
 
             [
                 'name' => 'Pending',
+                'color' => 'eab308',  // Yellow-500
+                'user_id' => $userId,
+            ],
+            [
+                'name' => 'Junk',
                 'color' => 'eab308',  // Yellow-500
                 'user_id' => $userId,
             ],

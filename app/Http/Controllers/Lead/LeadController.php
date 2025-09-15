@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Lead;
 use App\Exports\LeadsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lead\ImportRequest;
+use App\Http\Requests\Lead\LeadBulkActionRequest;
 use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Resources\Lead\LeadResource;
 use App\Imports\LeadsImport;
@@ -116,5 +117,10 @@ class LeadController extends Controller
         } catch (Exception $e) {
             return redirect()->route('employee.lead.import')->with('error', $e->getMessage());
         }
+    }
+
+    public function bulkAction(LeadBulkActionRequest $request)
+    {
+        $this->leadService->bulkAction($request->validated());
     }
 }

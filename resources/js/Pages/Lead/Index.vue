@@ -69,11 +69,22 @@ const form = useForm({
     isDateContacted: null,
 });
 
+const bulkForm = useForm({
+    ids: null,
+    isDelete: false,
+    markLost: false,
+    status: null,
+    source: null,
+    lastContact: null,
+    type: null,
+});
+
 const params = route().params;
 const op = ref();
 const columns = ref();
 const exportDropdownRef = ref();
-const showDrawer = ref(false);
+const showLeadModal = ref(false);
+const showBulkModal = ref(false);
 const isContactedToday = ref(false);
 const deleteId = ref(null);
 const openConfirmation = ref(false);
@@ -81,6 +92,7 @@ const isEdit = ref(false);
 const selectedGridOption = ref('list');
 const selectedSortOption = ref(params?.sort || 'desc');
 const searchQuery = ref(params?.search || '');
+const selectRowIDs = ref(null);
 
 const columnVisibility = ref({
     'Lead Name': true,
@@ -95,13 +107,13 @@ const columnVisibility = ref({
 
 const handleDrawerOpen = () => {
     form.reset();
-    showDrawer.value = true;
+    showLeadModal.value = true;
 };
 
 const handleDrawerClose = () => {
     form.reset();
     isEdit.value = false;
-    showDrawer.value = false;
+    showLeadModal.value = false;
 };
 
 const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -197,7 +209,7 @@ const handleEditLead = lead => {
     form.zipCode = lead?.zip_code;
     form.leadValue = lead?.lead_value;
     form.description = lead?.description;
-    form.public = lead?.public;
+    form.public = lead?.public === true ? 'public' : 'private';
     form.isDateContacted = lead?.is_date_contacted;
     form.dateContacted = lead?.date_contacted;
     isContactedToday.value = lead?.is_date_contacted;
@@ -231,7 +243,46 @@ const exportLeads = type => {
 };
 
 const checkedRows = e => {
-    console.log(e);
+    const ids = e?.map(item => item?.id);
+    selectRowIDs.value = ids;
+    bulkForm.ids = ids;
+};
+
+const handleBulkModal = () => {
+    resetBulkForm();
+    showBulkModal.value = true;
+};
+const handleBulkAction = () => {
+    if (bulkForm.isDelete || bulkForm.markLost) {
+        showBulkModal.value = false;
+        openConfirmation.value = true;
+    } else {
+        submitBulkAction();
+    }
+};
+
+const submitBulkAction = () => {
+    bulkForm.post(route('employee.lead.bulk.action'), {
+        onSuccess: () => {
+            showBulkModal.value = false;
+            resetBulkForm();
+        },
+    });
+};
+
+const handleBulkConfirm = () => {
+    openConfirmation.value = false;
+    submitBulkAction();
+};
+
+const handleBulkCancel = () => {
+    openConfirmation.value = false;
+};
+
+const resetBulkForm = () => {
+    const ids = [...bulkForm.ids];
+    bulkForm.reset();
+    bulkForm.ids = ids;
 };
 
 const viewOptions = [
@@ -352,10 +403,10 @@ const leadColumns = [
                                 class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
                             >
                                 <div
+                                    @click="handleSortBy"
                                     class="transitions-colors cursor-pointer rounded-md border border-transparent bg-gray-100 p-2 text-gray-700 ring-offset-1 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-indigo-600 active:text-gray-300"
                                 >
                                     <CommonIcon
-                                        @click="handleSortBy"
                                         :icon="
                                             selectedSortOption === 'asc'
                                                 ? 'fa7-solid:arrow-up-wide-short'
@@ -396,6 +447,20 @@ const leadColumns = [
                                             import
                                         </CommonButton>
                                     </Link>
+                                </div>
+                                <div>
+                                    <CommonButton
+                                        :disabled="!selectRowIDs?.length"
+                                        @click="handleBulkModal"
+                                        variant="gray"
+                                        class="border text-sm"
+                                    >
+                                        <CommonIcon
+                                            class="h-5 w-5"
+                                            icon="tdesign:folder-setting-filled"
+                                        />
+                                        Bulk Action
+                                    </CommonButton>
                                 </div>
                             </div>
                         </div>
@@ -593,7 +658,7 @@ const leadColumns = [
             </div>
 
             <CommonModal
-                v-model:visible="showDrawer"
+                v-model:visible="showLeadModal"
                 position="top"
                 className="w-7xl"
                 :header="isEdit ? 'Update Lead' : 'Create Lead'"
@@ -765,10 +830,33 @@ const leadColumns = [
                     </div>
                     <div class="col-span-12 flex items-center gap-8">
                         <!-- Public -->
-                        <label class="flex cursor-pointer items-center gap-2">
-                            <CommonCheckbox v-model="form.public" />
-                            <span>Public</span>
-                        </label>
+                        <div class="flex flex-row gap-2">
+                            <label
+                                class="flex cursor-pointer items-center gap-2"
+                            >
+                                <input
+                                    type="radio"
+                                    name="bulk-visibility"
+                                    id="bulk-public"
+                                    value="public"
+                                    v-model="form.public"
+                                />
+                                <span>Public</span>
+                            </label>
+
+                            <label
+                                class="flex cursor-pointer items-center gap-2"
+                            >
+                                <input
+                                    type="radio"
+                                    name="bulk-visibility"
+                                    id="bulk-private"
+                                    value="private"
+                                    v-model="form.public"
+                                />
+                                <span>Private</span>
+                            </label>
+                        </div>
 
                         <!-- Contacted Today -->
                         <label class="flex cursor-pointer items-center gap-2">
@@ -790,6 +878,139 @@ const leadColumns = [
                     </div>
                 </div>
             </CommonModal>
+            <CommonModal
+                v-model:visible="showBulkModal"
+                position="top"
+                header="Bulk actions"
+            >
+                <div>
+                    <!-- Actions -->
+                    <fieldset class="space-y-3">
+                        <legend
+                            class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                        >
+                            Actions
+                        </legend>
+
+                        <!-- Delete (destructive) -->
+                        <label class="flex items-center gap-2">
+                            <CommonCheckbox
+                                :disabled="bulkForm.markLost"
+                                v-model="bulkForm.isDelete"
+                                aria-describedby="bulk-delete-help"
+                            />
+                            <span
+                                class="text-sm text-gray-700 dark:text-gray-300"
+                                >Delete</span
+                            >
+                        </label>
+                        <p
+                            id="bulk-delete-help"
+                            class="text-xs text-red-600"
+                        ></p>
+                    </fieldset>
+
+                    <div class="space-y-5">
+                        <!-- Mark as lost -->
+                        <label class="flex items-center gap-2">
+                            <CommonCheckbox
+                                :id="'bulk-lost'"
+                                v-model="bulkForm.markLost"
+                                :disabled="bulkForm.isDelete"
+                                aria-describedby="bulk-lost-help"
+                            />
+                            <span
+                                class="text-sm text-gray-700 dark:text-gray-300"
+                                >Mark as lost</span
+                            >
+                        </label>
+                        <p id="bulk-lost-help" class="text-xs text-gray-500">
+                            Flags leads as lost without deleting them.
+                        </p>
+
+                        <!-- Fields -->
+                        <fieldset class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <legend class="sr-only">Bulk field changes</legend>
+
+                            <CommonSelect
+                                :id="'bulk-status'"
+                                label="Change status"
+                                v-model="bulkForm.status"
+                                class="!w-full"
+                                :options="status"
+                                optionLabel="name"
+                                :disabled="
+                                    bulkForm.isDelete || bulkForm.markLost
+                                "
+                                :error="bulkForm.errors.status"
+                            />
+
+                            <CommonSelect
+                                :id="'bulk-source'"
+                                label="Lead source"
+                                v-model="bulkForm.source"
+                                class="!w-full"
+                                :options="source"
+                                :disabled="bulkForm.isDelete"
+                                optionLabel="name"
+                                :error="bulkForm.errors.source"
+                            />
+
+                            <CommonDatePicker
+                                :showTime="true"
+                                :id="'bulk-last-contact'"
+                                label="Last contact"
+                                :disabled="bulkForm.isDelete"
+                                v-model="bulkForm.lastContact"
+                                :error="bulkForm.errors.lastContact"
+                            />
+                        </fieldset>
+
+                        <fieldset class="space-y-2">
+                            <label
+                                class="flex cursor-pointer items-center gap-2"
+                            >
+                                <input
+                                    :disabled="bulkForm.isDelete"
+                                    type="radio"
+                                    name="bulk-visibility"
+                                    id="bulk-public"
+                                    value="public"
+                                    v-model="bulkForm.type"
+                                />
+                                <span>Public</span>
+                            </label>
+
+                            <label
+                                class="flex cursor-pointer items-center gap-2"
+                            >
+                                <input
+                                    :disabled="bulkForm.isDelete"
+                                    type="radio"
+                                    name="bulk-visibility"
+                                    id="bulk-private"
+                                    value="private"
+                                    v-model="bulkForm.type"
+                                />
+                                <span>Private</span>
+                            </label>
+                        </fieldset>
+                    </div>
+
+                    <div class="my-5 flex justify-between gap-2">
+                        <CommonButton
+                            size="xs"
+                            variant="danger"
+                            @click="showBulkModal = false"
+                            >Close</CommonButton
+                        >
+                        <CommonButton @click="handleBulkAction" size="xs"
+                            >Confirm</CommonButton
+                        >
+                    </div>
+                </div>
+            </CommonModal>
+
             <CommonConfirmation
                 v-model="openConfirmation"
                 title="Delete Confirmation"
@@ -798,6 +1019,15 @@ const leadColumns = [
                 cancelText="Cancel"
                 @confirm="handleDelete"
                 @cancel="handleDestroyCancel"
+            />
+            <CommonConfirmation
+                v-model="openConfirmation"
+                title="Confirm Bulk Action"
+                message="Are you sure you want to proceed with this bulk action? This cannot be undone."
+                confirmText="Yes, Proceed"
+                cancelText="Cancel"
+                @confirm="handleBulkConfirm"
+                @cancel="handleBulkCancel"
             />
         </PanelLayout>
     </AppLayout>
