@@ -3,7 +3,7 @@ import { defineProps, ref, watch, defineEmits, handleError } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import CommonIcon from '@/Components/Common/CommonIcon.vue';
-import { router } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 
 const params = route().params;
 const currentPerPage = ref(params?.perPage || 10);
@@ -211,7 +211,7 @@ const buildPagination = () => {
                         class="flex items-center gap-2"
                         aria-label="Pagination Navigation"
                     >
-                        <button
+                        <Link
                             class="rounded-lg border px-3 py-2 text-sm hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-gray-800"
                             :disabled="buildPagination().currentPage === 1"
                             :href="
@@ -221,7 +221,7 @@ const buildPagination = () => {
                             "
                         >
                             Prev
-                        </button>
+                        </Link>
 
                         <template
                             v-for="(page, i) in buildPagination().pages"
@@ -247,7 +247,7 @@ const buildPagination = () => {
                             </Link>
                         </template>
 
-                        <button
+                        <Link
                             class="rounded-lg border px-3 py-2 text-sm hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-gray-800"
                             :disabled="
                                 buildPagination().currentPage ===
@@ -260,7 +260,7 @@ const buildPagination = () => {
                             "
                         >
                             Next
-                        </button>
+                        </Link>
                     </nav>
                 </div>
             </div>
