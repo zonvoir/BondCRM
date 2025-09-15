@@ -119,15 +119,15 @@ class LeadController extends Controller
         }
     }
 
-
     public function leadDetails(Lead $lead)
     {
         $props = [
 
         ];
+
         return Inertia::render('Lead/Details', $props);
     }
-  
+
     public function bulkAction(LeadBulkActionRequest $request)
     {
         $this->leadService->bulkAction($request->validated());
