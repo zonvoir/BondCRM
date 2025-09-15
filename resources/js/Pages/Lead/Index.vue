@@ -22,6 +22,8 @@ import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
 import { useSelectMapper } from '@/Composables/useSelectMapper.js';
 import { useDebounce } from '@vueuse/core';
 import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
+import CommonMultiTagInput from '@/Components/Common/CommonMultiTagInput.vue';
+
 
 const props = defineProps({
     mailProviders: {
@@ -234,6 +236,10 @@ const checkedRows = e => {
     console.log(e);
 };
 
+const handleRowClick = e => {
+    router.visit(route('employee.lead.details', { lead: e.data?.id }));
+};
+
 const viewOptions = [
     { label: 'Grid', value: 'grid', icon: 'grid-view-outline-rounded' },
     { label: 'List', value: 'list', icon: 'lists-rounded' },
@@ -281,11 +287,13 @@ const leadColumns = [
             <div class="rounded-md bg-white p-5 shadow dark:bg-gray-800">
                 <div>
                     <!-- filters  -->
-                    <div class="flex flex-wrap gap-2 gap-y-5 py-5">
+                    <div
+                        class="flex flex-nowrap gap-2 gap-y-5 overflow-x-auto py-5"
+                    >
                         <div v-for="(s, index) in status" :key="index">
                             <Link :href="filterStatus(s?.code)">
                                 <Badge
-                                    class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
+                                    class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal text-nowrap"
                                     :style="{ backgroundColor: '#' + s.color }"
                                 >
                                     {{ s?.leads_count }} {{ s.name }}
@@ -294,7 +302,9 @@ const leadColumns = [
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center justify-between border-b pb-4">
+                <div
+                    class="flex flex-wrap items-center justify-between gap-3 border-b pb-4"
+                >
                     <div
                         class="flex w-full max-w-full items-center gap-2 sm:max-w-1/2 md:max-w-1/3"
                     >
@@ -344,7 +354,7 @@ const leadColumns = [
                 </div>
 
                 <div v-if="selectedGridOption === 'list'">
-                    <div class="flex justify-between border-b pb-4">
+                    <div class="flex flex-wrap justify-between border-b pb-4">
                         <div
                             class="flex items-center justify-between gap-2 py-4"
                         >
@@ -493,6 +503,7 @@ const leadColumns = [
                         :showSerialNumber="true"
                         :data="leads"
                         @update:modelSelection="checkedRows"
+                        @rowClick="handleRowClick"
                     >
                         <Column
                             v-if="columnVisibility['Lead Name']"
@@ -595,7 +606,7 @@ const leadColumns = [
             <CommonModal
                 v-model:visible="showDrawer"
                 position="top"
-                className="w-7xl"
+                className="w-5xl"
                 :header="isEdit ? 'Update Lead' : 'Create Lead'"
             >
                 <div class="grid grid-cols-12 gap-4">
@@ -643,7 +654,16 @@ const leadColumns = [
                             v-model="form.name"
                             label="Name"
                             :error="form.errors.name"
+                            placeholder="Name"
                             required
+                        />
+                    </div>
+                    <div class="col-span-12">
+                        <CommonMultiTagInput
+                            labelClass="mb-1"
+                            v-model="tags"
+                            label="Tags"
+                            separator=","
                         />
                     </div>
 

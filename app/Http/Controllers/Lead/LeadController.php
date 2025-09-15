@@ -48,22 +48,22 @@ class LeadController extends Controller
 
     public function export(Request $request, $type)
     {
-        $filename = 'leads_'.now()->format('Y_m_d_H_i_s');
+        $filename = 'leads_' . now()->format('Y_m_d_H_i_s');
 
         return match ($type) {
             'csv' => Excel::download(
                 new LeadsExport($request),
-                $filename.'.csv',
+                $filename . '.csv',
                 ExcelFormat::CSV
             ),
             'pdf' => Excel::download(
                 new LeadsExport($request),
-                $filename.'.pdf',
+                $filename . '.pdf',
                 ExcelFormat::MPDF
             ),
             default => Excel::download(
                 new LeadsExport($request),
-                $filename.'.xlsx',
+                $filename . '.xlsx',
                 ExcelFormat::XLSX
             ),
         };
@@ -116,5 +116,14 @@ class LeadController extends Controller
         } catch (Exception $e) {
             return redirect()->route('employee.lead.import')->with('error', $e->getMessage());
         }
+    }
+
+    public function leadDetails(Lead $lead)
+    {
+        $props = [
+            
+        ];
+
+        return Inertia::render('Lead/Details', $props);
     }
 }

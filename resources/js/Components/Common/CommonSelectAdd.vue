@@ -108,7 +108,7 @@ const handleSubmit = () => {
         </template>
 
         <template v-else>
-            <div class="flex w-full items-end gap-2">
+            <div class="flex w-full items-start gap-2">
                 <slot />
                 <CommonButton
                     @click="isEditing = true"
