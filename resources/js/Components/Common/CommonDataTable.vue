@@ -178,7 +178,7 @@ const buildPagination = () => {
                 </DataTable>
 
                 <div
-                    class="mx-3 flex flex-col gap-6 py-4 lg:flex-row lg:items-center lg:justify-between"
+                    class="mx-3 flex flex-col flex-wrap gap-6 py-4 lg:flex-row lg:items-center lg:justify-between"
                 >
                     <!-- Items per page selector -->
                     <div class="flex items-center gap-4">
