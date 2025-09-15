@@ -344,8 +344,10 @@ const handleSubmit = () => {
                         </div>
                     </div>
 
-                    <div class="my-5 grid grid-cols-12 gap-4">
-                        <div class="col-span-3">
+                    <div
+                        class="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+                    >
+                        <div class="col-span-1">
                             <CommonFile
                                 @update:modelValue="simulateImportFile"
                                 label="Choose file"
@@ -354,7 +356,7 @@ const handleSubmit = () => {
                             />
                         </div>
 
-                        <div class="col-span-3">
+                        <div class="col-span-1">
                             <CommonSelectAdd
                                 label="Status"
                                 placeholder="name"
@@ -372,7 +374,7 @@ const handleSubmit = () => {
                             </CommonSelectAdd>
                         </div>
 
-                        <div class="col-span-3">
+                        <div class="col-span-1">
                             <CommonSelectAdd
                                 label="Lead Source"
                                 placeholder="source"
@@ -390,7 +392,9 @@ const handleSubmit = () => {
                             </CommonSelectAdd>
                         </div>
 
-                        <div class="col-span-12 my-4">
+                        <div
+                            class="col-span-1 my-4 md:col-span-2 xl:col-span-3"
+                        >
                             <CommonButton
                                 @click="handleSubmit"
                                 :processing="form.processing"

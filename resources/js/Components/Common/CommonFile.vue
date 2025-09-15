@@ -1,5 +1,5 @@
 <template>
-    <div class="flex max-w-fit flex-col gap-2 rounded-md border p-1">
+    <div class="flex max-w-full flex-col gap-2 rounded-md border p-1">
         <!-- Dynamic Label -->
         <label class="text-base font-medium text-gray-800 dark:text-gray-300">
             {{ label || 'Attachments' }}

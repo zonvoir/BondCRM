@@ -59,7 +59,10 @@ const removeTag = i => tags.value.splice(i, 1);
                     @click="removeTag(i)"
                     class="text-dark ml-1 hover:text-gray-800 focus:outline-none"
                 >
-                    <CommonIcon icon="heroicons:x-circle" class="cursor-pointer" />
+                    <CommonIcon
+                        icon="heroicons:x-circle"
+                        class="cursor-pointer"
+                    />
                 </button>
             </span>
 

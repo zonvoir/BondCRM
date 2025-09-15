@@ -24,7 +24,6 @@ import { useDebounce } from '@vueuse/core';
 import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
 import CommonMultiTagInput from '@/Components/Common/CommonMultiTagInput.vue';
 
-
 const props = defineProps({
     mailProviders: {
         type: Array,
