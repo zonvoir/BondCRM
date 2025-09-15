@@ -72,7 +72,6 @@ const form = useForm({
 const params = route().params;
 const op = ref();
 const columns = ref();
-const sortByDropdownRef = ref();
 const exportDropdownRef = ref();
 const showDrawer = ref(false);
 const isContactedToday = ref(false);
@@ -115,8 +114,10 @@ watch(debouncedSearchQuery, newValue => {
     router.visit(route('employee.lead.index', updatedParams));
 });
 
-const handleSortBy = event => {
-    sortByDropdownRef.value.toggle(event);
+const handleSortBy = () => {
+    selectedSortOption.value =
+        selectedSortOption.value === 'asc' ? 'desc' : 'asc';
+    updateSortInURL(selectedSortOption.value);
 };
 
 const handleExport = event => {
@@ -229,28 +230,13 @@ const exportLeads = type => {
     });
 };
 
+const checkedRows = e => {
+    console.log(e);
+};
+
 const viewOptions = [
     { label: 'Grid', value: 'grid', icon: 'grid-view-outline-rounded' },
     { label: 'List', value: 'list', icon: 'lists-rounded' },
-];
-
-const sortByMenu = [
-    {
-        label: 'Newest',
-        class: 'text-sm',
-        command: () => {
-            selectedSortOption.value = 'desc';
-            updateSortInURL('desc');
-        },
-    },
-    {
-        label: 'Oldest',
-        class: 'text-sm',
-        command: () => {
-            selectedSortOption.value = 'asc';
-            updateSortInURL('asc');
-        },
-    },
 ];
 
 const exportMenu = [
@@ -365,28 +351,16 @@ const leadColumns = [
                             <div
                                 class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
                             >
-                                <div>
-                                    <CommonButton
+                                <div
+                                    class="transitions-colors cursor-pointer rounded-md border border-transparent bg-gray-100 p-2 text-gray-700 ring-offset-1 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-indigo-600 active:text-gray-300"
+                                >
+                                    <CommonIcon
                                         @click="handleSortBy"
-                                        variant="gray"
-                                        class="!py-2 text-sm"
-                                    >
-                                        <CommonIcon
-                                            icon="heroicons:bars-arrow-down"
-                                        />
-                                        Sort by
-                                        {{
-                                            selectedSortOption === 'desc'
-                                                ? 'new'
-                                                : 'old'
-                                        }}
-                                        <CommonIcon
-                                            icon="heroicons:chevron-down"
-                                        />
-                                    </CommonButton>
-                                    <CommonDropDown
-                                        ref="sortByDropdownRef"
-                                        :items="sortByMenu"
+                                        :icon="
+                                            selectedSortOption === 'asc'
+                                                ? 'fa7-solid:arrow-up-wide-short'
+                                                : 'fa7-solid:arrow-down-short-wide'
+                                        "
                                     />
                                 </div>
                             </div>
@@ -514,9 +488,11 @@ const leadColumns = [
                         </div>
                     </div>
                     <CommonDataTable
+                        checkbox
                         routeName="employee.lead.index"
                         :showSerialNumber="true"
                         :data="leads"
+                        @update:modelSelection="checkedRows"
                     >
                         <Column
                             v-if="columnVisibility['Lead Name']"
