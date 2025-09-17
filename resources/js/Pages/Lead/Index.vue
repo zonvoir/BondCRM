@@ -278,38 +278,38 @@ const responsiveOptions = [
     {
         breakpoint: '2100px',
         numVisible: 8,
-        numScroll: 1
+        numScroll: 1,
     },
     {
         breakpoint: '1920px',
         numVisible: 6,
-        numScroll: 1
+        numScroll: 1,
     },
     {
         breakpoint: '1440px',
         numVisible: 5,
-        numScroll: 1
+        numScroll: 1,
     },
     {
         breakpoint: '1366px',
         numVisible: 4,
-        numScroll: 1
+        numScroll: 1,
     },
     {
         breakpoint: '1280px',
         numVisible: 4,
-        numScroll: 1
+        numScroll: 1,
     },
     {
         breakpoint: '768px',
         numVisible: 3,
-        numScroll: 1
+        numScroll: 1,
     },
     {
         breakpoint: '412px',
         numVisible: 1,
-        numScroll: 1
-    }
+        numScroll: 1,
+    },
 ];
 </script>
 
@@ -319,8 +319,7 @@ const responsiveOptions = [
             <div class="rounded-md bg-white p-5 shadow dark:bg-gray-800">
                 <div>
                     <!-- filters  -->
-                    <div class="flex flex-wrap gap-3  gap-y-5 pb-10">
-
+                    <div class="flex flex-wrap gap-3 gap-y-5 pb-10">
                         <!-- <div v-for="(s, index) in status" :key="index">
                             <Link :href="filterStatus(s?.code)">
                             <div class="max-w-fit cursor-pointer rounded-md flex px-3 py-2 items-center gap-2 text-xs text-gray-700 font-normal"
@@ -338,58 +337,96 @@ const responsiveOptions = [
                             </div>
                             </Link>
                         </div> -->
-                        <CommonCrousel :value="status" :responsive-options="responsiveOptions" :showIndicators="false"
+                        <CommonCrousel
+                            :value="status"
+                            :responsive-options="responsiveOptions"
+                            :showIndicators="false"
                             :pt="{
                                 pcNextButton: {
                                     root: {
-                                        class: '!bg-gray-200 !text-dark !h-7 !w-7'
-                                    }
+                                        class: '!bg-gray-200 !text-dark !h-7 !w-7',
+                                    },
                                 },
                                 pcPrevButton: {
                                     root: {
-                                        class: '!bg-gray-200 !text-dark !h-7 !w-7'
-                                    }
+                                        class: '!bg-gray-200 !text-dark !h-7 !w-7',
+                                    },
                                 },
-                            }" :num-visible="6" :touchSwipe="true" :mouseDrag="true">
+                            }"
+                            :num-visible="6"
+                            :touchSwipe="true"
+                            :mouseDrag="true"
+                        >
                             <template #item="{ data: s }">
                                 <Link :href="filterStatus(s.code)">
-                                <div class=" cursor-pointer ml-3 rounded-md flex px-2 py-1 items-center gap-2
-               text-xs text-gray-700 font-normal" :style="{ backgroundColor: `#${s.color}10` }">
-                                    <span
-                                        class="p-2 rounded-full px-3 text-sm font-semibold flex items-center justify-center h-6 w-6"
-                                        :style="{ backgroundColor: `#${s.color}30` }">
-                                        {{ s.leads_count }}
-                                    </span>
-                                    <span class="text-xs font-medium text-nowrap">
-                                        {{ s.name }}
-                                    </span>
-                                </div>
+                                    <div
+                                        class="ml-3 flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-xs font-normal text-gray-700"
+                                        :style="{
+                                            backgroundColor: `#${s.color}10`,
+                                        }"
+                                    >
+                                        <span
+                                            class="flex h-6 w-6 items-center justify-center rounded-full p-2 px-3 text-sm font-semibold"
+                                            :style="{
+                                                backgroundColor: `#${s.color}30`,
+                                            }"
+                                        >
+                                            {{ s.leads_count }}
+                                        </span>
+                                        <span
+                                            class="text-xs font-medium text-nowrap"
+                                        >
+                                            {{ s.name }}
+                                        </span>
+                                    </div>
                                 </Link>
                             </template>
                         </CommonCrousel>
-
                     </div>
                 </div>
                 <div class="flex items-center justify-between border-b pb-4">
-                    <div class="flex w-full max-w-full items-center gap-2 sm:max-w-1/2 md:max-w-1/3">
+                    <div
+                        class="flex w-full max-w-full items-center gap-2 sm:max-w-1/2 md:max-w-1/3"
+                    >
                         <div>
-                            <CommonInput type="search" v-model="searchQuery" icon="heroicons:magnifying-glass"
-                                placeholder="search" InputClass="!py-1 " class="w-full" />
+                            <CommonInput
+                                type="search"
+                                v-model="searchQuery"
+                                icon="heroicons:magnifying-glass"
+                                placeholder="search"
+                                InputClass="!py-1 "
+                                class="w-full"
+                            />
                         </div>
 
                         <div class="flex items-center">
-                            <CommonButton variant="gray" class="!py- border text-sm" @click="resetFilters"
-                                v-tooltip="'Reset filters'">
-                                <CommonIcon class="h-4 w-4" icon="qlementine-icons:funnel-crossed-16" />
+                            <CommonButton
+                                variant="gray"
+                                class="!py- border text-sm"
+                                @click="resetFilters"
+                                v-tooltip="'Reset filters'"
+                            >
+                                <CommonIcon
+                                    class="h-4 w-4"
+                                    icon="qlementine-icons:funnel-crossed-16"
+                                />
                             </CommonButton>
                         </div>
                     </div>
                     <div class="flex gap-2">
                         <div>
-                            <CommonSelectButton class="p-.5" v-model="selectedGridOption" :options="viewOptions"
-                                optionLabel="label" optionValue="value" />
+                            <CommonSelectButton
+                                class="p-.5"
+                                v-model="selectedGridOption"
+                                :options="viewOptions"
+                                optionLabel="label"
+                                optionValue="value"
+                            />
                         </div>
-                        <CommonButton @click="handleDrawerOpen" class="h-fit !py-2 text-sm">
+                        <CommonButton
+                            @click="handleDrawerOpen"
+                            class="h-fit !py-2 text-sm"
+                        >
                             <CommonIcon icon="heroicons:plus" class="h-4 w-4" />
                             Add Lead
                         </CommonButton>
@@ -398,30 +435,56 @@ const responsiveOptions = [
 
                 <div v-if="selectedGridOption === 'list'">
                     <div class="flex justify-between border-b pb-4">
-                        <div class="flex items-center justify-between gap-2 py-4">
-                            <div class="dark:bg-dark flex items-center justify-center gap-2 bg-white">
+                        <div
+                            class="flex items-center justify-between gap-2 py-4"
+                        >
+                            <div
+                                class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
+                            >
                                 <div
-                                    class="transitions-colors cursor-pointer rounded-md border border-transparent bg-gray-100 p-2 text-gray-700 ring-offset-1 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-indigo-600 active:text-gray-300">
-                                    <CommonIcon @click="handleSortBy" :icon="selectedSortOption === 'asc'
-                                        ? 'fa7-solid:arrow-up-wide-short'
-                                        : 'fa7-solid:arrow-down-short-wide'
-                                        " />
+                                    class="transitions-colors cursor-pointer rounded-md border border-transparent bg-gray-100 p-2 text-gray-700 ring-offset-1 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-indigo-600 active:text-gray-300"
+                                >
+                                    <CommonIcon
+                                        @click="handleSortBy"
+                                        :icon="
+                                            selectedSortOption === 'asc'
+                                                ? 'fa7-solid:arrow-up-wide-short'
+                                                : 'fa7-solid:arrow-down-short-wide'
+                                        "
+                                    />
                                 </div>
                             </div>
-                            <div class="dark:bg-dark flex items-center justify-center gap-2 bg-white">
+                            <div
+                                class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
+                            >
                                 <div>
-                                    <CommonButton @click="handleExport" variant="gray" class="!py-2 text-sm">
+                                    <CommonButton
+                                        @click="handleExport"
+                                        variant="gray"
+                                        class="!py-2 text-sm"
+                                    >
                                         Export
-                                        <CommonIcon icon="heroicons:chevron-down" />
+                                        <CommonIcon
+                                            icon="heroicons:chevron-down"
+                                        />
                                     </CommonButton>
-                                    <CommonDropDown ref="exportDropdownRef" :items="exportMenu" />
+                                    <CommonDropDown
+                                        ref="exportDropdownRef"
+                                        :items="exportMenu"
+                                    />
                                 </div>
                                 <div>
                                     <Link :href="route('employee.lead.import')">
-                                    <CommonButton variant="gray" class="border text-sm">
-                                        <CommonIcon class="h-5 w-5" icon="tabler:file-import" />
-                                        import
-                                    </CommonButton>
+                                        <CommonButton
+                                            variant="gray"
+                                            class="border text-sm"
+                                        >
+                                            <CommonIcon
+                                                class="h-5 w-5"
+                                                icon="tabler:file-import"
+                                            />
+                                            import
+                                        </CommonButton>
                                     </Link>
                                 </div>
                             </div>
@@ -429,9 +492,14 @@ const responsiveOptions = [
 
                         <div class="flex items-center gap-3">
                             <div>
-                                <CommonButton variant="gray" class="relative border text-sm" @click="toggle">
+                                <CommonButton
+                                    variant="gray"
+                                    class="relative border text-sm"
+                                    @click="toggle"
+                                >
                                     <Badge
-                                        class="absolute -top-1 -right-1 rounded-full bg-indigo-600 p-1 text-[10px] text-white">
+                                        class="absolute -top-1 -right-1 rounded-full bg-indigo-600 p-1 text-[10px] text-white"
+                                    >
                                     </Badge>
                                     <CommonIcon icon="heroicons:funnel" />
                                     Filters
@@ -442,41 +510,66 @@ const responsiveOptions = [
                                 </CommonPopover>
                             </div>
                             <div>
-                                <CommonButton variant="primary" class="relative border text-sm"
-                                    @click="columnsDrawerToggle">
+                                <CommonButton
+                                    variant="primary"
+                                    class="relative border text-sm"
+                                    @click="columnsDrawerToggle"
+                                >
                                     Manage Columns
                                 </CommonButton>
 
                                 <CommonPopover ref="columns" unstyled>
-                                    <div class="mt-2 max-h-80 overflow-y-auto rounded-md border shadow-xl">
-                                        <div v-for="(
-column, index
-                                            ) in leadColumns" :key="index" :class="[
+                                    <div
+                                        class="mt-2 max-h-80 overflow-y-auto rounded-md border shadow-xl"
+                                    >
+                                        <div
+                                            v-for="(
+                                                column, index
+                                            ) in leadColumns"
+                                            :key="index"
+                                            :class="[
                                                 index % 2 === 0
                                                     ? 'bg-white'
                                                     : 'bg-gray-100',
-                                            ]" class="min-w-xs">
-                                            <div class="flex items-center justify-between p-3">
-                                                <div class="flex items-center gap-3">
-                                                    <CommonIcon icon="material-symbols:circle" class="h-2 w-2" :class="columnVisibility[
-                                                        column.name
-                                                    ]
-                                                        ? 'text-green-500'
-                                                        : 'text-gray-300'
-                                                        " />
+                                            ]"
+                                            class="min-w-xs"
+                                        >
+                                            <div
+                                                class="flex items-center justify-between p-3"
+                                            >
+                                                <div
+                                                    class="flex items-center gap-3"
+                                                >
+                                                    <CommonIcon
+                                                        icon="material-symbols:circle"
+                                                        class="h-2 w-2"
+                                                        :class="
+                                                            columnVisibility[
+                                                                column.name
+                                                            ]
+                                                                ? 'text-green-500'
+                                                                : 'text-gray-300'
+                                                        "
+                                                    />
                                                     <h4 class="text-sm">
                                                         {{ column.name }}
                                                     </h4>
                                                 </div>
-                                                <CommonToggleSwitch :modelValue="columnVisibility[
-                                                    column.name
-                                                ]
-                                                    " @update:modelValue="
+                                                <CommonToggleSwitch
+                                                    :modelValue="
+                                                        columnVisibility[
+                                                            column.name
+                                                        ]
+                                                    "
+                                                    @update:modelValue="
                                                         toggleColumnVisibility(
                                                             column.name
                                                         )
-                                                        " :disabled="column.name === 'Action'
-                                                            " />
+                                                    "
+                                                    :disabled="
+                                                        column.name === 'Action'
+                                                    "
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -484,46 +577,100 @@ column, index
                             </div>
                         </div>
                     </div>
-                    <CommonDataTable checkbox routeName="employee.lead.index" :showSerialNumber="true" :data="leads"
-                        @update:modelSelection="checkedRows">
-                        <Column v-if="columnVisibility['Lead Name']" field="name" header="Lead Name" :sortable="true" />
+                    <CommonDataTable
+                        checkbox
+                        routeName="employee.lead.index"
+                        :showSerialNumber="true"
+                        :data="leads"
+                        @update:modelSelection="checkedRows"
+                    >
+                        <Column
+                            v-if="columnVisibility['Lead Name']"
+                            field="name"
+                            header="Lead Name"
+                            :sortable="true"
+                        />
 
-                        <Column v-if="columnVisibility['Company']" field="company" header="Company" :sortable="true" />
-                        <Column v-if="columnVisibility['Email']" field="email" header="Email" :sortable="true" />
+                        <Column
+                            v-if="columnVisibility['Company']"
+                            field="company"
+                            header="Company"
+                            :sortable="true"
+                        />
+                        <Column
+                            v-if="columnVisibility['Email']"
+                            field="email"
+                            header="Email"
+                            :sortable="true"
+                        />
 
-                        <Column v-if="columnVisibility['Phone']" field="phone" header="Phone" :sortable="true" />
+                        <Column
+                            v-if="columnVisibility['Phone']"
+                            field="phone"
+                            header="Phone"
+                            :sortable="true"
+                        />
 
-                        <Column v-if="columnVisibility['Status']" header="Status" sortField="status.name"
-                            :sortable="true">
+                        <Column
+                            v-if="columnVisibility['Status']"
+                            header="Status"
+                            sortField="status.name"
+                            :sortable="true"
+                        >
                             <template #body="slotProps">
-                                <Badge class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal" :style="{
-                                    backgroundColor: `#${slotProps.data?.status?.color}30`
-                                }">
+                                <Badge
+                                    class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
+                                    :style="{
+                                        backgroundColor: `#${slotProps.data?.status?.color}30`,
+                                    }"
+                                >
                                     {{ slotProps.data?.status?.name }}
                                 </Badge>
                             </template>
                         </Column>
 
-                        <Column v-if="columnVisibility['Source']" header="Sources" sortField="source.source"
-                            :sortable="true">
+                        <Column
+                            v-if="columnVisibility['Source']"
+                            header="Sources"
+                            sortField="source.source"
+                            :sortable="true"
+                        >
                             <template #body="slotProps">
-                                <CommonBadge :value="slotProps.data?.source?.source" severity="secondary" />
+                                <CommonBadge
+                                    :value="slotProps.data?.source?.source"
+                                    severity="secondary"
+                                />
                             </template>
                         </Column>
 
-                        <Column v-if="columnVisibility['Created']" field="created_at" header="Created"
-                            :sortable="true" />
-                        <Column v-if="columnVisibility['Action']" header="Action" :sortable="false">
+                        <Column
+                            v-if="columnVisibility['Created']"
+                            field="created_at"
+                            header="Created"
+                            :sortable="true"
+                        />
+                        <Column
+                            v-if="columnVisibility['Action']"
+                            header="Action"
+                            :sortable="false"
+                        >
                             <template #body="slotProps">
                                 <div class="flex gap-2">
-                                    <CommonButton type="button" @click="handleEditLead(slotProps?.data)"
-                                        variant="editBtn">
+                                    <CommonButton
+                                        type="button"
+                                        @click="handleEditLead(slotProps?.data)"
+                                        variant="editBtn"
+                                    >
                                         <CommonIcon icon="bi:pencil-square" />
                                     </CommonButton>
 
-                                    <CommonButton @click="
-                                        handleDestroy(slotProps?.data?.id)
-                                        " type="button" variant="deleteBtn">
+                                    <CommonButton
+                                        @click="
+                                            handleDestroy(slotProps?.data?.id)
+                                        "
+                                        type="button"
+                                        variant="deleteBtn"
+                                    >
                                         <CommonIcon icon="bi:trash" />
                                     </CommonButton>
                                 </div>
@@ -534,91 +681,176 @@ column, index
                 <div v-else>Hello world</div>
             </div>
 
-            <CommonModal v-model:visible="showDrawer" position="top" className="w-7xl"
-                :header="isEdit ? 'Update Lead' : 'Create Lead'">
+            <CommonModal
+                v-model:visible="showDrawer"
+                position="top"
+                className="w-7xl"
+                :header="isEdit ? 'Update Lead' : 'Create Lead'"
+            >
                 <div class="grid grid-cols-12 gap-4">
                     <!-- Lead Source -->
                     <div class="col-span-3">
-                        <CommonSelectAdd label="Lead Source" placeholder="source" required
-                            routeName="employee.source.save" inputName="source">
-                            <CommonSelect v-model="form.source" :options="source" optionLabel="name" class="!w-full"
-                                :error="form.errors.source" />
+                        <CommonSelectAdd
+                            label="Lead Source"
+                            placeholder="source"
+                            required
+                            routeName="employee.source.save"
+                            inputName="source"
+                        >
+                            <CommonSelect
+                                v-model="form.source"
+                                :options="source"
+                                optionLabel="name"
+                                class="!w-full"
+                                :error="form.errors.source"
+                            />
                         </CommonSelectAdd>
                     </div>
 
                     <!-- Status -->
                     <div class="col-span-3">
-                        <CommonSelectAdd label="Status" placeholder="name" required routeName="employee.status.save"
-                            inputName="name">
-                            <CommonSelect v-model="form.status" class="!w-full" :options="status" optionLabel="name"
-                                :error="form.errors.status" />
+                        <CommonSelectAdd
+                            label="Status"
+                            placeholder="name"
+                            required
+                            routeName="employee.status.save"
+                            inputName="name"
+                        >
+                            <CommonSelect
+                                v-model="form.status"
+                                class="!w-full"
+                                :options="status"
+                                optionLabel="name"
+                                :error="form.errors.status"
+                            />
                         </CommonSelectAdd>
                     </div>
 
                     <!-- Name -->
                     <div class="col-span-6">
-                        <CommonInput v-model="form.name" label="Name" :error="form.errors.name" required />
+                        <CommonInput
+                            v-model="form.name"
+                            label="Name"
+                            :error="form.errors.name"
+                            required
+                        />
                     </div>
 
                     <!-- Address -->
                     <div class="col-span-12">
-                        <CommonTextarea v-model="form.address" :error="form.errors.address" label="Address" rows="2" />
+                        <CommonTextarea
+                            v-model="form.address"
+                            :error="form.errors.address"
+                            label="Address"
+                            rows="2"
+                        />
                     </div>
 
                     <!-- Position & City -->
                     <div class="col-span-6">
-                        <CommonInput v-model="form.position" label="Position" :error="form.errors.position" />
+                        <CommonInput
+                            v-model="form.position"
+                            label="Position"
+                            :error="form.errors.position"
+                        />
                     </div>
                     <div class="col-span-6">
-                        <CommonInput v-model="form.city" label="City" :error="form.errors.city" />
+                        <CommonInput
+                            v-model="form.city"
+                            label="City"
+                            :error="form.errors.city"
+                        />
                     </div>
 
                     <!-- Email & State -->
                     <div class="col-span-6">
-                        <CommonInput v-model="form.email" label="Email" type="email" :error="form.errors.email"
-                            required />
+                        <CommonInput
+                            v-model="form.email"
+                            label="Email"
+                            type="email"
+                            :error="form.errors.email"
+                            required
+                        />
                     </div>
                     <div class="col-span-6">
-                        <CommonInput v-model="form.state" label="State" :error="form.errors.state" />
+                        <CommonInput
+                            v-model="form.state"
+                            label="State"
+                            :error="form.errors.state"
+                        />
                     </div>
 
                     <!-- Website & Country -->
                     <div class="col-span-6">
-                        <CommonInput v-model="form.website" label="Website" :error="form.errors.website" />
+                        <CommonInput
+                            v-model="form.website"
+                            label="Website"
+                            :error="form.errors.website"
+                        />
                     </div>
                     <div class="col-span-6">
-                        <CommonSelect label="Country" v-model="form.country" :options="countries" optionLabel="name"
-                            :error="form.errors.country" />
+                        <CommonSelect
+                            label="Country"
+                            v-model="form.country"
+                            :options="countries"
+                            optionLabel="name"
+                            :error="form.errors.country"
+                        />
                     </div>
 
                     <!-- Phone & Zip Code -->
                     <div class="col-span-6">
-                        <CommonInput v-model="form.phone" label="Phone" type="number" :error="form.errors.phone" />
+                        <CommonInput
+                            v-model="form.phone"
+                            label="Phone"
+                            type="number"
+                            :error="form.errors.phone"
+                        />
                     </div>
                     <div class="col-span-6">
-                        <CommonInput v-model="form.zipCode" label="Zip Code" type="number"
-                            :error="form.errors.zipCode" />
+                        <CommonInput
+                            v-model="form.zipCode"
+                            label="Zip Code"
+                            type="number"
+                            :error="form.errors.zipCode"
+                        />
                     </div>
 
                     <!-- Lead Value & Company -->
                     <div class="col-span-6">
-                        <CommonInput v-model="form.leadValue" label="Lead Value" type="number"
-                            :error="form.errors.leadValue" />
+                        <CommonInput
+                            v-model="form.leadValue"
+                            label="Lead Value"
+                            type="number"
+                            :error="form.errors.leadValue"
+                        />
                     </div>
                     <div class="col-span-6">
-                        <CommonInput v-model="form.company" label="Company" :error="form.errors.company" />
+                        <CommonInput
+                            v-model="form.company"
+                            label="Company"
+                            :error="form.errors.company"
+                        />
                     </div>
 
                     <!-- Description -->
                     <div class="col-span-12">
-                        <CommonTextarea v-model="form.description" :error="form.errors.description" label="Description"
-                            rows="3" />
+                        <CommonTextarea
+                            v-model="form.description"
+                            :error="form.errors.description"
+                            label="Description"
+                            rows="3"
+                        />
                     </div>
 
                     <!--Date Contacted-->
                     <div v-if="isContactedToday" class="col-span-12">
-                        <CommonDatePicker :showTime="true" label="Date Contacted" v-model="form.dateContacted"
-                            :error="form.errors.dateContacted" />
+                        <CommonDatePicker
+                            :showTime="true"
+                            label="Date Contacted"
+                            v-model="form.dateContacted"
+                            :error="form.errors.dateContacted"
+                        />
                     </div>
                     <div class="col-span-12 flex items-center gap-8">
                         <!-- Public -->
@@ -629,20 +861,33 @@ column, index
 
                         <!-- Contacted Today -->
                         <label class="flex cursor-pointer items-center gap-2">
-                            <CommonCheckbox v-model="form.isDateContacted" :onChange="handleContactedToday" />
+                            <CommonCheckbox
+                                v-model="form.isDateContacted"
+                                :onChange="handleContactedToday"
+                            />
                             <span>Contacted Today</span>
                         </label>
                     </div>
 
                     <!-- Save Button -->
                     <div class="col-span-12 mt-4">
-                        <CommonButton @click="handleSubmit" :processing="form.processing">Save Lead</CommonButton>
+                        <CommonButton
+                            @click="handleSubmit"
+                            :processing="form.processing"
+                            >Save Lead</CommonButton
+                        >
                     </div>
                 </div>
             </CommonModal>
-            <CommonConfirmation v-model="openConfirmation" title="Delete Confirmation"
-                message="Are you sure you want to delete this item? This action cannot be undone." confirmText="Delete"
-                cancelText="Cancel" @confirm="handleDelete" @cancel="handleDestroyCancel" />
+            <CommonConfirmation
+                v-model="openConfirmation"
+                title="Delete Confirmation"
+                message="Are you sure you want to delete this item? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                @confirm="handleDelete"
+                @cancel="handleDestroyCancel"
+            />
         </PanelLayout>
     </AppLayout>
 </template>
