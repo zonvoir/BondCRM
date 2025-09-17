@@ -46,6 +46,9 @@ class LeadRepository
                 })
                 ->orWhereHas('country', function ($countryQuery) use ($search) {
                     $countryQuery->where('name', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('tags', function ($tagQuery) use ($search) {
+                    $tagQuery->where('name', 'like', '%'.$search.'%');
                 });
         });
     }

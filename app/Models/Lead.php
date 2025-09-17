@@ -7,6 +7,7 @@ use App\Models\Setup\Status;
 use App\Traits\CommonTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Lead extends Model
 {
@@ -43,9 +44,18 @@ class Lead extends Model
         'date_contacted' => 'datetime',
     ];
 
+    protected $with = [
+        'tags',
+    ];
+
     public function getCreatedAtAttribute($value): ?string
     {
         return $value ? $this->asDateTime($value)->format($this->getDateFormatSettings()) : null;
+    }
+
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     /**

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Lead;
 use App\Exports\LeadsExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lead\ImportRequest;
+use App\Http\Requests\Lead\LeadBulkActionRequest;
 use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Resources\Lead\LeadResource;
 use App\Imports\LeadsImport;
 use App\Models\Lead;
+use App\Models\Tag;
 use App\Repositories\Lead\LeadRepository;
 use App\Services\Lead\LeadService;
 use Exception;
@@ -25,12 +27,11 @@ class LeadController extends Controller
     {
         $leadsPaginate = $this->leadRepository->getLeadsPaginate($request->all());
         $props = [
-            'mailProviders' => $this->leadService->mapProvider(),
-            'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),
             'status' => $this->leadService->getStatus(),
             'source' => $this->leadService->getSource(),
             'countries' => $this->leadService->geCountries(),
             'leads' => LeadResource::collection($leadsPaginate),
+            'tags' => Tag::query()->pluck('name'),
         ];
 
         return Inertia::render('Lead/Index', $props);
@@ -72,7 +73,7 @@ class LeadController extends Controller
     public function socialSync()
     {
         $props = [
-            'mailProviders' => $this->leadService->mapProvider(),
+            'mailProviders' => $this->leadService->getStatus(),
             'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),
         ];
 
@@ -116,5 +117,34 @@ class LeadController extends Controller
         } catch (Exception $e) {
             return redirect()->route('employee.lead.import')->with('error', $e->getMessage());
         }
+    }
+
+    public function leadDetails(Lead $lead)
+    {
+        $props = [
+
+        ];
+
+        return Inertia::render('Lead/Details', $props);
+    }
+
+    public function bulkAction(LeadBulkActionRequest $request)
+    {
+        $action = $this->leadService->bulkAction($request->validated());
+
+        if ($action['deleted'] > 0 && $action['updated'] > 0) {
+            $message = "{$action['deleted']} leads deleted and {$action['updated']} leads updated successfully.";
+        } elseif ($action['deleted'] > 0) {
+            $message = "{$action['deleted']} leads deleted successfully.";
+        } elseif ($action['updated'] > 0) {
+            $message = "{$action['updated']} leads updated successfully.";
+        } else {
+            return back();
+        }
+
+        return back()->with([
+            'message' => $message,
+            'type' => 'success',
+        ]);
     }
 }

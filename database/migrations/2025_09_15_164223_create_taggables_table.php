@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('open_ai_settings', function (Blueprint $table) {
+        Schema::create('taggables', function (Blueprint $table) {
             $table->id();
-            $table->string('assistant_name');
-            $table->string('assistant_id')->nullable();
-            $table->string('api_key');
-            $table->text('prompt')->nullable();
+            $table->foreignId('tag_id')->constrained()->cascadeOnDelete();
+            $table->morphs('taggable');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('open_ai_settings');
+        Schema::dropIfExists('taggables');
     }
 };

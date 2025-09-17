@@ -2,29 +2,18 @@
 
 namespace App\Services\Lead;
 
-use App\Enums\MailProviderEnum;
 use App\Enums\ScanAlgorithmEnum;
 use App\Models\Country;
 use App\Models\Lead;
 use App\Models\Setup\Sources;
 use App\Models\Setup\Status;
+use App\Models\Tag;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LeadService
 {
-    public function mapProvider(): array
-    {
-        $mailProviderEnum = MailProviderEnum::values();
-
-        return array_map(function ($mailProviderEnum) {
-            return [
-                'name' => ucfirst($mailProviderEnum),
-                'code' => $mailProviderEnum,
-            ];
-        }, $mailProviderEnum);
-    }
-
     public function mapScanAlgorithm(): array
     {
         $scanAlgorithm = ScanAlgorithmEnum::values();
@@ -79,12 +68,21 @@ class LeadService
 
     public function leadUpdateOrCreate(array $data): Model|Lead
     {
-        return Lead::query()->updateOrCreate(
+        $lead = Lead::query()->updateOrCreate(
             [
                 'id' => $data['id'] ?? null,
             ],
             $this->leadMap($data)
         );
+
+        if (! empty($data['tags'])) {
+            $tagIds = collect($data['tags'])->map(function ($tagName) {
+                return Tag::firstOrCreate(['name' => $tagName])->id;
+            })->toArray();
+            $lead->tags()->sync($tagIds);
+        }
+
+        return $lead;
     }
 
     public function leadMap(array $data): array
@@ -108,7 +106,7 @@ class LeadService
             'company' => $data['company'] ?? null,
             'description' => $data['description'] ?? null,
             'date_contacted' => $data['date_contacted'] ?? null,
-            'public' => $data['public'] ?? null,
+            'public' => $data['public'] === 'public',
             'is_date_contacted' => $data['is_date_contacted'] ?? null,
         ];
     }
@@ -142,5 +140,61 @@ class LeadService
         array_unshift($new, $headers);
 
         return array_slice($new, 1);
+    }
+
+    public function bulkAction(array $data): array
+    {
+        $ids = $data['ids'] ?? [];
+        if (empty($ids)) {
+            return ['deleted' => 0, 'updated' => 0];
+        }
+
+        if (! empty($data['is_delete'])) {
+            $deleted = Lead::query()->whereIn('id', $ids)->delete();
+
+            return ['deleted' => $deleted, 'updated' => 0];
+        }
+
+        $updates = [];
+
+        if (array_key_exists('mark_lost', $data) && $data['mark_lost']) {
+            $lostStatusId = Status::query()->where('name', 'Lost')->firstOrFail()->id;
+            $updates['status_id'] = $lostStatusId;
+        }
+
+        if (array_key_exists('status', $data) && ! empty($data['status'])) {
+            $updates['status_id'] = data_get($data, 'status.code');
+        }
+
+        if (array_key_exists('source', $data) && ! empty($data['source']['code'])) {
+            $updates['sources_id'] = data_get($data, 'source.code');
+        }
+
+        if (array_key_exists('type', $data) && ! empty($data['type'])) {
+            $updates['public'] = $data['type'] === 'public';
+        }
+
+        if (array_key_exists('last_contact', $data) && ! empty($data['last_contact'])) {
+            $iso = $data['last_contact'];
+            $updates['date_contacted'] = is_null($iso)
+                ? null
+                : Carbon::parse($iso)->timezone(config('app.timezone'))->toDateTimeString();
+        }
+
+        if (! empty($updates)) {
+            $updated = Lead::query()->whereIn('id', $ids)->update($updates);
+        }
+
+        if (! empty($data['tags'])) {
+            $tagIds = collect($data['tags'])->map(function ($tagName) {
+                return Tag::firstOrCreate(['name' => $tagName])->id;
+            })->toArray();
+
+            Lead::query()->whereIn('id', $ids)->get()->each(function ($lead) use ($tagIds) {
+                $lead->tags()->sync($tagIds);
+            });
+        }
+
+        return ['deleted' => 0, 'updated' => $updated ?? 0];
     }
 }
