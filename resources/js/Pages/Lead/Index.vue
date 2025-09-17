@@ -22,6 +22,7 @@ import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
 import { useSelectMapper } from '@/Composables/useSelectMapper.js';
 import { useDebounce } from '@vueuse/core';
 import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
+import CommonCrousel from '@/Components/Common/CommonCrousel.vue';
 
 const props = defineProps({
     mailProviders: {
@@ -273,6 +274,43 @@ const leadColumns = [
     { name: 'Created' },
     { name: 'Action' },
 ];
+const responsiveOptions = [
+    {
+        breakpoint: '2100px',
+        numVisible: 8,
+        numScroll: 1
+    },
+    {
+        breakpoint: '1920px',
+        numVisible: 6,
+        numScroll: 1
+    },
+    {
+        breakpoint: '1440px',
+        numVisible: 5,
+        numScroll: 1
+    },
+    {
+        breakpoint: '1366px',
+        numVisible: 4,
+        numScroll: 1
+    },
+    {
+        breakpoint: '1280px',
+        numVisible: 4,
+        numScroll: 1
+    },
+    {
+        breakpoint: '768px',
+        numVisible: 3,
+        numScroll: 1
+    },
+    {
+        breakpoint: '412px',
+        numVisible: 1,
+        numScroll: 1
+    }
+];
 </script>
 
 <template>
@@ -281,17 +319,55 @@ const leadColumns = [
             <div class="rounded-md bg-white p-5 shadow dark:bg-gray-800">
                 <div>
                     <!-- filters  -->
-                    <div class="flex flex-wrap gap-2 gap-y-5 py-5">
-                        <div v-for="(s, index) in status" :key="index">
+                    <div class="flex flex-wrap gap-3  gap-y-5 pb-10">
+
+                        <!-- <div v-for="(s, index) in status" :key="index">
                             <Link :href="filterStatus(s?.code)">
-                            <Badge class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs text-gray-700 font-normal"
-                                 :style="{
-                                    backgroundColor: `#${s.color}30`
+                            <div class="max-w-fit cursor-pointer rounded-md flex px-3 py-2 items-center gap-2 text-xs text-gray-700 font-normal"
+                                :style="{
+                                    backgroundColor: '#' + s.color + '10'
                                 }">
-                                {{ s?.leads_count }} {{ s.name }}
-                            </Badge>
+                                <span
+                                    class="p-2 rounded-full px-3 text-base font-semibold flex items-center justify-center h-8 w-8"
+                                    :style="{
+                                        backgroundColor: '#' + s.color + '30'
+                                    }">
+                                    {{ s?.leads_count }}
+                                </span>
+                                <span class="text-sm font-medium">{{ s.name }}</span>
+                            </div>
                             </Link>
-                        </div>
+                        </div> -->
+                        <CommonCrousel :value="status" :responsive-options="responsiveOptions" :showIndicators="false"
+                            :pt="{
+                                pcNextButton: {
+                                    root: {
+                                        class: '!bg-gray-200 !text-dark !h-7 !w-7'
+                                    }
+                                },
+                                pcPrevButton: {
+                                    root: {
+                                        class: '!bg-gray-200 !text-dark !h-7 !w-7'
+                                    }
+                                },
+                            }" :num-visible="6" :touchSwipe="true" :mouseDrag="true">
+                            <template #item="{ data: s }">
+                                <Link :href="filterStatus(s.code)">
+                                <div class=" cursor-pointer ml-3 rounded-md flex px-2 py-1 items-center gap-2
+               text-xs text-gray-700 font-normal" :style="{ backgroundColor: `#${s.color}10` }">
+                                    <span
+                                        class="p-2 rounded-full px-3 text-sm font-semibold flex items-center justify-center h-6 w-6"
+                                        :style="{ backgroundColor: `#${s.color}30` }">
+                                        {{ s.leads_count }}
+                                    </span>
+                                    <span class="text-xs font-medium text-nowrap">
+                                        {{ s.name }}
+                                    </span>
+                                </div>
+                                </Link>
+                            </template>
+                        </CommonCrousel>
+
                     </div>
                 </div>
                 <div class="flex items-center justify-between border-b pb-4">
@@ -322,23 +398,14 @@ const leadColumns = [
 
                 <div v-if="selectedGridOption === 'list'">
                     <div class="flex justify-between border-b pb-4">
-                        <div
-                            class="flex items-center justify-between gap-2 py-4"
-                        >
-                            <div
-                                class="dark:bg-dark flex items-center justify-center gap-2 bg-white"
-                            >
+                        <div class="flex items-center justify-between gap-2 py-4">
+                            <div class="dark:bg-dark flex items-center justify-center gap-2 bg-white">
                                 <div
-                                    class="transitions-colors cursor-pointer rounded-md border border-transparent bg-gray-100 p-2 text-gray-700 ring-offset-1 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-indigo-600 active:text-gray-300"
-                                >
-                                    <CommonIcon
-                                        @click="handleSortBy"
-                                        :icon="
-                                            selectedSortOption === 'asc'
-                                                ? 'fa7-solid:arrow-up-wide-short'
-                                                : 'fa7-solid:arrow-down-short-wide'
-                                        "
-                                    />
+                                    class="transitions-colors cursor-pointer rounded-md border border-transparent bg-gray-100 p-2 text-gray-700 ring-offset-1 hover:bg-gray-200 focus-visible:ring-2 focus-visible:ring-indigo-600 active:text-gray-300">
+                                    <CommonIcon @click="handleSortBy" :icon="selectedSortOption === 'asc'
+                                        ? 'fa7-solid:arrow-up-wide-short'
+                                        : 'fa7-solid:arrow-down-short-wide'
+                                        " />
                                 </div>
                             </div>
                             <div class="dark:bg-dark flex items-center justify-center gap-2 bg-white">
@@ -417,19 +484,9 @@ column, index
                             </div>
                         </div>
                     </div>
-                    <CommonDataTable
-                        checkbox
-                        routeName="employee.lead.index"
-                        :showSerialNumber="true"
-                        :data="leads"
-                        @update:modelSelection="checkedRows"
-                    >
-                        <Column
-                            v-if="columnVisibility['Lead Name']"
-                            field="name"
-                            header="Lead Name"
-                            :sortable="true"
-                        />
+                    <CommonDataTable checkbox routeName="employee.lead.index" :showSerialNumber="true" :data="leads"
+                        @update:modelSelection="checkedRows">
+                        <Column v-if="columnVisibility['Lead Name']" field="name" header="Lead Name" :sortable="true" />
 
                         <Column v-if="columnVisibility['Company']" field="company" header="Company" :sortable="true" />
                         <Column v-if="columnVisibility['Email']" field="email" header="Email" :sortable="true" />
@@ -482,39 +539,19 @@ column, index
                 <div class="grid grid-cols-12 gap-4">
                     <!-- Lead Source -->
                     <div class="col-span-3">
-                        <CommonSelectAdd
-                            label="Lead Source"
-                            placeholder="source"
-                            required
-                            routeName="employee.source.save"
-                            inputName="source"
-                        >
-                            <CommonSelect
-                                v-model="form.source"
-                                :options="source"
-                                optionLabel="name"
-                                class="!w-full"
-                                :error="form.errors.source"
-                            />
+                        <CommonSelectAdd label="Lead Source" placeholder="source" required
+                            routeName="employee.source.save" inputName="source">
+                            <CommonSelect v-model="form.source" :options="source" optionLabel="name" class="!w-full"
+                                :error="form.errors.source" />
                         </CommonSelectAdd>
                     </div>
 
                     <!-- Status -->
                     <div class="col-span-3">
-                        <CommonSelectAdd
-                            label="Status"
-                            placeholder="name"
-                            required
-                            routeName="employee.status.save"
-                            inputName="name"
-                        >
-                            <CommonSelect
-                                v-model="form.status"
-                                class="!w-full"
-                                :options="status"
-                                optionLabel="name"
-                                :error="form.errors.status"
-                            />
+                        <CommonSelectAdd label="Status" placeholder="name" required routeName="employee.status.save"
+                            inputName="name">
+                            <CommonSelect v-model="form.status" class="!w-full" :options="status" optionLabel="name"
+                                :error="form.errors.status" />
                         </CommonSelectAdd>
                     </div>
 
