@@ -22,6 +22,7 @@ import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
 import { useSelectMapper } from '@/Composables/useSelectMapper.js';
 import { useDebounce } from '@vueuse/core';
 import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
+import CommonCrousel from '@/Components/Common/CommonCrousel.vue';
 import CommonMultiTagInput from '@/Components/Common/CommonMultiTagInput.vue';
 
 const props = defineProps({
@@ -331,6 +332,43 @@ const leadColumns = [
     { name: 'Created' },
     { name: 'Action' },
 ];
+const responsiveOptions = [
+    {
+        breakpoint: '2100px',
+        numVisible: 8,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1920px',
+        numVisible: 6,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1440px',
+        numVisible: 5,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1366px',
+        numVisible: 4,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1280px',
+        numVisible: 4,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '768px',
+        numVisible: 3,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '412px',
+        numVisible: 1,
+        numScroll: 1,
+    },
+];
 </script>
 
 <template>
@@ -366,7 +404,7 @@ const leadColumns = [
                                 v-model="searchQuery"
                                 icon="heroicons:magnifying-glass"
                                 placeholder="search"
-                                InputClass="!py-2 "
+                                InputClass="!py-1 "
                                 class="w-full"
                             />
                         </div>
@@ -379,7 +417,7 @@ const leadColumns = [
                                 v-tooltip="'Reset filters'"
                             >
                                 <CommonIcon
-                                    class="h-5 w-5"
+                                    class="h-4 w-4"
                                     icon="qlementine-icons:funnel-crossed-16"
                                 />
                             </CommonButton>
@@ -397,7 +435,7 @@ const leadColumns = [
                         </div>
                         <CommonButton
                             @click="handleDrawerOpen"
-                            class="h-fit text-sm"
+                            class="h-fit !py-2 text-sm"
                         >
                             <CommonIcon icon="heroicons:plus" class="h-4 w-4" />
                             Add Lead
@@ -635,8 +673,7 @@ const leadColumns = [
                                 <Badge
                                     class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
                                     :style="{
-                                        backgroundColor:
-                                            '#' + slotProps.data?.status?.color,
+                                        backgroundColor: `#${slotProps.data?.status?.color}30`,
                                     }"
                                 >
                                     {{ slotProps.data?.status?.name }}
@@ -674,7 +711,7 @@ const leadColumns = [
                                     <CommonButton
                                         type="button"
                                         @click="handleEditLead(slotProps?.data)"
-                                        variant="secondary"
+                                        variant="editBtn"
                                     >
                                         <CommonIcon icon="bi:pencil-square" />
                                     </CommonButton>
@@ -684,7 +721,7 @@ const leadColumns = [
                                             handleDestroy(slotProps?.data?.id)
                                         "
                                         type="button"
-                                        variant="secondary"
+                                        variant="deleteBtn"
                                     >
                                         <CommonIcon icon="bi:trash" />
                                     </CommonButton>

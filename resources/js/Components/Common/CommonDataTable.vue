@@ -116,7 +116,7 @@ const buildPagination = () => {
 
 <template>
     <div
-        class="w-full rounded-md border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900"
+        class="w-full rounded-md bg-white dark:border-gray-700 dark:bg-gray-900"
     >
         <div class="overflow-x-auto rounded-t-md">
             <div class="card w-full">
@@ -132,12 +132,13 @@ const buildPagination = () => {
                     :pt="{
                         column: {
                             headerCell: {
-                                class: [
-                                    '!bg-indigo-50 !text-indigo-700 text-base dark:!bg-indigo-900/30 dark:!text-indigo-200 cursor-pointer !py-2',
-                                ],
+                                class: ['text-sm !bg-gray-100 !text-gray-700'],
                             },
                             bodyCell: {
-                                class: 'cursor-pointer !whitespace-nowrap',
+                                class: 'cursor-pointer !whitespace-nowrap !text-xs',
+                            },
+                            datatable: {
+                                class: '!border-none',
                             },
                         },
                     }"
@@ -181,16 +182,16 @@ const buildPagination = () => {
                     class="mx-3 flex flex-col flex-wrap gap-6 py-4 lg:flex-row lg:items-center lg:justify-between"
                 >
                     <!-- Items per page selector -->
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
                         <label
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                            class="text-xs font-medium text-gray-700 dark:text-gray-300"
                         >
                             Show
                         </label>
                         <select
                             @change="handlePageTotal"
                             v-model="currentPerPage"
-                            class="rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-gray-500 dark:focus:border-blue-400"
+                            class="rounded-md border border-gray-300 bg-white px-5 py-2 text-xs transition-all duration-200 hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-gray-500 dark:focus:border-blue-400"
                         >
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -198,7 +199,7 @@ const buildPagination = () => {
                             <option value="100">100</option>
                         </select>
                         <span
-                            class="text-sm font-medium tracking-wide text-gray-600 dark:text-gray-400"
+                            class="text-xs font-medium tracking-wide text-gray-600 dark:text-gray-400"
                         >
                             Showing {{ data?.meta?.from ?? data?.from }} –
                             {{ data?.meta?.to ?? data?.to }} of
@@ -229,14 +230,14 @@ const buildPagination = () => {
                         >
                             <span
                                 v-if="page === '...'"
-                                class="px-3 py-2 text-sm text-gray-400"
+                                class="px-2 py-1 text-sm text-gray-400"
                                 >…</span
                             >
 
                             <Link
                                 v-else
                                 :href="updatedUrlParams({ page })"
-                                class="flex h-10 min-w-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-all duration-200"
+                                class="flex h-8 min-w-8 items-center justify-center rounded-lg border px-2 text-sm font-medium transition-all duration-200"
                                 :class="
                                     page === buildPagination().currentPage
                                         ? 'border-blue-500 bg-blue-50 text-blue-600 dark:border-blue-400 dark:bg-blue-900/20 dark:text-blue-400'

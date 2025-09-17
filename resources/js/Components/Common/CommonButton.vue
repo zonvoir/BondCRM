@@ -69,6 +69,10 @@ const variants = {
     transparent:
         'bg-transparent text-gray-700 border border-transparent focus-visible:ring-2 focus-visible:ring-indigo-700 ring-offset-1 active:text-gray-300',
     danger: 'bg-transparent text-red-700 border border-red-700 hover:ring-red-600 hover:text-red-600 focus-visible:ring-2 focus-visible:ring-red-700 ring-offset-1',
+    editBtn:
+        'bg-[#1abc9c1a] text-[#1ABC9C] hover:bg-[#1ABC9C] hover:text-white transitions-colors',
+    deleteBtn:
+        'bg-[#FF669210] hover:bg-[#FF6692] hover:text-white transitions-colors text-[#FF6692]',
 };
 
 const variantClass = computed(() => {
