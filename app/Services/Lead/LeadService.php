@@ -194,11 +194,9 @@ class LeadService
                 : Carbon::parse($iso)->timezone(config('app.timezone'))->toDateTimeString();
         }
 
-        if (empty($updates)) {
-            return ['deleted' => 0, 'updated' => 0];
+        if (! empty($updates)) {
+            $updated = Lead::query()->whereIn('id', $ids)->update($updates);
         }
-
-        $updated = Lead::query()->whereIn('id', $ids)->update($updates);
 
         if (! empty($data['tags'])) {
             $tagIds = collect($data['tags'])->map(function ($tagName) {
@@ -210,6 +208,6 @@ class LeadService
             });
         }
 
-        return ['deleted' => 0, 'updated' => $updated];
+        return ['deleted' => 0, 'updated' => $updated ?? 0];
     }
 }

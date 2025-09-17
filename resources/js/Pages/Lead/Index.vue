@@ -46,6 +46,9 @@ const props = defineProps({
     leads: {
         type: Object,
     },
+    tags: {
+        type: Array,
+    },
 });
 
 const form = useForm({
@@ -757,6 +760,7 @@ const leadColumns = [
 
                     <div class="col-span-12">
                         <CommonMultiTagInput
+                            :suggestionOptions="tags"
                             labelClass="mb-1"
                             v-model="form.tags"
                             label="Tags"
@@ -1018,6 +1022,7 @@ const leadColumns = [
 
                             <div class="col-span-12">
                                 <CommonMultiTagInput
+                                    :suggestionOptions="tags"
                                     labelClass="mb-1"
                                     v-model="bulkForm.tags"
                                     label="Tags"

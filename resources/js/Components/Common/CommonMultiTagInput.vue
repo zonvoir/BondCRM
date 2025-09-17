@@ -9,7 +9,7 @@ const props = defineProps({
     labelClass: { type: String, default: '' },
     suggestionOptions: {
         type: Array,
-        default: () => ['Location', 'Address', 'Mobile'],
+        default: () => [],
     },
     modelValue: { type: Array, default: () => [] },
 });

@@ -10,6 +10,7 @@ use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Resources\Lead\LeadResource;
 use App\Imports\LeadsImport;
 use App\Models\Lead;
+use App\Models\Tag;
 use App\Repositories\Lead\LeadRepository;
 use App\Services\Lead\LeadService;
 use Exception;
@@ -32,6 +33,7 @@ class LeadController extends Controller
             'source' => $this->leadService->getSource(),
             'countries' => $this->leadService->geCountries(),
             'leads' => LeadResource::collection($leadsPaginate),
+            'tags' => Tag::query()->pluck('name'),
         ];
 
         return Inertia::render('Lead/Index', $props);
