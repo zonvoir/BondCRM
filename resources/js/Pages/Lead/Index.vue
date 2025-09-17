@@ -25,12 +25,6 @@ import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
 import CommonMultiTagInput from '@/Components/Common/CommonMultiTagInput.vue';
 
 const props = defineProps({
-    mailProviders: {
-        type: Array,
-    },
-    scanAlgorithm: {
-        type: Array,
-    },
     status: {
         type: Array,
         default: () => [],

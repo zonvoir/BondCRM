@@ -27,8 +27,6 @@ class LeadController extends Controller
     {
         $leadsPaginate = $this->leadRepository->getLeadsPaginate($request->all());
         $props = [
-            'mailProviders' => $this->leadService->mapProvider(),
-            'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),
             'status' => $this->leadService->getStatus(),
             'source' => $this->leadService->getSource(),
             'countries' => $this->leadService->geCountries(),
@@ -75,7 +73,7 @@ class LeadController extends Controller
     public function socialSync()
     {
         $props = [
-            'mailProviders' => $this->leadService->mapProvider(),
+            'mailProviders' => $this->leadService->getStatus(),
             'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),
         ];
 
