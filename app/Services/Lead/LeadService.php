@@ -8,8 +8,12 @@ use App\Models\Lead;
 use App\Models\Setup\Sources;
 use App\Models\Setup\Status;
 use App\Models\Tag;
+use App\Services\Mails\GmailService;
+use App\Services\Mails\GraphMicrosoftService;
+use App\Services\Mails\ImapFetcher;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LeadService
@@ -196,5 +200,52 @@ class LeadService
         }
 
         return ['deleted' => 0, 'updated' => $updated ?? 0];
+    }
+
+    public function socialSync(array $data)
+    {
+        if (array_key_exists('provider', $data) && array_key_exists('algorithm', $data)) {
+            $startDate = $data['start_date'] ?? null;
+            $endDate = $data['end_date'] ?? null;
+            $algorithm = data_get($data, 'algorithm.code');
+            $provider = data_get($data, 'provider.name');
+            $providerCode = data_get($data, 'provider.code');
+
+            $auth = auth()->user();
+
+            $type = Str::of($provider)->lower()->contains('webmail') ? 'webmail' : 'applemail';
+
+            $service = match ($provider) {
+                'Gmail' => new GmailService($auth),
+                'Outlook' => new GraphMicrosoftService($auth),
+                'Apple Mail', 'Webmail' => new ImapFetcher($auth),
+            };
+
+            $result = match ($provider) {
+                'Gmail' => $service->getFolderMessages('INBOX', 10, '', '', '', $startDate, $endDate),
+                'Outlook' => $service->getPaginatedInboxMessages(
+                    top: 10,
+                    skip: 0,
+                    search: null,
+                    folder: 'INBOX',
+                ),
+                'Apple Mail', 'Webmail' => $service->fetch('INBOX', $type),
+                default => null,
+            };
+
+            $nextPageToken = $result['nextPageToken'] ?? null;
+            if (! empty($result['@odata.nextLink'])) {
+                $query = parse_url($result['@odata.nextLink'], PHP_URL_QUERY);
+                parse_str($query, $parsed);
+                $nextPageToken = $parsed['$skip'] ?? $parsed['$skiptoken'] ?? null;
+            }
+
+            return [
+                'pageToken' => $nextPageToken,
+            ];
+
+        }
+
+        return [];
     }
 }

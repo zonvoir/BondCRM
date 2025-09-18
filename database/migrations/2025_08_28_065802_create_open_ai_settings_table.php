@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('open_ai_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('assistant_name');
-            $table->string('assistant_id')->nullable();
             $table->string('api_key');
             $table->text('prompt')->nullable();
             $table->timestamps();

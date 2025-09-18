@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Lead\ImportRequest;
 use App\Http\Requests\Lead\LeadBulkActionRequest;
 use App\Http\Requests\Lead\LeadRequest;
+use App\Http\Requests\Lead\SocialSyncRequest;
 use App\Http\Resources\Lead\LeadResource;
 use App\Imports\LeadsImport;
 use App\Models\Lead;
@@ -27,6 +28,7 @@ class LeadController extends Controller
     {
         $leadsPaginate = $this->leadRepository->getLeadsPaginate($request->all());
         $props = [
+            'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),
             'status' => $this->leadService->getStatus(),
             'source' => $this->leadService->getSource(),
             'countries' => $this->leadService->geCountries(),
@@ -45,6 +47,11 @@ class LeadController extends Controller
             'message' => 'Save successfully',
             'type' => 'success',
         ]);
+    }
+
+    public function socialSync(SocialSyncRequest $request)
+    {
+        $this->leadService->socialSync($request->validated());
     }
 
     public function export(Request $request, $type)
@@ -68,16 +75,6 @@ class LeadController extends Controller
                 ExcelFormat::XLSX
             ),
         };
-    }
-
-    public function socialSync()
-    {
-        $props = [
-            'mailProviders' => $this->leadService->getStatus(),
-            'scanAlgorithm' => $this->leadService->mapScanAlgorithm(),
-        ];
-
-        return Inertia::render('Lead/SocialSync', $props);
     }
 
     public function destroyLead(Lead $lead)

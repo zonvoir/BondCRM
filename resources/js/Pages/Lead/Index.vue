@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { Link, router, useForm } from '@inertiajs/vue3';
+import { useDebounce } from '@vueuse/core';
 import PanelLayout from '@/Layouts/PanelLayout.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import CommonButton from '@/Components/Common/CommonButton.vue';
@@ -14,17 +15,20 @@ import CommonDropDown from '@/Components/Common/CommonDropDown.vue';
 import CommonPopover from '@/Components/Common/CommonPopover.vue';
 import CommonToggleSwitch from '@/Components/Common/CommonToggleSwitch.vue';
 import CommonSelectButton from '@/Components/Common/CommonSelectButton.vue';
-import CommonTextarea from '@/Components/Common/CommonTextarea.vue';
 import CommonDatePicker from '@/Components/Common/CommonDatePicker.vue';
 import CommonCheckbox from '@/Components/Common/CommonCheckbox.vue';
 import CommonBadge from '@/Components/Common/CommonBadge.vue';
 import CommonConfirmation from '@/Components/Common/CommonConfirmation.vue';
-import { useSelectMapper } from '@/Composables/useSelectMapper.js';
-import { useDebounce } from '@vueuse/core';
-import CommonSelectAdd from '@/Components/Common/CommonSelectAdd.vue';
 import CommonMultiTagInput from '@/Components/Common/CommonMultiTagInput.vue';
+import CommonDrawer from '@/Components/Common/CommonDrawer.vue';
+import LeadCreate from '@/Pages/Lead/Partials/LeadCreate.vue';
+import SocialSync from '@/Pages/Lead/Partials/SocialSync.vue';
 
 const props = defineProps({
+    scanAlgorithm: {
+        type: Array,
+        default: () => [],
+    },
     status: {
         type: Array,
         default: () => [],
@@ -45,29 +49,6 @@ const props = defineProps({
     },
 });
 
-const form = useForm({
-    id: null,
-    name: '',
-    tags: null,
-    source: '',
-    status: '',
-    address: '',
-    position: '',
-    city: '',
-    email: '',
-    state: '',
-    website: '',
-    country: '',
-    phone: '',
-    zipCode: '',
-    leadValue: '',
-    company: '',
-    description: '',
-    dateContacted: '',
-    public: null,
-    isDateContacted: null,
-});
-
 const bulkForm = useForm({
     ids: null,
     tags: null,
@@ -84,11 +65,12 @@ const op = ref();
 const columns = ref();
 const exportDropdownRef = ref();
 const showLeadModal = ref(false);
+const editLead = ref(null);
+const isEdit = ref(false);
+const showSyncModal = ref(false);
 const showBulkModal = ref(false);
-const isContactedToday = ref(false);
 const deleteId = ref(null);
 const openConfirmation = ref(false);
-const isEdit = ref(false);
 const selectedGridOption = ref('list');
 const selectedSortOption = ref(params?.sort || 'desc');
 const searchQuery = ref(params?.search || '');
@@ -107,14 +89,20 @@ const columnVisibility = ref({
 });
 
 const handleDrawerOpen = () => {
-    form.reset();
     showLeadModal.value = true;
 };
 
 const handleDrawerClose = () => {
-    form.reset();
-    isEdit.value = false;
     showLeadModal.value = false;
+    isEdit.value = false;
+    editLead.value = null;
+};
+const handleSyncDrawerOpen = () => {
+    showSyncModal.value = true;
+};
+
+const handleSyncClose = () => {
+    showSyncModal.value = false;
 };
 
 const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -148,20 +136,6 @@ const toggleColumnVisibility = columnName => {
     columnVisibility.value[columnName] = !columnVisibility.value[columnName];
 };
 
-const handleContactedToday = value => {
-    form.isDateContacted = value;
-    form.dateContacted = value === false ? null : form.dateContacted;
-    isContactedToday.value = value;
-};
-
-const handleSubmit = () => {
-    form.post(route('employee.lead.save'), {
-        onSuccess: () => {
-            handleDrawerClose();
-        },
-    });
-};
-
 const handleDestroy = id => {
     deleteId.value = id;
     openConfirmation.value = true;
@@ -187,34 +161,9 @@ const handleDelete = () => {
 };
 
 const handleEditLead = lead => {
-    handleDrawerOpen();
     isEdit.value = true;
-    const { mappedData: mappedCountry } = useSelectMapper(lead?.country, false);
-    const { mappedData: mappedStatus } = useSelectMapper(lead?.status, false);
-    const { mappedData: mappedSource } = useSelectMapper(lead?.source, false, {
-        nameField: 'source',
-        codeField: 'id',
-    });
-    form.id = lead?.id;
-    form.source = mappedSource?.value;
-    form.status = mappedStatus?.value;
-    form.name = lead?.name;
-    form.tags = lead?.tags;
-    form.address = lead?.address;
-    form.position = lead?.position;
-    form.city = lead?.city;
-    form.email = lead?.email;
-    form.state = lead?.state;
-    form.website = lead?.website;
-    form.country = mappedCountry;
-    form.phone = lead?.phone;
-    form.zipCode = lead?.zip_code;
-    form.leadValue = lead?.lead_value;
-    form.description = lead?.description;
-    form.public = lead?.public === true ? 'public' : 'private';
-    form.isDateContacted = lead?.is_date_contacted;
-    form.dateContacted = lead?.date_contacted;
-    isContactedToday.value = lead?.is_date_contacted;
+    editLead.value = lead;
+    handleDrawerOpen();
 };
 
 const updateSortInURL = sortValue => {
@@ -288,7 +237,7 @@ const resetBulkForm = () => {
 };
 
 const handleRowClick = e => {
-    router.visit(route('employee.lead.details', { lead: e.data?.id }));
+    // router.visit(route('employee.lead.details', { lead: e.data?.id }));
 };
 
 const viewOptions = [
@@ -331,6 +280,43 @@ const leadColumns = [
     { name: 'Created' },
     { name: 'Action' },
 ];
+const responsiveOptions = [
+    {
+        breakpoint: '2100px',
+        numVisible: 8,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1920px',
+        numVisible: 6,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1440px',
+        numVisible: 5,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1366px',
+        numVisible: 4,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1280px',
+        numVisible: 4,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '768px',
+        numVisible: 3,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '412px',
+        numVisible: 1,
+        numScroll: 1,
+    },
+];
 </script>
 
 <template>
@@ -366,7 +352,7 @@ const leadColumns = [
                                 v-model="searchQuery"
                                 icon="heroicons:magnifying-glass"
                                 placeholder="search"
-                                InputClass="!py-2 "
+                                InputClass="!py-1 "
                                 class="w-full"
                             />
                         </div>
@@ -379,7 +365,7 @@ const leadColumns = [
                                 v-tooltip="'Reset filters'"
                             >
                                 <CommonIcon
-                                    class="h-5 w-5"
+                                    class="h-4 w-4"
                                     icon="qlementine-icons:funnel-crossed-16"
                                 />
                             </CommonButton>
@@ -396,8 +382,18 @@ const leadColumns = [
                             />
                         </div>
                         <CommonButton
+                            variant="gray"
+                            @click="handleSyncDrawerOpen"
+                            class="h-fit !py-2 text-sm"
+                        >
+                            <CommonIcon
+                                icon="material-symbols:bigtop-updates"
+                                class="h-4 w-4"
+                            />
+                        </CommonButton>
+                        <CommonButton
                             @click="handleDrawerOpen"
-                            class="h-fit text-sm"
+                            class="h-fit !py-2 text-sm"
                         >
                             <CommonIcon icon="heroicons:plus" class="h-4 w-4" />
                             Add Lead
@@ -635,8 +631,7 @@ const leadColumns = [
                                 <Badge
                                     class="max-w-fit cursor-pointer rounded-md p-2 px-2 text-xs font-normal"
                                     :style="{
-                                        backgroundColor:
-                                            '#' + slotProps.data?.status?.color,
+                                        backgroundColor: `#${slotProps.data?.status?.color}30`,
                                     }"
                                 >
                                     {{ slotProps.data?.status?.name }}
@@ -674,7 +669,7 @@ const leadColumns = [
                                     <CommonButton
                                         type="button"
                                         @click="handleEditLead(slotProps?.data)"
-                                        variant="secondary"
+                                        variant="editBtn"
                                     >
                                         <CommonIcon icon="bi:pencil-square" />
                                     </CommonButton>
@@ -684,7 +679,7 @@ const leadColumns = [
                                             handleDestroy(slotProps?.data?.id)
                                         "
                                         type="button"
-                                        variant="secondary"
+                                        variant="deleteBtn"
                                     >
                                         <CommonIcon icon="bi:trash" />
                                     </CommonButton>
@@ -697,236 +692,34 @@ const leadColumns = [
             </div>
 
             <CommonModal
+                @afterHide="handleDrawerClose"
                 v-model:visible="showLeadModal"
                 position="top"
                 className="w-5xl"
                 :header="isEdit ? 'Update Lead' : 'Create Lead'"
             >
-                <div class="grid grid-cols-12 gap-4">
-                    <!-- Lead Source -->
-                    <div class="col-span-3">
-                        <CommonSelectAdd
-                            label="Lead Source"
-                            placeholder="source"
-                            required
-                            routeName="employee.source.save"
-                            inputName="source"
-                        >
-                            <CommonSelect
-                                v-model="form.source"
-                                :options="source"
-                                optionLabel="name"
-                                class="!w-full"
-                                :error="form.errors.source"
-                            />
-                        </CommonSelectAdd>
-                    </div>
-
-                    <!-- Status -->
-                    <div class="col-span-3">
-                        <CommonSelectAdd
-                            label="Status"
-                            placeholder="name"
-                            required
-                            routeName="employee.status.save"
-                            inputName="name"
-                        >
-                            <CommonSelect
-                                v-model="form.status"
-                                class="!w-full"
-                                :options="status"
-                                optionLabel="name"
-                                :error="form.errors.status"
-                            />
-                        </CommonSelectAdd>
-                    </div>
-
-                    <!-- Name -->
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.name"
-                            label="Name"
-                            :error="form.errors.name"
-                            placeholder="Name"
-                            required
-                        />
-                    </div>
-
-                    <div class="col-span-12">
-                        <CommonMultiTagInput
-                            :suggestionOptions="tags"
-                            labelClass="mb-1"
-                            v-model="form.tags"
-                            label="Tags"
-                        />
-                    </div>
-
-                    <!-- Address -->
-                    <div class="col-span-12">
-                        <CommonTextarea
-                            v-model="form.address"
-                            :error="form.errors.address"
-                            label="Address"
-                            rows="2"
-                        />
-                    </div>
-
-                    <!-- Position & City -->
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.position"
-                            label="Position"
-                            :error="form.errors.position"
-                        />
-                    </div>
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.city"
-                            label="City"
-                            :error="form.errors.city"
-                        />
-                    </div>
-
-                    <!-- Email & State -->
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.email"
-                            label="Email"
-                            type="email"
-                            :error="form.errors.email"
-                            required
-                        />
-                    </div>
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.state"
-                            label="State"
-                            :error="form.errors.state"
-                        />
-                    </div>
-
-                    <!-- Website & Country -->
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.website"
-                            label="Website"
-                            :error="form.errors.website"
-                        />
-                    </div>
-                    <div class="col-span-6">
-                        <CommonSelect
-                            label="Country"
-                            v-model="form.country"
-                            :options="countries"
-                            optionLabel="name"
-                            :error="form.errors.country"
-                        />
-                    </div>
-
-                    <!-- Phone & Zip Code -->
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.phone"
-                            label="Phone"
-                            type="number"
-                            :error="form.errors.phone"
-                        />
-                    </div>
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.zipCode"
-                            label="Zip Code"
-                            type="number"
-                            :error="form.errors.zipCode"
-                        />
-                    </div>
-
-                    <!-- Lead Value & Company -->
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.leadValue"
-                            label="Lead Value"
-                            type="number"
-                            :error="form.errors.leadValue"
-                        />
-                    </div>
-                    <div class="col-span-6">
-                        <CommonInput
-                            v-model="form.company"
-                            label="Company"
-                            :error="form.errors.company"
-                        />
-                    </div>
-
-                    <!-- Description -->
-                    <div class="col-span-12">
-                        <CommonTextarea
-                            v-model="form.description"
-                            :error="form.errors.description"
-                            label="Description"
-                            rows="3"
-                        />
-                    </div>
-
-                    <!--Date Contacted-->
-                    <div v-if="isContactedToday" class="col-span-12">
-                        <CommonDatePicker
-                            :showTime="true"
-                            label="Date Contacted"
-                            v-model="form.dateContacted"
-                            :error="form.errors.dateContacted"
-                        />
-                    </div>
-                    <div class="col-span-12 flex items-center gap-8">
-                        <!-- Public -->
-                        <div class="flex flex-row gap-2">
-                            <label
-                                class="flex cursor-pointer items-center gap-2"
-                            >
-                                <input
-                                    type="radio"
-                                    name="bulk-visibility"
-                                    id="bulk-public"
-                                    value="public"
-                                    v-model="form.public"
-                                />
-                                <span>Public</span>
-                            </label>
-
-                            <label
-                                class="flex cursor-pointer items-center gap-2"
-                            >
-                                <input
-                                    type="radio"
-                                    name="bulk-visibility"
-                                    id="bulk-private"
-                                    value="private"
-                                    v-model="form.public"
-                                />
-                                <span>Private</span>
-                            </label>
-                        </div>
-
-                        <!-- Contacted Today -->
-                        <label class="flex cursor-pointer items-center gap-2">
-                            <CommonCheckbox
-                                v-model="form.isDateContacted"
-                                :onChange="handleContactedToday"
-                            />
-                            <span>Contacted Today</span>
-                        </label>
-                    </div>
-
-                    <!-- Save Button -->
-                    <div class="col-span-12 mt-4">
-                        <CommonButton
-                            @click="handleSubmit"
-                            :processing="form.processing"
-                            >Save Lead</CommonButton
-                        >
-                    </div>
-                </div>
+                <LeadCreate
+                    :isEdit="isEdit"
+                    :editLead="editLead"
+                    :status="status"
+                    :countries="countries"
+                    :source="source"
+                    :tags="tags"
+                    @saved="handleDrawerClose"
+                />
             </CommonModal>
+
+            <CommonDrawer
+                v-model:visible="showSyncModal"
+                header="Social Sync With AI"
+            >
+                <SocialSync
+                    :handleSyncClose="handleSyncClose"
+                    :status="status"
+                    :scanAlgorithm="scanAlgorithm"
+                />
+            </CommonDrawer>
+
             <CommonModal
                 v-model:visible="showBulkModal"
                 position="top"

@@ -20,8 +20,6 @@ const props = defineProps({
 const openAiSettings = props.data.openAiSettings;
 
 const form = useForm({
-    assistantName: openAiSettings?.assistant_name ?? null,
-    assistantId: openAiSettings?.assistant_id ?? null,
     apiKey: openAiSettings?.api_key ?? null,
     prompt: openAiSettings?.prompt ?? null,
 });
@@ -38,20 +36,6 @@ const submit = () => {
         <PanelLayout>
             <SettingsLayout :menu="menuSettings">
                 <form method="post" class="grid grid-cols-12 gap-3">
-                    <div class="col-span-12 sm:col-span-6">
-                        <CommonInput
-                            label="Assistant Name"
-                            v-model="form.assistantName"
-                            :error="form.errors.assistantName"
-                        />
-                    </div>
-                    <div class="col-span-12 sm:col-span-6">
-                        <CommonInput
-                            label="Assistant ID"
-                            v-model="form.assistantId"
-                            :error="form.errors.assistantId"
-                        />
-                    </div>
                     <div class="col-span-12 sm:col-span-12">
                         <CommonInput
                             label="API Key"

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->nullable();
             $table->string('name');
             $table->string('color')->nullable();
+            $table->boolean('is_edit')->default(false);
             $table->timestamps();
         });
     }

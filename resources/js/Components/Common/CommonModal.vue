@@ -1,5 +1,6 @@
 <template>
     <Dialog
+        @afterHide="onAfterHide"
         :draggable="false"
         :visible="visible"
         @update:visible="emit('update:visible')"
@@ -44,5 +45,8 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['update:visible']);
+const emit = defineEmits(['update:visible', 'afterHide']);
+const onAfterHide = () => {
+    emit('afterHide');
+};
 </script>

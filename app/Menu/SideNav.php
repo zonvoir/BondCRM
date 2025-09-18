@@ -142,13 +142,6 @@ class SideNav
                         'href' => route('employee.lead.index'),
                         'active' => $currentRouteName === 'employee.lead.index' || $currentRouteName === 'employee.lead.import' || $currentRouteName === 'employee.lead.details',
                     ],
-
-                    [
-                        'name' => 'Social Sync Lead',
-                        'permission' => hasPermissions('dashboard-view-employee'),
-                        'href' => route('employee.lead.social'),
-                        'active' => $currentRouteName === 'employee.lead.social',
-                    ],
                 ],
             ],
             [

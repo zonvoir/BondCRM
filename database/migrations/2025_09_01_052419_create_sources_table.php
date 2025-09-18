@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->nullable();
             $table->string('source');
+            $table->boolean('is_edit')->default(false);
             $table->timestamps();
         });
     }

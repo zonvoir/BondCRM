@@ -8,8 +8,6 @@ class OpenAiSetting extends Model
 {
     protected $fillable = [
         'id',
-        'assistant_name',
-        'assistant_id',
         'api_key',
         'prompt',
     ];

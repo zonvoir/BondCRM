@@ -17,8 +17,6 @@ class OpenAiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'assistant_name' => 'required|string',
-            'assistant_id' => 'nullable|string',
             'api_key' => ['required', 'string', function ($attribute, $value, $fail) {
                 $response = Http::withToken($value)
                     ->get('https://api.openai.com/v1/models');

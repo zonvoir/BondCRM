@@ -96,7 +96,7 @@ Route::middleware('auth', 'verified', 'role:'.RoleEnum::EMPLOYEE->value)->prefix
         Route::get('/', 'index')->name('index');
         Route::post('/save', 'saveLead')->name('save');
         Route::get('/export/{type}', 'export')->whereIn('type', ['excel', 'csv', 'pdf'])->name('export');
-        Route::get('/social-sync', 'socialSync')->name('social');
+        Route::post('/social-sync', 'socialSync')->name('social');
         Route::delete('/destroy/{lead}', 'destroyLead')->name('destroy');
         Route::get('/import', 'import')->name('import');
         Route::post('/import-Simulate', 'importSimulate')->name('import.simulate');
