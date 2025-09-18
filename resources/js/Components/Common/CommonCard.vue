@@ -1,5 +1,14 @@
 <template>
-    <div class="rounded-md bg-white p-3 shadow-sm sm:p-5 dark:bg-gray-800">
+    <div :class="['rounded-md p-3 sm:p-5 shadow-sm', customClass]">
         <slot />
     </div>
 </template>
+
+<script setup>
+const props = defineProps({
+    customClass: {
+        type: String,
+        default: 'bg-white dark:bg-gray-800',
+    },
+})
+</script>

@@ -17,22 +17,22 @@ class StatusSeeder extends Seeder
         $statuses = [
             [
                 'name' => 'Gmail',
-                'color' => 'bg-red-100',  // red
+                'color' => 'EA4335',   // Gmail Red
                 'user_id' => $userId,
             ],
             [
                 'name' => 'Outlook',
-                'color' => 'bg-blue-100',  // blue
+                'color' => '0078D4',   // Outlook Blue
                 'user_id' => $userId,
             ],
             [
                 'name' => 'Webmail',
-                'color' => 'bg-green-100',  // green
+                'color' => '34A853',   // Generic/Webmail Green
                 'user_id' => $userId,
             ],
             [
                 'name' => 'Apple Mail',
-                'color' => 'bg-green-100',  // gray
+                'color' => '7D7D7D',   // Apple Mail Gray
                 'user_id' => $userId,
             ],
             [

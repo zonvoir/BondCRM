@@ -1,7 +1,7 @@
 <template>
-    <div class="flex max-w-full flex-col gap-2 rounded-md border p-1">
+    <div class="flex max-w-full flex-col gap-2 rounded-md border dark:border-gray-900 dark:bg-gray-900 p-3">
         <!-- Dynamic Label -->
-        <label class="text-base font-medium text-gray-800 dark:text-gray-300">
+        <label class="text-base font-medium text-gray-800  dark:text-gray-300">
             {{ label || 'Attachments' }}
             <span v-if="required" class="ml-1 text-red-500">*</span>
         </label>
@@ -41,7 +41,7 @@
                         ref="fileInputRef"
                         type="file"
                         :class="[
-                            'text-dark max-w-fit rounded-md border border-indigo-200 bg-gray-200 p-2 text-sm transition-shadow hover:shadow',
+                            'text-dark max-w-fit rounded-md border border-indigo-200 dark:bg-gray-800 dark:border-gray-800 dark:text-white bg-gray-200 p-2 text-sm transition-shadow hover:shadow',
                             disabled
                                 ? 'cursor-not-allowed opacity-50'
                                 : 'cursor-pointer',

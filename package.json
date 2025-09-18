@@ -39,6 +39,8 @@
         "@vueuse/core": "^13.9.0",
         "primevue": "^4.3.9",
         "quill": "^2.0.3",
-        "vue-toastification": "^2.0.0-rc.5"
+        "vue-draggable-plus": "^0.6.0",
+        "vue-toastification": "^2.0.0-rc.5",
+        "vuedraggable": "^4.1.0"
     }
 }

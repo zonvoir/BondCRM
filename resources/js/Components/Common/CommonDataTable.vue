@@ -132,10 +132,10 @@ const buildPagination = () => {
                     :pt="{
                         column: {
                             headerCell: {
-                                class: ['text-sm !bg-gray-100 !text-gray-700'],
+                                class: ['text-sm !bg-gray-100 dark:!bg-gray-800 dark:!text-gray-100 !text-gray-700'],
                             },
                             bodyCell: {
-                                class: 'cursor-pointer !whitespace-nowrap !text-xs',
+                                class: 'cursor-pointer  !whitespace-nowrap !text-xs',
                             },
                             datatable: {
                                 class: '!border-none',

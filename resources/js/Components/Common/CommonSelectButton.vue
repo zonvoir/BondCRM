@@ -87,29 +87,23 @@ const getIconName = iconName => {
 </script>
 
 <template>
-    <SelectButton
-        v-model="internalValue"
-        :options="options"
-        :option-label="optionLabel"
-        :option-value="optionValue"
-        :multiple="multiple"
-        :disabled="disabled"
-        :invalid="invalid"
-        :aria-labelledby="ariaLabelledby"
-        :allow-empty="allowEmpty"
-        :class="sizeClass"
-    >
+    <SelectButton v-model="internalValue" :options="options" :option-label="optionLabel" :option-value="optionValue"
+        :multiple="multiple" :disabled="disabled" :pt="{
+            pcToggleButton: {
+                root: {
+                    class: 'dark:!bg-transparent dark:!border-transparent'
+                }
+            }
+
+        }" :invalid="invalid" :aria-labelledby="ariaLabelledby" :allow-empty="allowEmpty" :class="sizeClass">
         <template #option="{ option }">
             <div class="flex items-center gap-2" :class="class">
-                <CommonIcon
-                    v-if="option[iconField]"
-                    :icon="getIconName(option[iconField])"
-                    class="h-5 w-5"
-                />
+                <CommonIcon v-if="option[iconField]" :icon="getIconName(option[iconField])" class="h-5 w-5" />
                 <span v-if="showLabel && option[optionLabel]">
                     {{ option[optionLabel] }}
                 </span>
             </div>
         </template>
+
     </SelectButton>
 </template>

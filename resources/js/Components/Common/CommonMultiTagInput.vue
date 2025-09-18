@@ -90,7 +90,7 @@ const closeSuggestions = () => {
             <span
                 v-for="(tag, i) in tags"
                 :key="tag + i"
-                class="flex items-center gap-1 rounded-full bg-gray-200 px-2 py-1 text-sm"
+                class="flex items-center gap-1 rounded-full bg-gray-200 dark:bg-gray-700 px-2 py-1 text-sm"
             >
                 {{ tag }}
                 <button
@@ -115,7 +115,7 @@ const closeSuggestions = () => {
                 @keydown.tab.prevent="addTag()"
                 @keydown.space.prevent="addTag()"
                 placeholder="Tags"
-                class="border-none outline-none focus:ring-0"
+                class="border-none outline-none focus:ring-0 bg-transparent"
             />
 
             <!-- popover -->

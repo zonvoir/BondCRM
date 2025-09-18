@@ -7,44 +7,44 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-serif:
-    Roboto Flex, ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-serif:
+        Roboto Flex, ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 
-  --transition-property-width: width;
+    --transition-property-width: width;
 
-  --animate-scale-in: scale-in 100ms ease-out;
-  --animate-scale-out: scale-out 100ms ease-in;
-  --animate-hide: hide 100ms ease-in;
-  --animate-slide-in: slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-swipe-out: swipeOut 100ms ease-out;
+    --animate-scale-in: scale-in 100ms ease-out;
+    --animate-scale-out: scale-out 100ms ease-in;
+    --animate-hide: hide 100ms ease-in;
+    --animate-slide-in: slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+    --animate-swipe-out: swipeOut 100ms ease-out;
 
-  --background-color-light: #f8fafc;
-  --background-color-dark: #111827;
+    --background-color-light: #f8fafc;
+    --background-color-dark: #111827;
 
-  @keyframes scale-in {
-    0% {
-      transform: scale(0);
+    @keyframes scale-in {
+        0% {
+            transform: scale(0);
+        }
+        100% {
+            transform: scale(1);
+        }
     }
-    100% {
-      transform: scale(1);
+    @keyframes scale-out {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(0);
+        }
     }
-  }
-  @keyframes scale-out {
-    0% {
-      transform: scale(1);
+    @keyframes hide {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
     }
-    100% {
-      transform: scale(0);
-    }
-  }
-  @keyframes hide {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
 }
 
 /*
@@ -56,13 +56,13 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
+    }
 }
 
 @-webkit-keyframes bg-scrolling-reverse {
@@ -114,7 +114,6 @@
 }
 
 body {
-
 }
 
 .bg-login {
@@ -129,4 +128,8 @@ body {
 
 .rounded-circle {
     border-radius: 50px !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }

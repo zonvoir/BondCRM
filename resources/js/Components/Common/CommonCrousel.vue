@@ -18,11 +18,30 @@ defineProps({
         type: String,
         default: 'horizontal',
     },
+    nextButtonClass: {
+        type: String,
+        default: ""
+    },
+    prevButtonClass: {
+        type: String,
+        default: ""
+    }
 });
 </script>
 
 <template>
-    <Carousel class="w-full" v-bind="$props">
+    <Carousel class="w-full" :pt="{
+        pcNextButton: {
+            root: {
+                class: nextButtonClass,
+            },
+        },
+        pcPrevButton: {
+            root: {
+                class: prevButtonClass,
+            },
+        },
+    }" v-bind="$props">
         <template #item="slotProps">
             <slot name="item" v-bind="slotProps" />
         </template>
