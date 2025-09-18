@@ -3,7 +3,7 @@
         class="rounded-lg border border-gray-200 bg-white p-3  transition hover:shadow-lg dark:border-gray-600 dark:bg-gray-800">
         <!-- Header -->
         <div class="flex items-center gap-4">
-            <CommonAvatar label="KT" class="!bg-indigo-100 !text-xs !text-indigo-700" size="small" shape="circle" />
+            <!-- <CommonAvatar label="KT" class="!bg-indigo-100 !text-xs !text-indigo-700" size="small" shape="circle" /> -->
             <div>
                 <h1 class="text-sm font-semibold text-gray-900 dark:text-gray-100 cursor-pointer hover:underline">
                     #1 – {{ data.name }} <span class="font-normal text-gray-600 dark:text-gray-400">PhD</span>
@@ -63,7 +63,6 @@
 </template>
 
 <script setup>
-import CommonAvatar from './CommonAvatar.vue';
 import CommonIcon from './CommonIcon.vue';
 
 
