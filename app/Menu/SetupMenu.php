@@ -16,24 +16,26 @@ class SetupMenu
                 'name' => 'Settings',
                 'permission' => hasPermissions('dashboard-view'),
                 'href' => route('setup.general.index', 'general'),
-                'icon' => 'material-icon-theme:settings',
+                'icon' => 'heroicons:cog-6-tooth',
                 'active' => $currentRouteName === 'setup.general.index',
                 'subMenu' => [],
             ],
             [
                 'name' => 'Leads',
                 'permission' => hasPermissions('email-black-view'),
-                'icon' => 'material-icon-theme:folder-azure-pipelines-open',
+                'icon' => 'heroicons:user-group',
                 'active' => in_array($currentRouteName, ['setup.source', 'setup.status'], true),
                 'subMenu' => [
                     [
                         'name' => 'Sources',
+                        'icon' =>  'heroicons:globe-alt',
                         'permission' => hasPermissions('email-black-view'),
                         'href' => route('setup.source'),
                         'active' => $currentRouteName === 'setup.source',
                     ],
                     [
                         'name' => 'Statuses',
+                        'icon'=> 'heroicons:inbox-arrow-down',
                         'permission' => hasPermissions('email-black-view'),
                         'href' => route('setup.status'),
                         'active' => $currentRouteName === 'setup.status',
@@ -47,9 +49,7 @@ class SetupMenu
     {
         $currentRouteName = Route::currentRouteName();
 
-        return [
-
-        ];
+        return [];
     }
 
     public static function employeeSetupMenu(): array
@@ -66,7 +66,6 @@ class SetupMenu
                 'subMenu' => [],
             ],
         ];
-
     }
 
     public static function mainMenuSetup(): array
@@ -77,7 +76,6 @@ class SetupMenu
 
         if (hasRole(RoleEnum::USER->value)) {
             return self::userSetupMenu();
-
         }
 
         if (hasRole(RoleEnum::EMPLOYEE->value)) {

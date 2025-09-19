@@ -7,7 +7,7 @@ defineExpose({ popover });
 </script>
 
 <template>
-    <Popover ref="popover" draggable="true">
+    <Popover ref="popover"  draggable="true">
         <slot />
     </Popover>
 </template>

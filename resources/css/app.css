@@ -7,6 +7,45 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+    /* Brand / Primary */
+    --color-primary-950: #153158;
+    --color-primary-900: #223f67;
+    --color-primary-800: #385276;
+    --color-primary-700: #4e6585;
+    --color-primary-600: #647894;
+    --color-primary-500: #7a8ba3;
+    --color-primary-400: #909fb3;
+    --color-primary-300: #a6b2c2;
+    --color-primary-200: #bcc5d1;
+    --color-primary-100: #d2d8e0;
+    --color-primary-50: #e8ebef;
+
+    /* Neutral / Secondary */
+    --color-secondary-950: #0f0f0f;
+    --color-secondary-900: #171717;
+    --color-secondary-800: #1b1b1b;
+    --color-secondary-700: #1e1e1e;
+    --color-secondary-600: #2a2a2a;
+    --color-secondary-500: #3d3d3d;
+    --color-secondary-400: #505050;
+    --color-secondary-300: #6b6b6b;
+    --color-secondary-200: #a0a0a0;
+    --color-secondary-100: #d0d0d0;
+    --color-secondary-50: #f5f5f5;
+
+    /* font familiy */
+    --font-figtree: 'Figtree', sans-serif;
+
+    /* Semantic */
+    --color-dark: #000000;
+    --color-light: #ffffff;
+    --color-background: #f8f9fa;
+    --color-surface: #f9fafb;
+    --color-text: #333333;
+}
+/* #153158 */
+
+/* @theme {
   --font-serif:
     Roboto Flex, ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 
@@ -45,7 +84,7 @@
       opacity: 0;
     }
   }
-}
+} */
 
 /*
   The default border color has changed to `current color` in Tailwind CSS v4,
@@ -56,13 +95,13 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
+    }
 }
 
 @-webkit-keyframes bg-scrolling-reverse {
@@ -113,8 +152,8 @@
     }
 }
 
-body {
-
+* {
+    font-family: var(--font-figtree);
 }
 
 .bg-login {
@@ -129,4 +168,18 @@ body {
 
 .rounded-circle {
     border-radius: 50px !important;
+}
+
+.no-scrollbar-show::-webkit-scrollbar {
+    display: none;
+}
+
+::-webkit-scrollbar {
+    background: var(--color-secondary-50);
+    width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-secondary-100);
+    border-radius: 20px;
 }

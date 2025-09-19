@@ -94,36 +94,40 @@ class SideNav
                 'name' => 'Dashboard',
                 'permission' => hasPermissions('dashboard-view-employee'),
                 'href' => route('dashboard'),
-                'icon' => 'vscode-icons:file-type-homeassistant',
+                'icon' => 'heroicons:home',
                 'active' => $currentRouteName === 'dashboard',
                 'subMenu' => [],
             ],
             [
                 'name' => 'Mails',
                 'permission' => hasPermissions('dashboard-view-employee'),
-                'icon' => 'material-icon-theme:folder-mail-open',
+                'icon' => 'heroicons:envelope',
                 'active' => in_array($currentRouteName, ['employee.gmail', 'employee.outlook', 'employee.webmail', 'employee.apple-mail'], true),
                 'subMenu' => [
                     [
                         'name' => 'Gmail',
+                        'icon' =>  'heroicons:envelope-open',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.gmail', 'inbox'),
                         'active' => $currentRouteName === 'employee.gmail',
                     ],
                     [
                         'name' => 'Outlook',
+                        'icon' => 'mdi:microsoft-outlook',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.outlook', 'inbox'),
                         'active' => $currentRouteName === 'employee.outlook',
                     ],
                     [
                         'name' => 'WebMail',
+                        'icon' => 'mdi:webhook',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.webmail', 'inbox'),
                         'active' => $currentRouteName === 'employee.webmail',
                     ],
                     [
                         'name' => 'AppMail',
+                        'icon' => 'mdi:email-multiple',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.apple-mail', 'inbox'),
                         'active' => $currentRouteName === 'employee.apple-mail',
@@ -133,11 +137,12 @@ class SideNav
             [
                 'name' => 'Leads',
                 'permission' => hasPermissions('dashboard-view-employee'),
-                'icon' => 'vscode-icons:file-type-azurepipelines',
+                'icon' => 'heroicons:user-group',
                 'active' => in_array($currentRouteName, ['employee.lead.index', 'employee.lead.social', 'employee.lead.import', 'employee.lead.details'], true),
                 'subMenu' => [
                     [
                         'name' => 'Lead',
+                        'icon' =>  'mdi:account-group',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.lead.index'),
                         'active' => $currentRouteName === 'employee.lead.index' || $currentRouteName === 'employee.lead.import' || $currentRouteName === 'employee.lead.details',
@@ -147,17 +152,19 @@ class SideNav
             [
                 'name' => 'Black',
                 'permission' => hasPermissions('dashboard-view-employee'),
-                'icon' => 'material-icon-theme:folder-private-open',
+                'icon' => 'heroicons:shield-exclamation',
                 'active' => in_array($currentRouteName, ['employee.black.email', 'employee.black.words'], true),
                 'subMenu' => [
                     [
                         'name' => 'Email',
+                        'icon'=>'heroicons:envelope',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.black.email'),
                         'active' => $currentRouteName === 'employee.black.email',
                     ],
                     [
                         'name' => 'Keyword',
+                        'icon' =>  'heroicons:document-text',
                         'permission' => hasPermissions('dashboard-view-employee'),
                         'href' => route('employee.black.word'),
                         'active' => $currentRouteName === 'employee.black.word',

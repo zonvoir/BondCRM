@@ -16,15 +16,15 @@ const props = defineProps({
     <CommonIcon
         :class="[
             menu?.active
-                ? 'text-indigo-600'
-                : 'text-gray-400 group-hover:text-indigo-600',
+                ? 'text-light'
+                : 'text-secondary-50 group-hover:text-light',
             'h-6 w-6 shrink-0',
         ]"
         :icon="menu?.icon"
     />
 
     <div class="flex w-full justify-between">
-        <div class="group-hover:text-indigo-600 dark:text-white">
+        <div class="group-hover:text-light dark:text-light">
             {{ menu?.name }}
         </div>
         <div>
@@ -38,9 +38,9 @@ const props = defineProps({
                 "
                 :class="[
                     menu.active
-                        ? 'text-indigo-600'
-                        : 'h-6 w-6 shrink-0 text-gray-400',
-                    'h-6 w-6 shrink-0 group-hover:text-indigo-600',
+                        ? 'text-light'
+                        : 'h-6 w-6 shrink-0 text-light',
+                    'h-6 w-6 shrink-0 group-hover:text-light/20',
                 ]"
             />
         </div>

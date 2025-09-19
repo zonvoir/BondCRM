@@ -133,7 +133,7 @@ const buildPagination = () => {
                         column: {
                             headerCell: {
                                 class: [
-                                    '!bg-indigo-50 !text-indigo-700 text-base dark:!bg-indigo-900/30 dark:!text-indigo-200 cursor-pointer !py-2',
+                                    '!bg-primary-50 !text-secondary-800 text-base dark:!bg-primary-950/30 dark:!text-indigo-200 cursor-pointer !py-2',
                                 ],
                             },
                             bodyCell: {

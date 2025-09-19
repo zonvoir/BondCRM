@@ -67,6 +67,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    iconClass: {
+        type: String,
+        default: "text-gray-400"
+    }
 });
 
 const model = defineModel({
@@ -86,13 +90,11 @@ defineExpose({ focus: () => input?.value?.focus() });
 </script>
 
 <template>
-    <label
-        :class="[
-            labelClass,
-            'block text-sm font-medium text-gray-700 dark:text-gray-300',
-            label ? 'mb-1' : '',
-        ]"
-    >
+    <label :class="[
+        labelClass,
+        'block text-sm font-medium text-gray-700 dark:text-gray-300',
+        label ? 'mb-1' : '',
+    ]">
         <span class="flex items-center" v-if="label">
             {{ label }}
             <p class="mx-1 text-red-600" v-if="required">*</p>
@@ -100,30 +102,16 @@ defineExpose({ focus: () => input?.value?.focus() });
     </label>
 
     <div class="relative w-full">
-        <CommonIcon
-            v-if="icon"
-            :is="icon"
-            :icon="icon"
-            class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400"
-        />
+        <CommonIcon v-if="icon" :is="icon" :icon="icon"
+            :class="'absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 ', iconClass" />
 
-        <input
-            ref="input"
-            :type="type"
-            :maxlength="maxlength"
-            :placeholder="placeholder"
-            :readonly="readonly"
-            :disabled="disabled"
-            :required="required"
-            v-model="model"
-            :autocomplete="autocomplete"
-            :autofocus="autofocus"
-            :class="[
+        <input ref="input" :type="type" :maxlength="maxlength" :placeholder="placeholder" :readonly="readonly"
+            :disabled="disabled" :required="required" v-model="model" :autocomplete="autocomplete"
+            :autofocus="autofocus" :class="[
                 InputClass,
                 icon ? 'pl-10' : '',
-                'rounded-md border-gray-300 text-gray-900 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600',
-            ]"
-        />
+                'rounded-md border-gray-300 text-gray-900 shadow-xs focus:border-primary-900 focus:ring-primary-900 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600',
+            ]" />
     </div>
     <div class="mt-1" v-show="error">
         <p class="text-sm text-red-600 dark:text-red-400">

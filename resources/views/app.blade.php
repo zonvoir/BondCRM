@@ -9,7 +9,7 @@
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <link
-            href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
 

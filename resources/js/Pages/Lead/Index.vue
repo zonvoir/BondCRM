@@ -326,7 +326,7 @@ const responsiveOptions = [
                 <div>
                     <!-- filters  -->
                     <div
-                        class="flex flex-nowrap gap-2 gap-y-5 overflow-x-auto py-5"
+                        class="flex flex-nowrap gap-2 gap-y-5 overflow-x-auto no-scrollbar-show pb-10"
                     >
                         <div v-for="(s, index) in status" :key="index">
                             <Link :href="filterStatus(s?.code)">
@@ -480,7 +480,7 @@ const responsiveOptions = [
                                     @click="toggle"
                                 >
                                     <Badge
-                                        class="absolute -top-1 -right-1 rounded-full bg-indigo-600 p-1 text-[10px] text-white"
+                                        class="absolute -top-1 -right-1 rounded-full bg-red-600 p-1 text-[10px] text-white"
                                     >
                                     </Badge>
                                     <CommonIcon icon="heroicons:funnel" />
@@ -601,13 +601,13 @@ const responsiveOptions = [
                         >
                             <template #body="slotProps">
                                 <div class="flex flex-col gap-1">
-                                    <CommonBadge
+                                    <CommonBadge 
                                         v-for="tag in slotProps.data?.tags.slice(
                                             0,
                                             2
                                         )"
                                         :key="tag.id"
-                                        class="mr-1"
+                                        class="mr-1 !bg-primary-900"
                                         :value="tag"
                                     />
 
